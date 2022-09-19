@@ -7,4 +7,4 @@ from JimFawcett.github.io/RustBits.html
 Each demo has project structure created using cargo new and suitable for editing in VS Code
 and running from VS Code terminal using cargo commands.
 
-https://jimfawcett.github.io/RustBits.html
+https://jimfawcett.github.io/CodeBits.html
