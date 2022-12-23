@@ -1,0 +1,3 @@
+C:/github/JimFawcett/Bits/Cpp/Cpp_Hello/build/CMakeFiles/Cpp_Hello.dir
+C:/github/JimFawcett/Bits/Cpp/Cpp_Hello/build/CMakeFiles/ALL_BUILD.dir
+C:/github/JimFawcett/Bits/Cpp/Cpp_Hello/build/CMakeFiles/ZERO_CHECK.dir

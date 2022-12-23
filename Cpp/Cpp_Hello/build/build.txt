@@ -1,0 +1,9 @@
+﻿C:\github\JimFawcett\bits\Cpp\Cpp_Hello
+> cd build
+C:\github\JimFawcett\bits\Cpp\Cpp_Hello\build
+> cmake --build .
+MSBuild version 17.4.0+18d5aef85 for .NET Framework
+  Cpp_Hello.vcxproj -> C:\github\JimFawcett\Bits\Cpp\Cpp_Hello\build\Debug\
+  Cpp_Hello.exe
+C:\github\JimFawcett\bits\Cpp\Cpp_Hello\build
+>
