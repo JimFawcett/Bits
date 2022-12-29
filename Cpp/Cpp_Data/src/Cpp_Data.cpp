@@ -28,22 +28,26 @@ void show(T t, const std::string &ts) {
 int main() {
     std::cout << "\n  Demonstrate C++ types:";
     std::cout << "\n ------------------------" << "\n";
-
-    int t1 = int{3};     // lives in stack frame
+    /*-- values live in stack frame --*/
+    int t1 = int{3}; 
     show(t1, TS(t1));
     long long int t1a = 3;
     show(t1a, TS(t1a));
+    // double t1 = 3.1415927; // not allowed to redefine type
     
-    double* t2 = new double{3.14159}; // value lives in heap
+    /*-- values live in heap when using new --*/
+    double* t2 = new double{3.14159};
     show(t2, TS(t2));
     show(*t2, TS(*t2));
     
+    /*-- control block lives in stack, data live in heap --*/
     auto t3 = std::string("Hello Data");
     show(t3, TS(t3));
     
     auto& t4 = t3;      // reference
     show(t4, TS(t4));
     
+    /*-- may not be copied but move allowed --*/
     auto t5 = std::unique_ptr<int>(new int{-3});
     show(move(t5), TS(t5));  // can't be copied
     std::cout << std::endl;
