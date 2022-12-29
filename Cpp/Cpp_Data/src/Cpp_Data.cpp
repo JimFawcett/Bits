@@ -14,20 +14,21 @@
   Qualifiers:
     short, long, const
 */
+/*-- macro turns name into string --*/
 #define STRINGIFY_(x) #x     // # is a macro stringizer
 #define TS(x) STRINGIFY_(x)  // operator
 
 template<typename T>
 void show(T t, const std::string &ts) {
-  std::cout << "\n  " << typeid(t).name();
-  std::cout << ", " << ts;
-  std::cout << "\n  value: " << t;
-  std::cout << ",  size:  " << sizeof(t);
+  std::cout << "\n  " << typeid(t).name();  // show type
+  std::cout << ", " << ts;                  // show name at call site
+  std::cout << "\n  value: " << t;          // show value
+  std::cout << ",  size:  " << sizeof(t);   // show size on stack
   std::cout << "\n";
 }
 int main() {
     std::cout << "\n  Demonstrate C++ types:";
-    std::cout << "\n ------------------------" << "\n";
+    std::cout << "\n ------------------------";
     /*-- values live in stack frame --*/
     int t1 = int{3}; 
     show(t1, TS(t1));
@@ -49,6 +50,8 @@ int main() {
     
     /*-- may not be copied but move allowed --*/
     auto t5 = std::unique_ptr<int>(new int{-3});
-    show(move(t5), TS(t5));  // can't be copied
+    show(std::move(t5), TS(t5));  // unique_ptr can't be copied so move
+    t5 = std::unique_ptr<int>(new int{-3});
+    show(*t5, TS(*t5)); // contents can be copied
     std::cout << std::endl;
 }
