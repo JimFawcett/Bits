@@ -13,6 +13,16 @@
     struct, class, enum class, using
   Qualifiers:
     short, long, const
+
+  Operations:
+    Primitive types can all be copied.
+    Most library and user-defined types can be copied, moved, and deleted
+    by providing member constructors and destructor.  Often compiler generation
+    works well. For classes with pointer members developers must provide them.
+
+  Processing:
+    All types are static, operations run as native code, and no garbage
+    collection is used.
 */
 /*-- macro turns name into string --*/
 #define STRINGIFY_(x) #x     // # is a macro stringizer
