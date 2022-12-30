@@ -22,7 +22,7 @@
 
   Processing:
     All types are static, operations run as native code, and no garbage
-    collection is used.
+    collection is needed. Resources are returned at end of declr scope.
 */
 /*-- macro turns name into string --*/
 #define STRINGIFY_(x) #x     // # is a macro stringizer
@@ -44,7 +44,7 @@ int main() {
     show(t1, TS(t1));
     long long int t1a = 3;
     show(t1a, TS(t1a));
-    // double t1 = 3.1415927; // not allowed to redefine type
+    // double t1 = 3.1415927; // not allowed to redefine type of t1
     
     /*-- values live in heap when using new --*/
     double* t2 = new double{3.14159};
@@ -52,14 +52,14 @@ int main() {
     show(*t2, TS(*t2));
     delete(t2);
     
-    /*-- control block lives in stack, data live in heap --*/
-    auto t3 = std::string("Hello Data");
+    /*-- control block lives in stack, char data live in heap --*/
+    auto t3 = std::string("Hello Data");  // move ctor - rhs is temp
     show(t3, TS(t3));
     
     auto& t4 = t3;      // reference
     show(t4, TS(t4));
     
-    /*-- may not be copied but move allowed --*/
+    /*-- unique_ptr may not be copied but move allowed --*/
     auto t5 = std::unique_ptr<int>(new int{-3});
     show(std::move(t5), TS(t5));  // unique_ptr can't be copied so move
     t5 = std::unique_ptr<int>(new int{-3});
