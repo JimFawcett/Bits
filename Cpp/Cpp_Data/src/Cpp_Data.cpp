@@ -50,6 +50,7 @@ int main() {
     double* t2 = new double{3.14159};
     show(t2, TS(t2));
     show(*t2, TS(*t2));
+    delete(t2);
     
     /*-- control block lives in stack, data live in heap --*/
     auto t3 = std::string("Hello Data");
