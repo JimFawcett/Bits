@@ -12,7 +12,7 @@
     array, pointer, reference
     struct, class, enum class, using
   Qualifiers:
-    short, long, const
+    short, long, const, unsigned
 
   Operations:
     Primitive types can all be copied.
