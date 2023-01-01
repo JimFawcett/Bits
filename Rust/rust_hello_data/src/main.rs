@@ -59,14 +59,20 @@ fn main() {
       Below is not type redefinition, it is shadowing, 
       e.g., a new variable that hides the older t1a.
     */
-    let t1a:f64 = 42.0;
+    let mut t1a:f64 = 42.0;
     show(t1a, stringify!(t1a));
 
+    /*-- create mutable reference --*/
+    let t1b:&mut f64 = &mut t1a;
+    *t1b = 84.0;
+    show(t1b, stringify!(t1b));
+
     /*-- values live in heap when wrapped with box --*/
-    let t2 = Box::new(3.14159f64);
+    let t2 = Box::new(3.14159f64); // 3.14159f64 is value specified to be f64
     show(t2.clone(), stringify!(t2));
     show(*t2, stringify!(*t2));
-
+    /*-- Box releases its heap storage when it goes out of scope --*/
+    
     let s1 = std::mem::size_of::<Box<i8>>();
     let s2 = std::mem::size_of::<Box<i64>>();
     println!("\nsize_of::<Box<i8>>() = {}", s1);
