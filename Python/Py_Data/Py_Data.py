@@ -80,12 +80,13 @@ def execute() :
     t5 = 1 + 1j
     showIdent(t5, "t5")
     showIdent(t6, "t6")
-
+    
     # reference behavior - iterate over children
     separate()
     print("iterate over t6")
     for i in t6:
         showIdent(i, "elem")
+    # print(dir(t6))
       
     print("\nThat's all folks!\n")
 execute()

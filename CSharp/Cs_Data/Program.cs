@@ -67,7 +67,7 @@ namespace HelloData
       Console.WriteLine("methods:");
       foreach(
         var method in typeof(T).GetMethods(
-          BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public
+          BindingFlags.Instance | BindingFlags.Public
         )
       ) {
         Console.WriteLine(
@@ -89,6 +89,7 @@ namespace HelloData
       double t1 = 3.5;
       p.showIdent(t1, "t1");
       p.showType(t1, "t1");
+      p.iterate(t1);
       
       // reference behavior - copy on write
       separator();
