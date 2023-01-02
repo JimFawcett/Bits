@@ -1,0 +1,91 @@
+# Python/Py_Data::Py_Data.py
+# 
+# Python Dynamic Data Types
+#   int, float, complex
+#   bytes, bytearray, memoryview
+#   list, tuple, range
+#   dict, set, frozenset
+#   bool
+#   str
+#   NoneType
+
+import sys
+def showType(t, n) :
+    print(type(t), n)
+    print("value: ", t, ', size: ', sys.getsizeof(t))
+
+def showIdent(t, n) :
+    print(n, t, id(t))
+
+def separate() :
+    print("------")
+
+def execute() : 
+    print(" Demonstrate Python Types")
+    print("--------------------------")
+    # types
+    t1 = 42
+    showType(t1, "t1")
+    t1 = 3.14159         #dynamic type t1 redefined
+    showType(t1, "t1")
+    t1 = [1, 2, 3, 4]    #dynamic type t1 redefined
+    showType(t1, "t1")
+
+    # reference behavior - copy on write
+    separate()
+    print("t2 = t1")
+    t2 = t1
+    showIdent(t1,"t1")
+    showIdent(t2,"t2")
+    print("\nt2 = 3.33333")
+    t2 = 3.33333
+    showIdent(t1,"t1")
+    showIdent(t2,"t2")
+
+    # reference behavior - copy on write
+    separate()
+    print("t2 += -1.0")
+    t2 += -1.0
+    showIdent(t1,"t1")
+    showType(t1, "t1")
+    showIdent(t2,"t2")
+    showType(t2, "t2")
+
+    # reference behavior - copy on write
+    separate()
+    t3 = [1, "one"]
+    showIdent(t3, "t3")
+    print("t4 = t3")
+    t4 = t3
+    showIdent(t3, "t3")
+    showType(t3,"t3")
+    showIdent(t4, "t4")
+    showType(t4,"t4")
+    
+    # reference behavior - no copy on write
+    separate()
+    print("t3.append('b')")
+    t3.append('b')
+    showIdent(t3, "t3")
+    showType(t3,"t3")
+    showIdent(t4, "t4")
+    showType(t4,"t4")
+
+    # reference behavior - child copy on write
+    separate()
+    t5 = (1, 2, 3)
+    t6 = [1, t5, "weird"]
+    showIdent(t5, "t5")
+    showIdent(t6, "t6")
+    t5 = 1 + 1j
+    showIdent(t5, "t5")
+    showIdent(t6, "t6")
+
+    # reference behavior - iterate over children
+    separate()
+    print("iterate over t6")
+    for i in t6:
+        showIdent(i, "elem")
+      
+    print("\nThat's all folks!\n")
+execute()

@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "3e9cvjafLLlur+o+VGO4IQKxatWOoeq/NTMncXDh8YLojZTU9j2AYvZbN7VT4AoLEovID++Qb+IaMm5R2YPnQg==",
+  "dgSpecHash": "aEVckhPxMR60vrcqNeE7nSZF8XGjEnATj6VMyb6+ndO3mAjz6QehN7xalJQv1q7Xe+G1fvOEugMt72CdGZUGeA==",
   "success": true,
-  "projectFilePath": "C:\\github\\JimFawcett\\bits\\CSharp\\Cs_Hello\\Cs_Hello.csproj",
+  "projectFilePath": "C:\\github\\JimFawcett\\Bits\\CSharp\\Cs_Hello\\Cs_Hello.csproj",
   "expectedPackageFiles": [],
   "logs": []
 }
