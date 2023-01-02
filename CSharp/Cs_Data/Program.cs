@@ -1,6 +1,5 @@
-﻿// See https://aka.ms/new-console-template for more information
-using System;
-#pragma warning disable CS8602
+﻿using System;
+#pragma warning disable CS8602  // possibly null reference warning
 // https://stackoverflow.com/questions/8173239/c-getting-size-of-a-value-type-variable-at-runtime/8173293#8173293
 // 
 using System;

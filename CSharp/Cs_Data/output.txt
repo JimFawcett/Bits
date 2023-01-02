@@ -1,0 +1,73 @@
+C:\github\JimFawcett\Bits\CSharp\Cs_Data
+> dotnet run
+ Demonstrate C# types
+----------------------
+t1, 1074528256
+Double, t1
+value: 3.5, size: 8
+fields:
+  m_value = 3.5
+methods:
+  CompareTo
+  CompareTo
+  Equals
+  Equals
+  GetHashCode
+  ToString
+  ToString
+  ToString
+  ToString
+  TryFormat
+  GetTypeCode
+  GetType
+----------
+t2, -1596041648
+String, t2
+value: a string, size: 8
+
+t3 = t2
+
+t3, -1596041648
+String, t3
+value: a string, size: 8
+
+t3 = "another string"
+
+t2, -1596041648
+t3, 1723840830
+String, t3
+value: another string, size: 8
+----------
+obj, 58225482
+Object, obj
+value: System.Object, size: 8
+fields:
+methods:
+  GetType
+  ToString
+  Equals
+  GetHashCode
+
+t4, -1813067718
+T4, t4
+value: HelloData.T4, size: 24
+fields:
+  <I>k__BackingField = 3
+  <D>k__BackingField = 3.1415927
+  <C>k__BackingField = z
+methods:
+  get_I
+  set_I
+  get_D
+  set_D
+  get_C
+  set_C
+  Equals
+  GetHashCode
+  ToString
+  GetType
+
+That's all Folks!
+
+C:\github\JimFawcett\Bits\CSharp\Cs_Data
+>
