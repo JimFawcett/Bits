@@ -1,0 +1,58 @@
+C:\github\JimFawcett\Bits\Python\Py_Data
+> python .\Py_Data.py
+ Demonstrate Python Types
+--------------------------
+<class 'int'> t1
+value:  42 , size:  28
+<class 'float'> t1
+value:  3.14159 , size:  24
+<class 'list'> t1
+value:  [1, 2, 3, 4] , size:  88
+------
+t2 = t1
+t1 [1, 2, 3, 4] 1581050570752
+t2 [1, 2, 3, 4] 1581050570752
+
+t2 = 3.33333
+t1 [1, 2, 3, 4] 1581050570752
+t2 3.33333 1581050207984
+------
+t2 += -1.0
+t1 [1, 2, 3, 4] 1581050570752
+<class 'list'> t1
+value:  [1, 2, 3, 4] , size:  88
+t2 2.33333 1581050209360
+<class 'float'> t2
+value:  2.33333 , size:  24
+------
+t3 [1, 'one'] 1581050507840
+t4 = t3
+t3 [1, 'one'] 1581050507840
+<class 'list'> t3
+value:  [1, 'one'] , size:  72
+t4 [1, 'one'] 1581050507840
+<class 'list'> t4
+value:  [1, 'one'] , size:  72
+------
+t3.append('b')
+t3 [1, 'one', 'b'] 1581050507840
+<class 'list'> t3
+value:  [1, 'one', 'b'] , size:  120
+t4 [1, 'one', 'b'] 1581050507840
+<class 'list'> t4
+value:  [1, 'one', 'b'] , size:  120
+------
+t5 (1, 2, 3) 1581050830144
+t6 [1, (1, 2, 3), 'weird'] 1581050835264
+t5 (1+1j) 1581050208048
+t6 [1, (1, 2, 3), 'weird'] 1581050835264
+------
+iterate over t6
+elem 1 1581049184496
+elem (1, 2, 3) 1581050830144
+elem weird 1581050834288
+
+That's all folks!
+
+C:\github\JimFawcett\Bits\Python\Py_Data
+>
