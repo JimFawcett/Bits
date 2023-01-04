@@ -1,12 +1,15 @@
 C:\github\JimFawcett\Bits\CSharp\Cs_Data
 > dotnet run
  Demonstrate C# types
-----------------------
-t1, 1074528256
-Double, t1
-value: 3.5, size: 8
+
+---------------
+  int - value type
+---------------
+--- int t1 = 42 ---
+Int32, t1
+value: 42, size: 4
 fields:
-  m_value = 3.5
+  m_value = 42
 methods:
   CompareTo
   CompareTo
@@ -20,25 +23,31 @@ methods:
   TryFormat
   GetTypeCode
   GetType
-----------
-t2, -1596041648
+
+--- int t1a = t1 ---
+t1a is not same object as t1
+
+---------------
+  string - reference type
+---------------
+--- string t2 = "a string" ---
 String, t2
 value: a string, size: 8
-
-t3 = t2
-
-t3, -1596041648
+--- Note: ---
+  string has many methods - uncomment next line to see them
+--- string t3 = t2 ---
 String, t3
 value: a string, size: 8
-
-t3 = "another string"
-
-t2, -1596041648
-t3, 1723840830
+t3 is same object as t2
+--- t3 += " is here" ---
 String, t3
-value: another string, size: 8
-----------
-obj, 58225482
+value: a string is here, size: 8
+t3 is not same object as t2
+
+---------------
+  Object - base reference type
+---------------
+--- Object obj1 - new Object() ---
 Object, obj
 value: System.Object, size: 8
 fields:
@@ -47,10 +56,18 @@ methods:
   ToString
   Equals
   GetHashCode
+--- Object obj2 = obj1 ---
+obj2 is same object as obj1
 
-t4, -1813067718
-T4, t4
-value: HelloData.T4, size: 24
+---------------
+  Svt Struct value type
+---------------
+--- Svt t4 = new Svt() ---
+t4  { I:3, D:3.1415927, C:z }
+Svt, t4
+value: HelloData.Svt, size: 24
+--- Note: ---
+  value type: size of object in stackframe
 fields:
   <I>k__BackingField = 3
   <D>k__BackingField = 3.1415927
@@ -62,10 +79,42 @@ methods:
   set_D
   get_C
   set_C
+  printSelf
   Equals
   GetHashCode
   ToString
   GetType
+--- Svt t4a = t4 ---
+t4a  { I:3, D:3.1415927, C:z }
+t4  { I:3, D:3.1415927, C:z }
+t4a is not same object as t4
+Svt, t4a
+value: HelloData.Svt, size: 24
+--- t4a.C = 'q' ---
+t4a  { I:3, D:3.1415927, C:q }
+t4  { I:3, D:3.1415927, C:z }
+t4 is not same object as t4a
+
+---------------
+  Crt - ref type with ref member
+---------------
+--- Crt t5 = new Crt() ---
+t5  { I:0, D:1, S:SomeString }
+Crt, t5
+value: HelloData.Crt, size: 8
+--- Note: ---
+  ref type: size of handle to object in heap
+--- Crt t5a = t5 ---
+t5a  { I:0, D:1, S:SomeString }
+t5a is same object as t5
+t5a.S is same object as t5.S
+--- t5a.S = "new string" ---
+t5a  { I:0, D:1, S:new string }
+t5  { I:0, D:1, S:new string }
+t5a is same object as t5
+t5a.S is same object as t5.S
+--- Note: ---
+  source t5 was altered!
 
 That's all Folks!
 
