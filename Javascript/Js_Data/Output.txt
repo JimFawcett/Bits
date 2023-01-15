@@ -1,0 +1,67 @@
+Javascript Data
+-------------------------
+Demo numbers
+-------------------------
+-- let t1 = 42 --
+t1, number
+size: 8, value: 42
+
+-- let t2 = t1 --
+t2 is same object as t1
+
+-- let t2 = 3.1415927 -- : copy on write
+t2 is not same object as t1
+
+t1, number
+size: 8, value: 42
+t2, number
+size: 8, value: 3.1415927
+
+-------------------------
+Demo strings
+-------------------------
+-- let t3 = "a string" --
+t3, string
+size: 16, value: a string
+
+-- let t4 = t3 --
+t4 is same object as t3
+
+t3, string
+size: 16, value: a string
+t4, string
+size: 16, value: a string
+
+-- t4 += " and another string" -- : copy on write
+t4 is not same object as t3
+
+t3, string
+size: 16, value: a string
+t4, string
+size: 54, value: a string and another string
+
+-------------------------
+Demo arrays
+-------------------------
+--- t5 = [1, 2, 3] ---
+t5, object
+size: 24, value: 1,2,3
+
+--- let t6 = t5 ---
+t6 is same object as t5
+
+t5, object
+size: 24, value: 1,2,3
+t6, object
+size: 24, value: 1,2,3
+
+--- t6[1] = -2 --- : no copy on write
+t6 is same object as t5
+
+t5, object
+size: 24, value: 1,-2,3
+t6, object
+size: 24, value: 1,-2,3
+-------------------------
+Source t5 modified!
+-------------------------

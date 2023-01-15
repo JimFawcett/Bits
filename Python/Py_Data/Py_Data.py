@@ -10,6 +10,9 @@ import sys
 #   str
 #   NoneType
 
+# Python requires definition before use ordering
+#  - no link phase to find definitions
+
 def showType(t, n) :
     print(n, type(t))
     print("value: ", t, ', size: ', sys.getsizeof(t), "\n")
