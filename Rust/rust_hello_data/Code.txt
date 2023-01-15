@@ -79,9 +79,9 @@ fn main() {
     println!("size_of::<Box<i64>>() = {}", s2);
 
     /*--
-      String control block lives on stack, char data live in heap.
-      Passing by value or assignment transfers ownership from
-      source to destination.  That is termed a move.
+      Control block lives on stack, char data live in heap.
+      Passing by value or assignment transfers ownership
+      from source to destination.  That is termed a move.
     --*/
     println!("\n  -- use clone to avoid src move --");
     let t3: String = String::from("Hello Data"); // temp moved
@@ -100,12 +100,12 @@ fn main() {
     println!("\n\nThat's all Folks!!\n\n");
 }
 /*
-  show_type is generic function with Debug bound.
-  Using format "{:?} requires Debug."
+  show_type is generic function with Debug bound
 */
 fn show_type<T: Debug>(t: T, nm: &str) {
   let typename = std::any::type_name::<T>();
   println!("\n{}, {}", nm, typename);
   println!("value: {:?}, size: {}", t, std::mem::size_of::<T>());
 }
+
 

@@ -1,58 +1,67 @@
-C:\github\JimFawcett\Bits\Python\Py_Data
-> python .\Py_Data.py
  Demonstrate Python Types
 --------------------------
-<class 'int'> t1
-value:  42 , size:  28
-<class 'float'> t1
-value:  3.14159 , size:  24
-<class 'list'> t1
-value:  [1, 2, 3, 4] , size:  88
-------
-t2 = t1
-t1 [1, 2, 3, 4] 1581050570752
-t2 [1, 2, 3, 4] 1581050570752
 
-t2 = 3.33333
-t1 [1, 2, 3, 4] 1581050570752
-t2 3.33333 1581050207984
-------
-t2 += -1.0
-t1 [1, 2, 3, 4] 1581050570752
-<class 'list'> t1
+  -- instances of all types reside in managed heap --
+
+t1 <class 'int'>
+value:  42 , size:  28
+
+t1 <class 'float'>
+value:  3.14159 , size:  24
+
+t1 <class 'list'>
 value:  [1, 2, 3, 4] , size:  88
-t2 2.33333 1581050209360
-<class 'float'> t2
+
+-- t2 = t1 --
+t1 [1, 2, 3, 4] 1362362625728
+t2 [1, 2, 3, 4] 1362362625728
+
+-- t2 = 3.33333 : copy on write --
+t1 [1, 2, 3, 4] 1362362625728
+t2 3.33333 1362360114928
+
+-- t2 += -1.0 : copy on write --
+t1 [1, 2, 3, 4] 1362362625728
+t1 <class 'list'>
+value:  [1, 2, 3, 4] , size:  88
+
+t2 2.33333 1362360116208
+t2 <class 'float'>
 value:  2.33333 , size:  24
-------
-t3 [1, 'one'] 1581050507840
-t4 = t3
-t3 [1, 'one'] 1581050507840
-<class 'list'> t3
+
+-- t3 = [1, "one"] --
+t3 [1, 'one'] 1362362643072
+-- t4 = t3 --
+t3 [1, 'one'] 1362362643072
+t3 <class 'list'>
 value:  [1, 'one'] , size:  72
-t4 [1, 'one'] 1581050507840
-<class 'list'> t4
+
+t4 [1, 'one'] 1362362643072
+t4 <class 'list'>
 value:  [1, 'one'] , size:  72
-------
-t3.append('b')
-t3 [1, 'one', 'b'] 1581050507840
-<class 'list'> t3
+
+-- t3.append('b') : no copy on write --
+t3 [1, 'one', 'b'] 1362362643072
+t3 <class 'list'>
 value:  [1, 'one', 'b'] , size:  120
-t4 [1, 'one', 'b'] 1581050507840
-<class 'list'> t4
+
+t4 [1, 'one', 'b'] 1362362643072
+t4 <class 'list'>
 value:  [1, 'one', 'b'] , size:  120
-------
-t5 (1, 2, 3) 1581050830144
-t6 [1, (1, 2, 3), 'weird'] 1581050835264
-t5 (1+1j) 1581050208048
-t6 [1, (1, 2, 3), 'weird'] 1581050835264
-------
-iterate over t6
-elem 1 1581049184496
-elem (1, 2, 3) 1581050830144
-elem weird 1581050834288
+
+-- t5 = (1, 2, 3) --
+t5 (1, 2, 3) 1362362965248
+-- t6 = [1, t5, "weird"] --
+t6 [1, (1, 2, 3), 'weird'] 1362362969856
+-- t5 = 1 + 1j : copy on write --
+t5 (1+1j) 1362360114992
+t6 [1, (1, 2, 3), 'weird'] 1362362969856
+
+-- iterate over t6 --
+elem 1 1362359091440
+elem (1, 2, 3) 1362362965248
+elem weird 1362362969136
 
 That's all folks!
 
-C:\github\JimFawcett\Bits\Python\Py_Data
->
+

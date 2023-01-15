@@ -1,0 +1,6 @@
+
+C:\github\JimFawcett\Bits\Python\Py_Data
+> python Py_Data.py
+ Demonstrate Python Types
+--------------------------
+

@@ -1,0 +1,7 @@
+C:\github\JimFawcett\Bits\Rust\rust_hello_data
+> cargo run
+   Compiling rust_hello_data v0.1.0 (C:\github\JimFawcett\Bits\Rust\rust_hello_data)
+    Finished dev [unoptimized + debuginfo] target(s) in 0.32s
+     Running `target\debug\rust_hello_data.exe`
+
+
