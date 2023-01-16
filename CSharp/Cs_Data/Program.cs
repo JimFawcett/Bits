@@ -49,25 +49,29 @@ namespace HelloData
     }
   }
   /*-- type demonstration --*/
+
+
   class Program
   {
     /*-- demonstration begins here --*/
+    const string nl = "\n";
+
     static void Main(string[] args)
     {
       print(" Demonstrate C# types");
-      label("int - value type");
+      showNote("int - value type");
       showOp("int t1 = 42");
       int t1 = 42;
-      showType(t1, "t1");
+      showType(t1, "t1", nl);
       showOp("interate over val type members using reflection");
       iterate(t1);
       print();
       showOp("int t1a = t1 : copy of value type");
       int t1a = t1;
-      isSameObj(t1a, "t1a", t1, "t1");
+      isSameObj(t1a, "t1a", t1, "t1", nl);
 
       // reference behavior - copy on write
-      label("string - reference type");
+      showNote("string - reference type");
       showOp("string t2 = \"a string\"");
       string t2 = "a string";
       showType(t2, "t2");
@@ -77,24 +81,26 @@ namespace HelloData
       string t3 = t2;
       showType(t3, "t3");
       isSameObj(t3,"t3",t2,"t2");
-
       showOp("t3 += \" is here\" : copy on write");
       t3 += " is here";
+      showType(t2, "t2");
       showType(t3, "t3");
       isSameObj(t3,"t3",t2,"t2");
+      showNote("t2 not modified by change in t3 due to copy on write", nl);
       
-      label("Object - base reference type");
+      showNote("Object - base reference type");
       showOp("Object obj1 - new Object()");
       Object obj1 = new Object();
       // showIdent(obj, "obj");
       showType(obj1, "obj");
       showOp("interate over ref type members using reflection");
       iterate(obj1);
+      print();
       showOp("Object obj2 = obj1");
       Object obj2 = obj1;
-      isSameObj(obj2, "obj2", obj1, "obj1");
+      isSameObj(obj2, "obj2", obj1, "obj1", nl);
 
-      label("Svt Struct value type");
+      showNote("Svt Struct value type");
       showOp("Svt t4 = new Svt()");
       Svt t4 = new Svt();
       t4.I = 3;
@@ -102,9 +108,11 @@ namespace HelloData
       t4.C = 'z';
       t4.printSelf("t4");
       showType(t4, "t4");
-      showNote("value type: size of object in stackframe");
-      showOp("iterate over ref type members using reflection");
+      showNote("value type: size of object in stackframe", nl);
+
+      showOp("iterate over val type members using reflection");
       iterate(t4);
+      print();
 
       showOp("Svt t4a = t4 : copy of val type");
       Svt t4a = t4;
@@ -117,15 +125,15 @@ namespace HelloData
       t4a.C = 'q';
       t4a.printSelf("t4a");
       t4.printSelf("t4");
-      isSameObj(t4, "t4", t4a, "t4a");
+      isSameObj(t4, "t4", t4a, "t4a", nl);
 
-      label("Crt - ref type with ref member");
+      showNote("Crt - ref type with ref member");
       showOp("Crt t5 = new Crt()");
       Crt t5 = new Crt();
       t5.S = "SomeString";
       t5.printSelf("t5");
       showType(t5, "t5");
-      showNote("ref type: size of handle to object in heap");
+      showNote("ref type: size of handle to object in heap", nl);
 
       showOp("Crt t5a = t5 : copy handle of ref type");
       Crt t5a = t5;
@@ -140,32 +148,38 @@ namespace HelloData
       isSameObj(t5a, "t5a", t5, "t5");
       isSameObj(t5a.S, "t5a.S", t5.S, "t5.S");
       showNote("source t5 was altered!");
+
       Console.WriteLine("\nThat's all Folks!\n");
     }
     /*-- simple reflection --*/
-    public static void showType<T>(T t, String nm)
+    public static void showType<T>(T t, String nm, string suffix = "")
     {
       #pragma warning disable CS8602  // possibly null reference warning
       Type tt = t.GetType();
       Console.WriteLine("{0}, {1}", nm, tt.Name);
       int size = Utils.GetManagedSize(tt);
-      Console.WriteLine("value: {0}, size: {1}", t, size);
+      Console.WriteLine("value: {0}, size: {1}{2}", t, size, suffix);
     }
     /*-- beware, two distinct objects may have same hashcode --*/
-    public static void showIdent<T>(T t, String n) {
+    public static void showIdent<T>(T t, String n, string suffix = "") {
       int id = t.GetHashCode();
-      Console.WriteLine("{0}, {1}", n, id);
+      Console.WriteLine("{0}, {1}{2}", n, id, suffix);
     }
-    public static void isSameObj<T>(T t1, String n1, T t2, String n2) {
+    public static void isSameObj<T>(
+      T t1, String n1, T t2, String n2, string suffix = ""
+    ) {
       if(ReferenceEquals(t1, t2)) {
-        Console.WriteLine("{0} is same object as {1}", n1, n2);
+        Console.WriteLine(
+          "{0} is same object as {1}{2}", n1, n2, suffix
+        );
       }
       else {
-        Console.WriteLine("{0} is not same object as {1}", n1, n2);
+        Console.WriteLine(
+          "{0} is not same object as {1}{2}", n1, n2, suffix);
       }
     }
-    public static void showOp(string op) {
-      Console.WriteLine("--- {0} ---", op);
+    public static void showOp(string op, string suffix = "") {
+      Console.WriteLine("--- {0} ---{1}", op, suffix);
     }
     // https://stackoverflow.com/questions/7613782/iterating-through-struct-members
     public static void iterate<T>(T t) /*where T:new()*/ {
@@ -193,13 +207,14 @@ namespace HelloData
     public static void print(String s = "") {
       Console.WriteLine(s);
     }
-    public static void label(string s) {
+    public static void showNote(string s, string suffix = "") {
       Console.WriteLine(
-        "\n---------------\n  {0}\n---------------", s
+        "-------------------------"
       );
-    }
-    public static void showNote(string s) {
-      Console.WriteLine("--- Note: ---\n  {0}", s);
+      Console.WriteLine("{0}", s);  
+      Console.WriteLine(
+        "-------------------------{0}", suffix
+      );
     }
   }
   /*-- 

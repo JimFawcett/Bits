@@ -1,13 +1,11 @@
-
-
  Demonstrate C# types
-
----------------
-  int - value type
----------------
+-------------------------
+int - value type
+-------------------------
 --- int t1 = 42 ---
 t1, Int32
 value: 42, size: 4
+
 --- interate over val type members using reflection ---
 fields:
   m_value = 42
@@ -28,26 +26,32 @@ methods:
 --- int t1a = t1 : copy of value type ---
 t1a is not same object as t1
 
----------------
-  string - reference type
----------------
+-------------------------
+string - reference type
+-------------------------
 --- string t2 = "a string" ---
 t2, String
 value: a string, size: 8
---- Note: ---
-  string has many methods - uncomment next line to see them
+-------------------------
+string has many methods - uncomment next line to see them
+-------------------------
 --- string t3 = t2 : copy handle of ref type ---
 t3, String
 value: a string, size: 8
 t3 is same object as t2
 --- t3 += " is here" : copy on write ---
+t2, String
+value: a string, size: 8
 t3, String
 value: a string is here, size: 8
 t3 is not same object as t2
+-------------------------
+t2 not modified by change in t3 due to copy on write
+-------------------------
 
----------------
-  Object - base reference type
----------------
+-------------------------
+Object - base reference type
+-------------------------
 --- Object obj1 - new Object() ---
 obj, Object
 value: System.Object, size: 8
@@ -58,18 +62,21 @@ methods:
   ToString
   Equals
   GetHashCode
+
 --- Object obj2 = obj1 ---
 obj2 is same object as obj1
 
----------------
-  Svt Struct value type
----------------
+-------------------------
+Svt Struct value type
+-------------------------
 --- Svt t4 = new Svt() ---
 t4  { I:3, D:3.1415927, C:z }
 t4, Svt
 value: HelloData.Svt, size: 24
---- Note: ---
-  value type: size of object in stackframe
+-------------------------
+value type: size of object in stackframe
+-------------------------
+
 --- iterate over ref type members using reflection ---
 fields:
   <I>k__BackingField = 3
@@ -87,6 +94,7 @@ methods:
   GetHashCode
   ToString
   GetType
+
 --- Svt t4a = t4 : copy of val type ---
 t4a  { I:3, D:3.1415927, C:z }
 t4  { I:3, D:3.1415927, C:z }
@@ -98,15 +106,17 @@ t4a  { I:3, D:3.1415927, C:q }
 t4  { I:3, D:3.1415927, C:z }
 t4 is not same object as t4a
 
----------------
-  Crt - ref type with ref member
----------------
+-------------------------
+Crt - ref type with ref member
+-------------------------
 --- Crt t5 = new Crt() ---
 t5  { I:0, D:1, S:SomeString }
 t5, Crt
 value: HelloData.Crt, size: 8
---- Note: ---
-  ref type: size of handle to object in heap
+-------------------------
+ref type: size of handle to object in heap
+-------------------------
+
 --- Crt t5a = t5 : copy handle of ref type ---
 t5a  { I:0, D:1, S:SomeString }
 t5a is same object as t5
@@ -116,8 +126,9 @@ t5a  { I:0, D:1, S:new string }
 t5  { I:0, D:1, S:new string }
 t5a is same object as t5
 t5a.S is same object as t5.S
---- Note: ---
-  source t5 was altered!
+-------------------------
+source t5 was altered!
+-------------------------
 
 That's all Folks!
 

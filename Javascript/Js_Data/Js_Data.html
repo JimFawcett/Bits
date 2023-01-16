@@ -22,7 +22,7 @@
       let t2 = t1;
       isSameObject(t2, "t2", t1, "t1");
       println(nil);
-      println("-- let t2 = 3.1415927 -- : copy on write");
+      println("-- let t2 = 3.1415927 -- : change of object");
       t2 = 3.1415927;
       isSameObject(t2, "t2", t1, "t1");
       print(nl);
