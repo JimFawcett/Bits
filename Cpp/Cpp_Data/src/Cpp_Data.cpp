@@ -79,9 +79,9 @@ void showType(T t, const std::string &nm) {
   std::cout << ",  size:  " << sizeof(t);   // show size on stack
   std::cout << "\n";
 }
-void print(const std::string& txt = "") {
+void print(const std::string& txt) {
   std::cout << "\n  " << txt;
 }
-void println(const std::string& txt = "") {
+void println(const std::string& txt) {
   std::cout << "\n  " << txt << "\n";
 }
