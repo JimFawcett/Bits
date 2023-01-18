@@ -4,6 +4,7 @@
 #include <typeinfo>  // typeid
 #include <memory>    // std::unique_ptr
 #include <utility>   // move()
+#include <vector>    // vector class
 
 /*
   Static Data Types:
@@ -25,32 +26,102 @@
     All types are static, operations run as native code, and no garbage
     collection is needed. Resources are returned at end of declr scope.
 */
+#define STRINGIFY_(x) #x
+#define STRINGIFY(x) STRINGIFY_(x)
+
+const std::string nl = "\n";
+
 /* C++ requires declaration before use */
 template<typename T>
-void showType(T t, const std::string &nm);
-void showNote(const std::string& txt);
+void showType(T t, const std::string &nm, const std::string& suffix = "");
+void showNote(const std::string& txt, const std::string& suffix = "");
 void print(const std::string& txt = "");
 void println(const std::string& txt = "");
+std::string truncate(size_t N, const char* pStr);
 
-const char nl = '\n';
+/* alias type name */
+template<typename T>
+using pU = std::unique_ptr<T>;
 
-class Test1 {
+class Point1 {
 public:
-  Test1() = default;   // compiler generated default ctor
-  Test1(const std::string& name);
-  std::string& name(); 
+  Point1();                                       // default ctor
+  Point1(const Point1& pt) = default;             // copy ctor
+  Point1(Point1&& pt) = default;                  // move ctor
+  Point1& operator=(const Point1& pt) = default;  // copy assignment
+  Point1& operator=(Point1&& pt) = default;       // move assignment
+  ~Point1() = default;                            // dtor
+  void show();
+  int& xCoor() { return x; }
+  int& yCoor() { return y; }
+  int& zCoor() { return z; }
 private:
-  std::string _name;
+  int x;
+  int y;
+  int z;
 };
-/*-- promotion constructor --*/
-Test1::Test1(const std::string& name) : _name(name) { }
-/*-- get and set name --*/
-std::string& Test1::name() {
-  return _name;
+
+Point1::Point1() {
+  x = y = z = 0;
 }
-/*-- make class instance printable --*/
-std::ostream& operator<<(std::ostream& out, Test1& t1) {
-  out << t1.name();
+void Point1::show() {
+  std::cout << "\n  " << STRINGIFY(Point1);
+  std::cout << " { " << x << ", " << y << ", " << z << " }";
+}
+/* required for showType(T t, const std::string& nm) */
+std::ostream& operator<<(std::ostream& out, Point1& t1) {
+  out << STRINGIFY(Point1);
+  out << " { " << t1.xCoor() << ", " << t1.yCoor() << ", " 
+               << t1.zCoor() << " }";
+  return out;
+}
+
+template<typename T>
+class Point2 {
+public:
+  Point2() = delete;                              // default ctor
+  Point2(size_t N);
+  Point2(const Point2& pt) = default;             // copy ctor
+  Point2(Point2&& pt) = default;                  // move ctor
+  Point2& operator=(const Point2& pt) = default;  // copy assignment
+  Point2& operator=(Point2&& pt) = default;       // move assignemnt
+  ~Point2() = default;                            // dtor
+  void show();
+  std::vector<T>& coords() { return coord; }
+private:
+  std::vector<T> coord;
+};
+
+template<typename T>
+Point2<T>::Point2(size_t N) {
+  for(size_t i=0; i<N; i++) {
+    coord.push_back(T{0});
+  }
+}
+template<typename T>
+void Point2<T>::show() {
+  std::cout << "\n  " << STRINGIFY(Point2);
+  std::cout << " { ";
+  for(size_t i=0; i<coord.size(); ++i) {
+    std::cout << coord[i];
+    if(i < coord.size() - 1) {
+      std::cout << ", ";
+    }
+  }
+  std::cout << " }";
+}
+/* required for showType(T t, const std::string& nm) */
+template<typename T>
+std::ostream& operator<<(std::ostream& out, Point2<T>& t2) {
+  out << STRINGIFY(Point2);
+  out << " { ";
+  for(size_t i=0; i < t2.coords().size(); ++i) {
+    std::cout << t2.coords()[i];
+    if(i < t2.coords().size() - 1) {
+      std::cout << ", ";
+    }
+  }
+  std::cout << " }";  
   return out;
 }
 
@@ -60,89 +131,89 @@ int main() {
     showNote("stack based instances");
 
     /* standard type std::string */
-    print("--- auto str = std::string(\"Wiley\") ---");
-    auto str = std::string("Wiley");
+    print("\n--- auto str = std::string(\"Wile E. Coyote\") ---");
+    auto str = std::string("Wile E. Coyote");
     auto out = std::string("contents of str = ") + str;
     print(out);
-    showType(str, "str");
+    showType(str, "str", nl);
 
-    /* custom type Test1 */
-    print("--- auto test1 = Test1(\"tom\") ---");
-    auto test1 = Test1("Tom");
-    std::cout << "\n  Test1 name = " << test1.name();
-    showType(test1, "test1");
-    print("-- test1.name() = \"Jerry\" ---");
-    test1.name() = std::string("Jerry");
-    std::cout << "\n  Test1 name = " << test1.name();
-    showType(test1, "test1");
+    /* custom type Point1 */
+    Point1 p1;
+    // int x = p1.xCoor();
+    p1.show();
+    p1.xCoor() = 42;
+    p1.zCoor() = -3;
+    p1.show();
+    showType(p1, "p1", nl);
+    std::cout << "  p1.xCoor() = " << p1.xCoor() << "\n";
 
+    Point2<double> p2(5);
+    p2.show();
+    p2.coords() = std::vector<double>{1.0, -2.0, 3.0, 4.5, -42.0 };
+    p2.show();
+    showType(p2, "p2", nl);
+    std::cout << "  p2.coords()[2] = " << p2.coords()[2] << "\n";
+    
     showNote("heap-based instances");
 
     /* standard type std::string */
-    print("--- std::unique_ptr<std::string> pStr(new std::string(\"Bugs\") ---");
-    std::unique_ptr<std::string> pStr(new std::string("Bugs"));
+    /* uses alias pU for std::unique_ptr, defined above */
+    print("\n--- pU<std::string> pStr(new std::string(\"Road Runner\") ---");
+    pU<std::string> pStr(new std::string("Road Runner"));
     std::cout << "\n  pStr contents = " << *pStr;
     showType(*pStr, "*pStr");
+    showType(move(pStr), "pStr");
 
-    /* custom type Test1 */
-    print("--- std::unique_ptr<Test1> pTest1(new Test1(\"Elmer\") ---");
-    std::unique_ptr<Test1> pTest1(new Test1("Elmer"));
-    std::cout << "\n  Test1 name = " << *pTest1;
-    showType(*pTest1, "*pTest1");
-    showType(move(pTest1), "move(pTest1)");
+    /* custom types */
+    print("\n--- pU<Point1> pPoint1(new Point1()) ---");
+    pU<Point1> pPoint1(new Point1());
+    print("\n--- pPoint1->show() ---");
+    pPoint1->show();
+    pPoint1->xCoor() = 1;
+    pPoint1->yCoor() = 2;
+    pPoint1->zCoor() = -3;
+    pPoint1->show();
+    std::cout << "\n  pPoint1->zCoor() = " << pPoint1->zCoor() << "\n";
+    showType(*pPoint1, "*pPoint1");
+    showType(std::move(pPoint1), "pPoint1");
+    /* pPoint1 moved, so invalid */
 
-    // /*-- values live in stack frame --*/
-    // println("-- initialize from literals --");
-    // int t1 = int{3}; 
-    // showType(t1, "t1");
-    // long long int t1a = 3;
-    // showType(t1a, "t1a");
+    print("\n--- pU<Point2> pPoint2(new Point2(4)) ---");
+    pU<Point2<double>> pPoint2(new Point2<double>(4));
+    print("\n--- pPoint2->show() ---");
+    pPoint2->show();
+    pPoint2->coords() = std::vector<double>{ 1.0, 3.5, -2.0, 42.0 };
+    pPoint2->show();
+    std::cout << "\n  pPoint2->coords()[1] = " << pPoint2->coords()[1] << "\n";
+    showType(*pPoint2, "*pPoint2");
+    showType(std::move(pPoint2), "pPoint2");
+    /* pPoint2 moved, so invalid */
 
-    // println("-- copy construct --");
-    // auto t1b = t1a;
-    // showType(t1b, "t1b");
-    // // double t1 = 3.1415927; // not allowed to redefine type of t1
-    
-    // /*-- values live in heap when using new --*/
-    // println("-- store in heap --");
-    // double* t2 = new double{3.14159};
-    // showType(t2, "t2");
-    // showType(*t2, "*t2");
-    // delete(t2);  // see unique_ptr, below
-    
-    // /*-- control block lives in stack, char data live in heap --*/
-    // println("-- string: control block in stack, data in heap --");
-    // auto t3 = std::string("Hello Data");  // move ctor - rhs is temp
-    // showType(t3, "t3");
-    // println("-- C++ reference --");
-    // auto& t4 = t3;      // create reference, no copy or move
-    // showType(t4, "t4");
-    
-    // /*-- unique_ptr may not be copied but move allowed --*/
-    // println("-- unique_ptr owns data --");
-    // auto t5 = std::unique_ptr<int>(new int{-3});
-    // showType(std::move(t5), "t5");  // unique_ptr can't be copied so move
-    // t5 = std::unique_ptr<int>(new int{-3});
-    // showType(*t5, "*t5"); // contents can be copied
-    // println("-- t5 deleted when unique_ptr leaves scope");
-    
     print("\n\n  That's all Folks!\n\n");
 }
 
 template<typename T>
-void showType(T t, const std::string &nm) {
+void showType(T t, const std::string &nm, const std::string& suffix) {
   std::cout << "\n  " << nm;                // show name at call site
-  std::cout << ": type: " << typeid(t).name();  // show type
+  std::cout << " type: " << truncate(60,typeid(t).name());  // show type
   std::cout << "\n  value: " << t;          // show value
   std::cout << ",  size:  " << sizeof(t);   // show size on stack
-  std::cout << "\n";
+  std::cout << suffix;
 }
-void showNote(const std::string& txt) {
+void showNote(const std::string& txt, const std::string& suffix) {
   print("-------------------------");
   print(txt);
   print("-------------------------");
+  std::cout << suffix;
 }
-
+std::string truncate(size_t N, const char* pStr) {
+  std::string temp(pStr);
+  if(temp.length() > N) {
+    temp.resize(N);
+    return temp + "...";
+  }
+  return temp;
+}
 void print(const std::string& txt) {
   std::cout << "\n  " << txt;
 }
