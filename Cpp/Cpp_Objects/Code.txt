@@ -92,7 +92,7 @@ std::ostream& operator<<(std::ostream& out, Point1& t1) {
 }
 
 /*
-  Point2 class represents a point in an n-Dimensional hyperspace.
+  Point2 class represents a point in an n-Dimensional hyper space.
   It is more flexible than Point1 by using a template to support
   a variety of coordinate types, and by using a vector to hold
   any finite number of coordinates.
