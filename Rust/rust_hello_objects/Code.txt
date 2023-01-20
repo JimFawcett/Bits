@@ -77,25 +77,10 @@ impl<T> Point2<T> where T:Debug, T:Default, T:Clone {
 /*-- Demo object instances in action --*/
 fn main() {
     print!(
-      "\n -- demonstrate object creation --\n"
+      "\n -- demonstrate object creation --\n\n"
     );
-    show_note("std::library objects");
-    print!("\n--- let mut s1 = {}.to_string() ---", "\"a string\"");
-    let mut s1 = "a string".to_string();
-    show_type(&s1, "&s1");
-    print!("\n--- {} ---", "s1.push_str(\" and more\");");
-    s1.push_str(" and more");
-    show_type(&s1, "&s1");
 
-    print!("\n--- let mut v:Vec<i32> = vec![1, 2, 3, 2, 1]; ---");
-    let mut v:Vec<i32> = vec![1, 2, 3, 2, 1];
-    show_type(&v, "&v");
-    print!("\n--- v.push(42); ---");
-    v.push(42);
-    show_type(&v, "&v");    
-
-    show_note("instances of user-defined types");
-    print!("\n--- let mut p1 = Point1::new() ---\n");
+    print!("--- let mut p1 = Point1::new() ---\n");
     let mut p1 = Point1::new();
     p1.show();
     println!();
@@ -135,8 +120,6 @@ fn main() {
     print!("\n\n  That's all Folks!\n\n");
 }
 /*
-  Show facts about a type's elements, e.g., name, type, 
-  value, and size.
   show_type is generic function with Debug bound.
   Using format "{:?} requires Debug."
 */
@@ -145,13 +128,11 @@ fn show_type<T: std::fmt::Debug>(t: T, nm: &str) {
   println!("\ncall name: {:?}, type: {:?}", nm, typename);
   println!("value: {:?}, size: {}", t, std::mem::size_of::<T>());
 }
-/* indent print out by "left" spaces */
 fn print_offset(left:usize) {
   for _i in 0..left {
     print!(" ");
   }
 }
-/* fold a vector slice into rows of w elements */
 fn show_fold<T:Debug>(d:&Vec<T>, w:usize, left:usize) {
   print!("\n");
   print_offset(left);
@@ -162,6 +143,7 @@ fn show_fold<T:Debug>(d:&Vec<T>, w:usize, left:usize) {
     else {
       print!("{:?}", d[_i - 1]);
       print!("\n");
+      // print_offset(left);
       break;
     }
     if _i % w == 0  && _i != 0 && _i != w - 1 {
@@ -169,11 +151,5 @@ fn show_fold<T:Debug>(d:&Vec<T>, w:usize, left:usize) {
       print_offset(left);
     }
   }
-}
-/* show string wrapped with dotted lines above and below */
-fn show_note(note:&str) {
-  print!("\n-------------------------\n");
-  print!("{}", note);
-  print!("\n-------------------------\n");
-}
+} 
 

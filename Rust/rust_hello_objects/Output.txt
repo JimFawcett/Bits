@@ -1,0 +1,44 @@
+
+ -- demonstrate object creation --
+
+--- let mut p1 = Point1::new() ---
+Point1 { 0, 0, 0 }
+Point1 { 42, -3, 2 }
+call name: "p1", type: "rust_hello_objects::Point1"
+value: Point1 { x: 42, y: -3, z: 2 }, size: 12
+
+--- let p1a = p1.clone() ---
+Point1 { 42, -3, 2 }
+
+--- show_type(p2a.clone(), "p2a") ---
+call name: "p2", type: "rust_hello_objects::Point2<f64>"
+value: Point2 { coor: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0] }, size: 24
+
+call name: "p2", type: "rust_hello_objects::Point2<f64>"
+value: Point2 { coor: [0.0, 0.0, 3.1415, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0] }, size: 24
+
+--- show_type(p2a.clone(), "p2a") ---
+call name: "p2a", type: "rust_hello_objects::Point2<i32>"
+value: Point2 { coor: [0, 1, 2, 3, 4, 4, 3, 2, 1, 0] }, size: 24
+
+"--- p2a.len() ---"
+size of p2a = 10
+
+--- p2a.show(8,2) ---
+Point2<T> {
+  0, 1, 2, 3, 4, 4, 3, 2,
+  1, 0
+}
+
+--- show_type(&v, "&v") ---
+call name: "&v", type: "&alloc::vec::Vec<i32>"
+value: [0, -1, 2, -3, 4, -5, 6, -7, 8, -9, 10, -11, 12, -13, 14], size: 8      
+
+--- show_fold(&v, 5, 2) ---
+  0, -1, 2, -3, 4,
+  -5, 6, -7, 8, -9,
+  10, -11, 12, -13, 14
+
+
+  That's all Folks!
+
