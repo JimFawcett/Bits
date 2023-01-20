@@ -1,5 +1,29 @@
-
  -- demonstrate object creation --
+
+-------------------------
+std::library objects
+-------------------------
+
+--- let mut s1 = "a string".to_string() ---
+--- show_type(&s1, "&s1") ---
+call name: "&s1", type: "&alloc::string::String"
+value: "a string", size: 8
+
+--- s1.push_str(" and more"); ---
+call name: "&s1", type: "&alloc::string::String"
+value: "a string and more", size: 8
+
+--- let mut v:Vec<i32> = vec![1, 2, 3, 2, 1]; ---
+call name: "&v", type: "&alloc::vec::Vec<i32>"
+value: [1, 2, 3, 2, 1], size: 8
+
+--- v.push(42); ---
+call name: "&v", type: "&alloc::vec::Vec<i32>"
+value: [1, 2, 3, 2, 1, 42], size: 8
+
+-------------------------
+instances of user-defined types
+-------------------------
 
 --- let mut p1 = Point1::new() ---
 Point1 { 0, 0, 0 }
@@ -41,4 +65,5 @@ value: [0, -1, 2, -3, 4, -5, 6, -7, 8, -9, 10, -11, 12, -13, 14], size: 8
 
 
   That's all Folks!
+
 

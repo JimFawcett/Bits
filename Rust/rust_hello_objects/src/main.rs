@@ -4,8 +4,8 @@ use std::default::*;
 // CreateObject::main.rs
 
 /*-------------------------------------
-  - Declare DemoObj struct, like C++ class
-  - Request compiler impliment traits Debug & Clone
+  - Declare Point1 struct, like a C++ class
+  - Request compiler implement traits Debug & Clone
 */
 #[derive(Debug, Clone)]
 pub struct Point1 {
@@ -21,6 +21,11 @@ impl Point1 {
           x:0, y:0, z:0
       }
   }
+  /* 
+    For simple types like this it would be reasonable to 
+    make x, y, z public and remove the getter and setter
+    functions. 
+  */
   pub fn get_x(&self) -> &i32 {
     &self.x
   }
@@ -47,6 +52,10 @@ impl Point1 {
   }
 }
 
+/*-------------------------------------
+  - Declare Point2<T> struct, like a C++ template class
+  - Request compiler implement traits Debug & Clone
+*/
 #[derive(Debug, Clone)]
 pub struct Point2<T> where T:Debug, T:Default, T:Clone {
   coor: Vec<T>,
@@ -65,6 +74,7 @@ impl<T> Point2<T> where T:Debug, T:Default, T:Clone {
   pub fn len(&self) -> usize {
     self.coor.len()
   }
+  /* acts as both get_coor() and set_coor(vec![1, 2, 3]) */
   pub fn coors(&mut self) -> &mut Vec<T> {
     return &mut self.coor;
   }
@@ -80,8 +90,10 @@ fn main() {
       "\n -- demonstrate object creation --\n"
     );
     show_note("std::library objects");
+
     print!("\n--- let mut s1 = {}.to_string() ---", "\"a string\"");
     let mut s1 = "a string".to_string();
+    print!("\n--- {} ---", "show_type(&s1, \"&s1\")");
     show_type(&s1, "&s1");
     print!("\n--- {} ---", "s1.push_str(\" and more\");");
     s1.push_str(" and more");
@@ -95,6 +107,7 @@ fn main() {
     show_type(&v, "&v");    
 
     show_note("instances of user-defined types");
+    
     print!("\n--- let mut p1 = Point1::new() ---\n");
     let mut p1 = Point1::new();
     p1.show();
