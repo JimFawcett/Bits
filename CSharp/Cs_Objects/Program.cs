@@ -2,7 +2,7 @@
 using System.Reflection;
 using System.Reflection.Emit;
 
-/* Cs_Data::Cs_Data.cs */
+/* Cs_Data::Cs_Objects.cs */
 /*
   Static Data Types:
     value types => assignment copies value
@@ -18,38 +18,21 @@ using System.Reflection.Emit;
 //#pragma warning disable CS8602  // possibly null reference warning
 // https://stackoverflow.com/questions/8173239/c-getting-size-of-a-value-type-variable-at-runtime/8173293#8173293
 // 
-namespace HelloData
+namespace HelloObjects
 {
-  /*-- 
-    Svt is a value type used for type demo example.
-    It consists of three public properties.
-  --*/
-  public struct Svt   // value type with value type members
+  /*--- Point is a user-defined type --*/
+  public class Point1   // value type with value type members
   { 
-    public Svt() {}
-    public int I { get; set; } = 0;
-    public double D { get; set; } = 1.0;
-    public char C { get; set; }  = 'a';
+    public Point1() {}
+    public int x { get; set; } = 0;
+    public int y { get; set; } = 0;
+    public int z { get; set; } = 0;
     public void printSelf(string name) {
-      Console.Write("{0}  {{ I:{1}, D:{2}, C:{3} }}\n", name, I, D, C);
+      Console.Write("{0}  {{ x:{1}, y:{2}, z:{3} }}\n", name, x, y, z);
     }
   }
-  /*-- 
-    Crt is a reference type used for type demo example.
-    It consists of three public properties.
-  --*/
-  public class Crt   // reference type with a reference type member
-  { 
-    public Crt() {}
-    public int I { get; set; } = 0;
-    public double D { get; set; } = 1.0;
-    public string S { get; set; }  = "a string";
-    public void printSelf(string name) {
-      Console.Write("{0}  {{ I:{1}, D:{2}, S:{3} }}\n", name, I, D, S);
-    }
-  }
+  
   /*-- type demonstration --*/
-
 
   class Program
   {
@@ -58,17 +41,17 @@ namespace HelloData
 
     static void Main(string[] args)
     {
-      print(" Demonstrate C# types");
-      showNote("int - value type");
-      showOp("int t1 = 42");
-      int t1 = 42;
-      showType(t1, "t1", nl);
-      showOp("interate over val type members using reflection");
-      iterate(t1);
-      print();
-      showOp("int t1a = t1 : copy of value type");
-      int t1a = t1;
-      isSameObj(t1a, "t1a", t1, "t1", nl);
+      print(" Demonstrate C# objects");
+      // showNote("int - value type");
+      // showOp("int t1 = 42");
+      // int t1 = 42;
+      // showType(t1, "t1", nl);
+      // showOp("interate over val type members using reflection");
+      // iterate(t1);
+      // print();
+      // showOp("int t1a = t1 : copy of value type");
+      // int t1a = t1;
+      // isSameObj(t1a, "t1a", t1, "t1", nl);
 
       // reference behavior - copy on write
       showNote("string - reference type");
@@ -100,12 +83,12 @@ namespace HelloData
       Object obj2 = obj1;
       isSameObj(obj2, "obj2", obj1, "obj1", nl);
 
-      showNote("Svt Struct value type");
-      showOp("Svt t4 = new Svt()");
-      Svt t4 = new Svt();
-      t4.I = 3;
-      t4.D = 3.1415927;
-      t4.C = 'z';
+      showNote("Point1 user-defined reference type");
+      showOp("Point1 t4 = new Point1()");
+      Point1 t4 = new Point1();
+      t4.x = 3;
+      t4.y = 42;
+      t4.z = -2;
       t4.printSelf("t4");
       showType(t4, "t4");
       showNote("value type: size of object in stackframe", nl);
@@ -113,41 +96,6 @@ namespace HelloData
       showOp("iterate over val type members using reflection");
       iterate(t4);
       print();
-
-      showOp("Svt t4a = t4 : copy of val type");
-      Svt t4a = t4;
-      t4a.printSelf("t4a");
-      t4.printSelf("t4");
-      isSameObj(t4a,"t4a",t4,"t4");
-      showType(t4a, "t4a");
-
-      showOp("t4a.C = 'q'");
-      t4a.C = 'q';
-      t4a.printSelf("t4a");
-      t4.printSelf("t4");
-      isSameObj(t4, "t4", t4a, "t4a", nl);
-
-      showNote("Crt - ref type with ref member");
-      showOp("Crt t5 = new Crt()");
-      Crt t5 = new Crt();
-      t5.S = "SomeString";
-      t5.printSelf("t5");
-      showType(t5, "t5");
-      showNote("ref type: size of handle to object in heap", nl);
-
-      showOp("Crt t5a = t5 : copy handle of ref type");
-      Crt t5a = t5;
-      t5a.printSelf("t5a");
-      isSameObj(t5a, "t5a", t5, "t5");
-      isSameObj(t5a.S, "t5a.S", t5.S, "t5.S");
-
-      showOp("t5a.S = \"new string\" : no copy on write");
-      t5a.S = "new string";
-      t5a.printSelf("t5a");
-      t5a.printSelf("t5");
-      isSameObj(t5a, "t5a", t5, "t5");
-      isSameObj(t5a.S, "t5a.S", t5.S, "t5.S");
-      showNote("source t5 was altered!");
 
       Console.WriteLine("\nThat's all Folks!\n");
     }
@@ -209,11 +157,11 @@ namespace HelloData
     }
     public static void showNote(string s, string suffix = "") {
       Console.WriteLine(
-        "-------------------------"
+        "\n-------------------------"
       );
       Console.WriteLine("{0}", s);  
       Console.WriteLine(
-        "-------------------------{0}", suffix
+        "-------------------------{0}\n", suffix
       );
     }
   }

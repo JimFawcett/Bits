@@ -7,9 +7,9 @@
 #include <vector>    // vector class
 
 /*
-  This demo uses the std::string class and two user defined
-  classes, Point1 and Point2, to illustrate how objects are
-  defined and instantiated.
+  This demo uses the std::string and std::vector<T> classes
+  and two user defined classes, Point1 and Point2<T>, to 
+  illustrate how objects are defined and instantiated.
 
   Operations:
     All the classes discussed here provide:
@@ -28,14 +28,15 @@
     pointer members developers must provide them.
 
   Processing:
-    All types are static, operations run as native code, and no garbage
-    collection is needed. Resources are returned at end of declr scope.
+    All types are static, operations run as native code, and no 
+    garbage collection is needed. Resources are returned at end 
+    of their declaration scope.
 */
 
 const std::string nl = "\n";
 
 /* Display and analysis functions are defined at the end */
-/* C++ requires declaration before use.                  */
+/* but C++ requires declaration before use.              */
 template<typename T>
 void showType(T t, const std::string &nm, const std::string& suffix = "");
 void showNote(const std::string& txt, const std::string& suffix = "");
@@ -43,7 +44,7 @@ void print(const std::string& txt = "");
 void println(const std::string& txt = "");
 std::string truncate(size_t N, const char* pStr);
 
-/* alias type name */
+/* alias type name - pU<T> is the same type as std::unique_ptr<T> */
 template<typename T>
 using pU = std::unique_ptr<T>;
 
@@ -92,7 +93,7 @@ std::ostream& operator<<(std::ostream& out, Point1& t1) {
 }
 
 /*
-  Point2 class represents a point in an n-Dimensional hyperspace.
+  Point2<T> class represents a point in an n-Dimensional hyperspace.
   It is more flexible than Point1 by using a template to support
   a variety of coordinate types, and by using a vector to hold
   any finite number of coordinates.
@@ -148,69 +149,113 @@ std::ostream& operator<<(std::ostream& out, Point2<T>& t2) {
   std::cout << " }";  
   return out;
 }
+/* required for showType(T t, const std::vector<T>& nm) */
+template<typename T>
+std::ostream& operator<<(std::ostream& out, std::vector<T>& v) {
+  out << "vector";
+  out << " { ";
+  for(size_t i=0; i < v.size(); ++i) {
+    std::cout << v[i];
+    if(i < v.size() - 1) {
+      std::cout << ", ";
+    }
+  }
+  std::cout << " }";  
+  return out;
+}
 /* Demonstration starts here */
 
 int main() {
-    print(" Demonstrate C++ Objects");
+    print("Demonstrate C++ Objects\n");
 
     showNote("stack based instances");
 
+    showNote("std library types string and vector<T>");
+
     /* standard type std::string */
-    print("\n--- auto str = std::string(\"\\\"Wile E. Coyote\\\"\") ---");
+    print("--- auto str = std::string(\"\\\"Wile E. Coyote\\\"\"); ---");
     auto str = std::string("\"Wile E. Coyote\"");
     auto out = std::string("contents of str = ") + str;
     print(out);
-    showType(str, "str", nl);
+    print("--- showType(str, \"str\"); ---");
+    showType(str, "str");
 
-    /* custom type Point1 */
+    print("\n  --- auto vec = std::vector<double>{ 3.5, 3, 2.5, 2 }; ---");
+    auto vec = std::vector<double>{ 3.5, 3, 2.5, 2 };
+    print("--- showType(vec, \"vec\"); ---");
+    showType(vec, "vec");
+    print("--- vec[2] = -2.5; ---");
+    vec[2] = -2.5;
+    print("--- showType(vec, \"vec\"); ---");
+    showType(vec, "vec", nl);    
+
+    showNote("user-defined types Point1 and Point2<T>");
+    print("--- Point1 p1; ---");
     Point1 p1;
     print("--- p1.show() ---");
     p1.show();
     p1.xCoor() = 42;
     p1.zCoor() = -3;
     p1.show();
+    print("--- showType(p1, \"p1\", nl) ---");
     showType(p1, "p1", nl);
-    std::cout << "  p1.xCoor() = " << p1.xCoor() << "\n";
+    std::cout << "  --- p1.xCoor() returns value " << p1.xCoor() << " ---\n";
 
+    print("--- Point2<double> p2(5) ---");
     Point2<double> p2(5);
     p2.show();
+    print("--- p2.coords() = std::vector<double>{ 1.0, -2.0, 3.0, 4.5, -42.0 } ---");
     p2.coords() = std::vector<double>{1.0, -2.0, 3.0, 4.5, -42.0 };
     p2.show();
+    print("--- showType(p2, \"p2\", nl); ---");
     showType(p2, "p2", nl);
     std::cout << "  p2.coords()[2] = " << p2.coords()[2] << "\n";
     
     showNote("heap-based instances");
 
-    /* standard type std::string */
+    /* standard library type std::string */
     /* uses alias pU for std::unique_ptr, defined above */
-    print("\n--- pU<std::string> pStr(new std::string(\"\\\"Road Runner\\\"\") ---");
+    print("\n  --- pU<std::string> pStr(new std::string(\"\\\"Road Runner\\\"\") ---");
     pU<std::string> pStr(new std::string("\"Road Runner\""));
     std::cout << "\n  pStr contents = " << *pStr;
+    print("--- showType(*pStr, \"*pStr\") ---");
     showType(*pStr, "*pStr");
-    showType(move(pStr), "pStr");
+    /* std::unique_ptr<T> cannot be copied but can be moved */
+    print("--- showType(move(pStr), \"pStr\") ---");
+    showType(move(pStr), "pStr", nl);
+
+    /* standard library type std::vector<T> */
+    print("--- pU<std::vector<double>> pVec(new std::vector<double>{ 1.5, 2.5, 3.5 });");
+    pU<std::vector<double>> pVec(new std::vector<double>{ 1.5, 2.5, 3.5 });
+    showType(*pVec, "*pVec");
 
     /* custom types */
-    print("\n--- pU<Point1> pPoint1(new Point1()) ---");
+    print("\n  --- pU<Point1> pPoint1(new Point1()) ---");
     pU<Point1> pPoint1(new Point1());
-    print("\n--- pPoint1->show() ---");
+    print("--- pPoint1->show() ---");
     pPoint1->show();
     pPoint1->xCoor() = 1;
     pPoint1->yCoor() = 2;
     pPoint1->zCoor() = -3;
     pPoint1->show();
-    std::cout << "\n  pPoint1->zCoor() = " << pPoint1->zCoor() << "\n";
+    std::cout << "\n  pPoint1->zCoor() = " << pPoint1->zCoor();
+    print("--- showType(*pPoint1, \"*pPoint1\"); ---");
     showType(*pPoint1, "*pPoint1");
+    print("--- showType(std::move(pPoint1), \"pPoint1\"); ---");
     showType(std::move(pPoint1), "pPoint1");
     /* pPoint1 moved, so invalid */
 
-    print("\n--- pU<Point2> pPoint2(new Point2(4)) ---");
+    print("\n  --- pU<Point2<double>> pPoint2(new Point2<double>(4)) ---");
     pU<Point2<double>> pPoint2(new Point2<double>(4));
-    print("\n--- pPoint2->show() ---");
+    print("--- pPoint2->show() ---");
     pPoint2->show();
+    print("--- pPoint2->coords() = std::vector<double>{ 1.0, 3.5, -2.0, 42.0 }; ---");
     pPoint2->coords() = std::vector<double>{ 1.0, 3.5, -2.0, 42.0 };
     pPoint2->show();
-    std::cout << "\n  pPoint2->coords()[1] = " << pPoint2->coords()[1] << "\n";
+    std::cout << "\n  value of pPoint2->coords()[1] is " << pPoint2->coords()[1];
+    print("--- showType(*pPoint2, \"*pPoint2\"); ---");
     showType(*pPoint2, "*pPoint2");
+    print("--- showType(std::move(pPoint2), \"pPoint2\"); ---");
     showType(std::move(pPoint2), "pPoint2");
     /* pPoint2 moved, so invalid */
 

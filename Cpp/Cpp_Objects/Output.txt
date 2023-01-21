@@ -1,22 +1,43 @@
-   Demonstrate C++ Objects
+  Demonstrate C++ Objects
+
   -------------------------
   stack based instances
   -------------------------
-
---- auto str = std::string("\"Wile E. Coyote\"") ---
+  -------------------------
+  std library types string and vector<T>
+  -------------------------
+  --- auto str = std::string("\"Wile E. Coyote\""); ---
   contents of str = "Wile E. Coyote"
-  str type: class std::basic_string<char,struct std::char_traits<char>,c...    
+  --- showType(str, "str"); ---
+  str type: class std::basic_string<char,struct std::char_traits<char>,c...
   value: "Wile E. Coyote",  size:  40
 
+  --- auto vec = std::vector<double>{ 3.5, 3, 2.5, 2 }; ---
+  --- showType(vec, "vec"); ---
+  vec type: class std::vector<double,class std::allocator<double> >
+  value: vector { 3.5, 3, 2.5, 2 },  size:  32
+  --- vec[2] = -2.5; ---
+  --- showType(vec, "vec"); ---
+  vec type: class std::vector<double,class std::allocator<double> >
+  value: vector { 3.5, 3, -2.5, 2 },  size:  32
+
+  -------------------------
+  user-defined types Point1 and Point2<T>
+  -------------------------
+  --- Point1 p1; ---
   --- p1.show() ---
   Point1 { 0, 0, 0 }
   Point1 { 42, 0, -3 }
+  --- showType(p1, "p1", nl) ---
   p1 type: class Point1
   value: Point1 { 42, 0, -3 },  size:  12
-  p1.xCoor() = 42
+  --- p1.xCoor() returns value 42 ---
 
+  --- Point2<double> p2(5) ---
   Point2 { 0, 0, 0, 0, 0 }
+  --- p2.coords() = std::vector<double>{ 1.0, -2.0, 3.0, 4.5, -42.0 } ---
   Point2 { 1, -2, 3, 4.5, -42 }
+  --- showType(p2, "p2", nl); ---
   p2 type: class Point2<double>
   value: Point2 { 1, -2, 3, 4.5, -42 },  size:  32
   p2.coords()[2] = 3
@@ -25,37 +46,45 @@
   heap-based instances
   -------------------------
 
---- pU<std::string> pStr(new std::string("\"Road Runner\"") ---
+  --- pU<std::string> pStr(new std::string("\"Road Runner\"") ---
   pStr contents = "Road Runner"
-  *pStr type: class std::basic_string<char,struct std::char_traits<char>,c...  
+  --- showType(*pStr, "*pStr") ---
+  *pStr type: class std::basic_string<char,struct std::char_traits<char>,c...
   value: "Road Runner",  size:  40
-  pStr type: class std::unique_ptr<class std::basic_string<char,struct st...   
-  value: 000001F38E17E0C0,  size:  8
+  --- showType(move(pStr), "pStr") ---
+  pStr type: class std::unique_ptr<class std::basic_string<char,struct st...
+  value: 00000184A447E920,  size:  8
 
---- pU<Point1> pPoint1(new Point1()) ---
+  --- pU<std::vector<double>> pVec(new std::vector<double>{ 1.5, 2.5, 3.5 });
+  *pVec type: class std::vector<double,class std::allocator<double> >
+  value: vector { 1.5, 2.5, 3.5 },  size:  32
 
---- pPoint1->show() ---
+  --- pU<Point1> pPoint1(new Point1()) ---
+  --- pPoint1->show() ---
   Point1 { 0, 0, 0 }
   Point1 { 1, 2, -3 }
   pPoint1->zCoor() = -3
-
+  --- showType(*pPoint1, "*pPoint1"); ---
   *pPoint1 type: class Point1
   value: Point1 { 1, 2, -3 },  size:  12
+  --- showType(std::move(pPoint1), "pPoint1"); ---
   pPoint1 type: class std::unique_ptr<class Point1,struct std::default_delet...
-  value: 000001F38E177890,  size:  8
+  value: 00000184A4479BA0,  size:  8
 
---- pU<Point2> pPoint2(new Point2(4)) ---
-
---- pPoint2->show() ---
+  --- pU<Point2<double>> pPoint2(new Point2<double>(4)) ---
+  --- pPoint2->show() ---
   Point2 { 0, 0, 0, 0 }
+  --- pPoint2->coords() = std::vector<double>{ 1.0, 3.5, -2.0, 42.0 }; ---
   Point2 { 1, 3.5, -2, 42 }
-  pPoint2->coords()[1] = 3.5
-
+  value of pPoint2->coords()[1] is 3.5
+  --- showType(*pPoint2, "*pPoint2"); ---
   *pPoint2 type: class Point2<double>
   value: Point2 { 1, 3.5, -2, 42 },  size:  32
+  --- showType(std::move(pPoint2), "pPoint2"); ---
   pPoint2 type: class std::unique_ptr<class Point2<double>,struct std::defau...
-  value: 000001F38E172CE0,  size:  8
+  value: 00000184A4474A00,  size:  8
 
 
   That's all Folks!
+
 
