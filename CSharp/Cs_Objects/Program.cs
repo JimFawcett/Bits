@@ -18,33 +18,38 @@ using System.Text;
     ----------------------------------------------
       object, string, class
 */
-#pragma warning disable CS8602  // possibly null reference warning
 // https://stackoverflow.com/questions/8173239/c-getting-size-of-a-value-type-variable-at-runtime/8173293#8173293
 // 
-namespace HelloObjects
+namespace CSharpObjects
 {
-  interface Showable {
-    void show();
-    int Length { get; }
+  interface IShow {
+    void show();              // show rows of elements
+    int Length { get; }       // total number of elements
+    int width { get; set; }   // number of elements per row
+    int left { get; set; }    // offset from terminal left
   }
   /*--- Point1 is a user-defined type --*/
-  public class Point1 : Showable  // value type with value type members
+  public class Point1 : IShow  // value type with value type members
   { 
     public Point1() {}
     public int x { get; set; } = 0;
     public int y { get; set; } = 0;
     public int z { get; set; } = 0;
     public int Length { get; } = 3;
+    public int width { get; set; } = 3;
+    public int left { get; set; } = 2;
     public void show() {
-      printSelf("Point1", 2);
+      printSelf("Point1");
     }
-    public void printSelf(string name, int offset=0) {
-      string ofstr = Program.indent(offset);
-      Console.WriteLine("{4}{0}  {{ x:{1}, y:{2}, z:{3} }}", name, x, y, z, ofstr);
+    public void printSelf(string name) {
+      string ofstr = Program.indent(left);
+      Console.WriteLine(
+        "{4}{0}  {{ x:{1}, y:{2}, z:{3} }}", name, x, y, z, ofstr
+      );
     }
   }
   /*--- Point2<T> is a generalization of Point1 ---*/
-  public class Point2<T> : IEnumerable<T> , Showable {
+  public class Point2<T> : IEnumerable<T> , IShow {
     public Point2(int N) {
       coor = new List<T>();
       for(int i = 0; i<N; ++i) {
@@ -55,10 +60,10 @@ namespace HelloObjects
       }
     }
     public void show() {
-      printSelf("Point2<T>", 2);
+      printSelf("Point2<T>");
     }
-    public void printSelf(string name, int offset = 0) {
-      Console.Write(Program.indent(offset));
+    public void printSelf(string name) {
+      Console.Write(Program.indent(left));
       Console.Write("{0} {{ ", name);
       for(int i=0; i<coor.Count; ++i) {
         Console.Write("{0}", coor[i]);
@@ -81,6 +86,8 @@ namespace HelloObjects
     }
     public List<T> coor { get; set; }
     public int Length { get { return coor.Count; } }
+    public int width { get; set; } = 5;
+    public int left { get; set; } = 2;
   }
   
   /*-- type demonstration --*/
@@ -102,16 +109,23 @@ namespace HelloObjects
       Point1 p1 = new Point1();
       println("--- showTypeShowable(p1, \"p1\") ---");
       showTypeShowable(p1, "p1");
-      Point2<double> p2 = new Point2<double>(5);
+      Point2<double> p2 = new Point2<double>(10);
       println("--- showTypeShowable(p2, \"p2\") ---");
       showTypeShowable(p2, "p2");
       println("--- showTypeEnum(p2, \"p2\") ---");
-      showTypeEnum<double>(p2, "p2");
+      showTypeEnum<double>(p2, "p2", 7);
 
-      print("--- ToCSV ---");
-      string tmp = ToCSV<double>(p2.coor);
-      string tmp1 = ToCSV(p2.coor);
-      print(tmp);
+      print("--- double[] to folded CSV ---");
+      // double[] arr = p2.coor.ToArray();
+      int[] arr = { 0,1,2,3,4,5,6,7,8 };
+      string tmp = FoldArray(arr, 3, 2);
+      Console.WriteLine("\n{0}",tmp);
+      print("--- coor to folded CSV ---");
+      double[] arr2 = p2.coor.ToArray();
+      tmp = FoldArray(arr2, 4, 2);
+      Console.WriteLine("\n{0}",tmp);
+      // string tmp = ToCSV<double>(p2.coor);
+      // string tmp1 = ToCSV(p2.coor);
       // showType(p1, "p1");
       // // showNote("int - value type");
       // // showOp("int t1 = 42");
@@ -179,7 +193,7 @@ namespace HelloObjects
     /*-- simple reflection --*/
     public static void showTypeScalar<T>(T t, string nm, string suffix = "")
     {
-      Type tt = t.GetType();
+      Type tt = t!.GetType();
       int size = 0;
       if(tt != null) {
         Console.WriteLine("{0}, {1}", nm, tt.Name);
@@ -187,26 +201,28 @@ namespace HelloObjects
       }
       Console.WriteLine("value: {0}, size: {1}{2}", t, size, suffix);
     }
-    public static void showTypeEnum<T> (IEnumerable<T> t, string nm, string suffix="")
+    public static void showTypeEnum<T> (IEnumerable<T> t, string nm, int w = 5, string suffix="")
     {
       Type tt = t.GetType();
       Console.WriteLine("{0}, {1}", nm, tt.Name);
       int size = Utils.GetManagedSize(tt);
-      string tmp = ToCSV<T>(t);
+      // string tmp = ToCSV<T>(t);
       string tnm = tt.Name;
       if(tnm.Length > 1) {
         tnm = tnm.Remove(tnm.Length - 2) + "<T>";
       }
       Console.WriteLine("value:\n{0}{1} {{", "  ", tnm);
       // Console.WriteLine("    {0}", tmp);
-      foreach(T elem in t) {
-        Console.Write("{0}, ", elem);
-      }
+      string tmp = FoldArray(t.ToArray(), w, 4);
+      Console.Write(tmp);
+      // foreach(T elem in t) {
+      //   Console.Write("{0}, ", elem);   // change to string instead of write
+      // }                                 // fold and remove last comment
       Console.WriteLine("\n  }");
       Console.WriteLine("size: {0}{1}", size, suffix);
     }
     public static void showTypeShowable<T>(T t, string nm, string suffix="")
-      where T:Showable
+      where T:IShow
     {
       Type tt = t.GetType();
       Console.WriteLine("{0}, {1}", nm, tt.Name);
@@ -239,7 +255,7 @@ namespace HelloObjects
     // }
     /*-- beware, two distinct objects may have same hashcode --*/
     public static void showIdent<T>(T t, String n, string suffix = "") {
-      int id = t.GetHashCode();
+      int id = t!.GetHashCode();
       Console.WriteLine("{0}, {1}{2}", n, id, suffix);
     }
     public static void isSameObj<T>(
@@ -285,7 +301,7 @@ namespace HelloObjects
     public static string ToCSV<T>(IEnumerable<T> coll) {
       StringBuilder sb = new StringBuilder();
       foreach(T elem in coll) {
-        sb.Append(elem.ToString()).Append(", ");
+        sb.Append(elem!.ToString()).Append(", ");
       }
       return sb.ToString(0, sb.Length - 2);
     }
@@ -339,8 +355,26 @@ namespace HelloObjects
         "-------------------------{0}\n", suffix
       );
     }
-    /* fold a vector slice into rows of w elements */
-    void ShowFold<T>(T[] arr, uint w, uint left) {
+    /* fold array elements into rows of w elements */
+    public static string FoldArray<T>(T[] arr, int w, int left) {
+      StringBuilder tmp = new StringBuilder();
+      tmp.Append(indent(left));
+      for(int i=0; i< arr.Length; ++i) {
+        tmp.Append(arr[i]!.ToString());
+        tmp.Append(", ");
+        if((i+1) % w == 0 && i != arr.Length - 1) {
+          tmp.Append("\n");
+          tmp.Append(indent(left));
+        }
+        // tmp += arr[i].ToString();
+        // tmp += ", ";
+      }
+      if(tmp.Length > 1) {
+        tmp.Length -= 2;
+      }
+      return tmp.ToString();
+    }
+    public static void ShowFold<T>(T[] arr, uint w, uint left) {
       // print!("\n");
       // print_offset(left);
       // for(int i=0; i <= arr.GetLength(); ++i) {
