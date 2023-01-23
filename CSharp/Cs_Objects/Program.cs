@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Reflection;
 using System.Reflection.Emit;
+using System.Collections;
+using System.Collections.Generic;
+using System.Text;
 
 /* Cs_Data::Cs_Objects.cs */
 /*
@@ -15,21 +18,69 @@ using System.Reflection.Emit;
     ----------------------------------------------
       object, string, class
 */
-//#pragma warning disable CS8602  // possibly null reference warning
+#pragma warning disable CS8602  // possibly null reference warning
 // https://stackoverflow.com/questions/8173239/c-getting-size-of-a-value-type-variable-at-runtime/8173293#8173293
 // 
 namespace HelloObjects
 {
-  /*--- Point is a user-defined type --*/
-  public class Point1   // value type with value type members
+  interface Showable {
+    void show();
+    int Length { get; }
+  }
+  /*--- Point1 is a user-defined type --*/
+  public class Point1 : Showable  // value type with value type members
   { 
     public Point1() {}
     public int x { get; set; } = 0;
     public int y { get; set; } = 0;
     public int z { get; set; } = 0;
-    public void printSelf(string name) {
-      Console.Write("{0}  {{ x:{1}, y:{2}, z:{3} }}\n", name, x, y, z);
+    public int Length { get; } = 3;
+    public void show() {
+      printSelf("Point1", 2);
     }
+    public void printSelf(string name, int offset=0) {
+      string ofstr = Program.indent(offset);
+      Console.WriteLine("{4}{0}  {{ x:{1}, y:{2}, z:{3} }}", name, x, y, z, ofstr);
+    }
+  }
+  /*--- Point2<T> is a generalization of Point1 ---*/
+  public class Point2<T> : IEnumerable<T> , Showable {
+    public Point2(int N) {
+      coor = new List<T>();
+      for(int i = 0; i<N; ++i) {
+        T? test = default(T);
+        if(test != null) {
+          coor.Add(test);
+        }
+      }
+    }
+    public void show() {
+      printSelf("Point2<T>", 2);
+    }
+    public void printSelf(string name, int offset = 0) {
+      Console.Write(Program.indent(offset));
+      Console.Write("{0} {{ ", name);
+      for(int i=0; i<coor.Count; ++i) {
+        Console.Write("{0}", coor[i]);
+        if(i < coor.Count - 1) {
+          Program.print(", ");
+        }
+      }
+      Console.Write(" }\n");
+    }
+    /* The three functions below support indexing and iterating */
+    public T this[int index] {
+      get { return coor[index]; }
+      set { coor.Insert(index, value); }
+    }
+    public IEnumerator<T> GetEnumerator() {
+      return coor.GetEnumerator();
+    }
+    IEnumerator IEnumerable.GetEnumerator() {
+      return this.GetEnumerator();
+    }
+    public List<T> coor { get; set; }
+    public int Length { get { return coor.Count; } }
   }
   
   /*-- type demonstration --*/
@@ -42,72 +93,150 @@ namespace HelloObjects
     static void Main(string[] args)
     {
       print(" Demonstrate C# objects");
-      // showNote("int - value type");
-      // showOp("int t1 = 42");
-      // int t1 = 42;
-      // showType(t1, "t1", nl);
-      // showOp("interate over val type members using reflection");
-      // iterate(t1);
-      // print();
-      // showOp("int t1a = t1 : copy of value type");
-      // int t1a = t1;
-      // isSameObj(t1a, "t1a", t1, "t1", nl);
+      Type? t = GetTypeOfCollection(new List<double>());
+      if(t != null) {
+        Console.WriteLine("\n{0}", t.Name);
+      }
+      Double d = 3.1415927;
+      showTypeScalar(d, "d");
+      Point1 p1 = new Point1();
+      println("--- showTypeShowable(p1, \"p1\") ---");
+      showTypeShowable(p1, "p1");
+      Point2<double> p2 = new Point2<double>(5);
+      println("--- showTypeShowable(p2, \"p2\") ---");
+      showTypeShowable(p2, "p2");
+      println("--- showTypeEnum(p2, \"p2\") ---");
+      showTypeEnum<double>(p2, "p2");
 
-      // reference behavior - copy on write
-      showNote("string - reference type");
-      showOp("string t2 = \"a string\"");
-      string t2 = "a string";
-      showType(t2, "t2");
-      showNote("string has many methods - uncomment next line to see them");
-      //iterate(t2);
-      showOp("string t3 = t2 : copy handle of ref type");
-      string t3 = t2;
-      showType(t3, "t3");
-      isSameObj(t3,"t3",t2,"t2");
-      showOp("t3 += \" is here\" : copy on write");
-      t3 += " is here";
-      showType(t2, "t2");
-      showType(t3, "t3");
-      isSameObj(t3,"t3",t2,"t2");
-      showNote("t2 not modified by change in t3 due to copy on write", nl);
+      print("--- ToCSV ---");
+      string tmp = ToCSV<double>(p2.coor);
+      string tmp1 = ToCSV(p2.coor);
+      print(tmp);
+      // showType(p1, "p1");
+      // // showNote("int - value type");
+      // // showOp("int t1 = 42");
+      // // int t1 = 42;
+      // // showType(t1, "t1", nl);
+      // // showOp("interate over val type members using reflection");
+      // // iterate(t1);
+      // // print();
+      // // showOp("int t1a = t1 : copy of value type");
+      // // int t1a = t1;
+      // // isSameObj(t1a, "t1a", t1, "t1", nl);
+
+      // // reference behavior - copy on write
+      // showNote("Library types string and List<T>");
+      // showOp("string t2 = \"a string\"");
+      // string t2 = "a string";
+      // showType(t2, "t2");
+      // showNote("string has many methods - uncomment next line to see them");
+      // //iterate(t2);
+      // showOp("string t3 = t2 : copy handle of ref type");
+      // string t3 = t2;
+      // showType(t3, "t3");
+      // isSameObj(t3,"t3",t2,"t2");
+      // showOp("t3 += \" is here\" : copy on write");
+      // t3 += " is here";
+      // showType(t2, "t2");
+      // showType(t3, "t3");
+      // isSameObj(t3,"t3",t2,"t2");
+      // showNote("t2 not modified by change in t3 due to copy on write", nl);
       
-      showNote("Object - base reference type");
-      showOp("Object obj1 - new Object()");
-      Object obj1 = new Object();
-      // showIdent(obj, "obj");
-      showType(obj1, "obj");
-      showOp("interate over ref type members using reflection");
-      iterate(obj1);
-      print();
-      showOp("Object obj2 = obj1");
-      Object obj2 = obj1;
-      isSameObj(obj2, "obj2", obj1, "obj1", nl);
+      // List<int> nums = new List<int>();
+      // nums.Add(1);
+      // nums.Add(2);
+      // nums.Add(3);
+      // showType(nums, "nums");
 
-      showNote("Point1 user-defined reference type");
-      showOp("Point1 t4 = new Point1()");
-      Point1 t4 = new Point1();
-      t4.x = 3;
-      t4.y = 42;
-      t4.z = -2;
-      t4.printSelf("t4");
-      showType(t4, "t4");
-      showNote("value type: size of object in stackframe", nl);
+      // showNote("Object - base reference type");
+      // showOp("Object obj1 - new Object()");
+      // Object obj1 = new Object();
+      // // showIdent(obj, "obj");
+      // showType(obj1, "obj");
+      // showOp("interate over ref type members using reflection");
+      // iterate(obj1);
+      // print();
+      // showOp("Object obj2 = obj1");
+      // Object obj2 = obj1;
+      // isSameObj(obj2, "obj2", obj1, "obj1", nl);
 
-      showOp("iterate over val type members using reflection");
-      iterate(t4);
-      print();
+      // showNote("Point1 user-defined reference type");
+      // showOp("Point1 t4 = new Point1()");
+      // Point1 t4 = new Point1();
+      // t4.x = 3;
+      // t4.y = 42;
+      // t4.z = -2;
+      // t4.printSelf("t4");
+      // showType(t4, "t4");
+      // showNote("value type: size of object in stackframe", nl);
+
+      // showOp("iterate over val type members using reflection");
+      // iterate(t4);
+      // print();
 
       Console.WriteLine("\nThat's all Folks!\n");
     }
     /*-- simple reflection --*/
-    public static void showType<T>(T t, String nm, string suffix = "")
+    public static void showTypeScalar<T>(T t, string nm, string suffix = "")
     {
-      #pragma warning disable CS8602  // possibly null reference warning
+      Type tt = t.GetType();
+      int size = 0;
+      if(tt != null) {
+        Console.WriteLine("{0}, {1}", nm, tt.Name);
+        size = Utils.GetManagedSize(tt);
+      }
+      Console.WriteLine("value: {0}, size: {1}{2}", t, size, suffix);
+    }
+    public static void showTypeEnum<T> (IEnumerable<T> t, string nm, string suffix="")
+    {
       Type tt = t.GetType();
       Console.WriteLine("{0}, {1}", nm, tt.Name);
       int size = Utils.GetManagedSize(tt);
-      Console.WriteLine("value: {0}, size: {1}{2}", t, size, suffix);
+      string tmp = ToCSV<T>(t);
+      string tnm = tt.Name;
+      if(tnm.Length > 1) {
+        tnm = tnm.Remove(tnm.Length - 2) + "<T>";
+      }
+      Console.WriteLine("value:\n{0}{1} {{", "  ", tnm);
+      // Console.WriteLine("    {0}", tmp);
+      foreach(T elem in t) {
+        Console.Write("{0}, ", elem);
+      }
+      Console.WriteLine("\n  }");
+      Console.WriteLine("size: {0}{1}", size, suffix);
     }
+    public static void showTypeShowable<T>(T t, string nm, string suffix="")
+      where T:Showable
+    {
+      Type tt = t.GetType();
+      Console.WriteLine("{0}, {1}", nm, tt.Name);
+      int size = Utils.GetManagedSize(tt);
+      Console.WriteLine("value:");
+      t.show();
+      Console.WriteLine("size: {0}{1}", size, suffix);
+    }
+    // public static void showType<T>(T t, String nm, string suffix = "")
+    // {
+    //   #pragma warning disable CS8602  // possibly null reference warning
+    //   Type tt = t.GetType();
+    //   if(tt.IsPrimitive) {
+    //     Console.WriteLine("{0}, {1}", nm, tt.Name);
+    //   } 
+    //   else {
+    //     Type? tc = GetTypeOfCollection(t);
+    //     if(tc != null) {
+    //       Console.WriteLine("\n{0}", tc.Name);
+    //     }
+        
+    //     string tmp = ToCSV((IEnumerable<T>)t);
+    //     // Object obj = t;
+    //     // string tmp = ToCSV2(obj);
+    //     // string tmp = "test";
+    //     Console.WriteLine("\n{0}, {1}", nm, tmp);
+    //   }
+    //   int size = Utils.GetManagedSize(tt);
+    //   Console.WriteLine("value: {0}, size: {1}{2}", t, size, suffix);
+    // }
     /*-- beware, two distinct objects may have same hashcode --*/
     public static void showIdent<T>(T t, String n, string suffix = "") {
       int id = t.GetHashCode();
@@ -152,8 +281,54 @@ namespace HelloObjects
         );
       }
     }
+    // https://stackoverflow.com/questions/330493/join-collection-of-objects-into-comma-separated-string
+    public static string ToCSV<T>(IEnumerable<T> coll) {
+      StringBuilder sb = new StringBuilder();
+      foreach(T elem in coll) {
+        sb.Append(elem.ToString()).Append(", ");
+      }
+      return sb.ToString(0, sb.Length - 2);
+    }
+    public static string ToCSV2(IEnumerable<Object> coll) {
+      StringBuilder sb = new StringBuilder();
+      foreach(Object elem in coll) {
+        sb.Append(elem.ToString()).Append(", ");
+      }
+      return sb.ToString(0, sb.Length - 2);
+    }
+    // https://www.codeproject.com/Tips/5267157/How-To-Get-A-Collection-Element-Type-Using-Reflect
+    public static Type? GetTypeOfCollection(Object coll) {
+      Type type = (coll).GetType();
+      var etype = typeof(IEnumerable<>);
+      foreach (var bt in type.GetInterfaces()) {
+        if (bt.IsGenericType && bt.GetGenericTypeDefinition() == etype) {
+          return (bt.GetGenericArguments()[0]);
+        }
+      }
+      return null;
+    }
+    // public static void test1() {
+    //   List<double> ld = new List<double>();
+    //     Type type = (ld).GetType();
+    //     var etype = typeof(IEnumerable<>);
+    //     foreach (var bt in type.GetInterfaces())
+    //         if (bt.IsGenericType && bt.GetGenericTypeDefinition() == etype)
+    //             Console.WriteLine(bt.GetGenericArguments()[0]);
+    //   // List<double> ld = new List<double>();
+    //   // Type t = ld.GetType();
+    //   // Type tt = t.GetGenericTypeDefinition();
+    //   // Console.WriteLine(tt.Name);
+    // }
     public static void print(String s = "") {
+      Console.Write(s);
+    }
+    public static void println(String s = "") {
       Console.WriteLine(s);
+    }
+    public static string indent(int count) {
+      StringBuilder sb = new StringBuilder();
+      sb.Append(' ', count);
+      return sb.ToString();
     }
     public static void showNote(string s, string suffix = "") {
       Console.WriteLine(
@@ -163,6 +338,34 @@ namespace HelloObjects
       Console.WriteLine(
         "-------------------------{0}\n", suffix
       );
+    }
+    /* fold a vector slice into rows of w elements */
+    void ShowFold<T>(T[] arr, uint w, uint left) {
+      // print!("\n");
+      // print_offset(left);
+      // for(int i=0; i <= arr.GetLength(); ++i) {
+      //   if (i < arr.GetLength) {
+      //     print!("{:?}, ", arr[i - 1]);
+      //   }
+      //   else {
+      //     print!("{:?}", arr[i - 1]);
+      //     print!("\n");
+      //     break;
+      //   }
+      //   if (i % w == 0  && i != 0 && i != w - 1) {
+      //     print!("\n");
+      //     print_offset(left);
+      //   }
+      // }
+    }
+    string truncate(int N, string bigStr) {
+      // string temp = bigStr;
+      // if(temp.length() > N) {
+      //   temp.resize(N);
+      //   return temp + "...";
+      // }
+      // return temp;
+      return "truncate test";
     }
   }
   /*-- 
