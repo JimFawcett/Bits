@@ -1,0 +1,147 @@
+--------------------------------------------------
+ Demonstrate C# objects
+--------------------------------------------------
+
+--------------------------------------------------
+Examples of creation and display of Primitive Types
+- displays type information using ShowTypeScalar
+--------------------------------------------------
+s, Int16
+value: 123, size: 2
+
+l, Int64
+value: 12345, size: 8
+
+f, Single
+value: 3.1415927, size: 4
+
+d, Double
+value: 3.1415927, size: 8
+
+--------------------------------------------------
+ShowTypeScalar doesn't expect child elements
+so does not return a useful value for an array.
+--------------------------------------------------
+arr, Int32[]
+value: System.Int32[], size: 8
+--------------------------------------------------
+ShowTypeEnum does expect child elements so returns
+an appropriate state, e.g., list of values of array.
+--------------------------------------------------
+arr, Int32[]
+value:
+  Int32<T> {
+    4, 3, 2, 1, 0, -1
+  }
+size: 8
+
+--------------------------------------------------
+Examples of creation and display of Library Types
+- uses ShowTypeScalar for String
+- uses ShowTypeEnum for List<double>
+- size is the size of reference, not instance
+--------------------------------------------------
+aString, String
+value: a string, size: 8
+
+aList, List`1
+value:
+  List<T> {
+    1, 1.5, 2, 2.5, 3,
+    3.5, 4
+  }
+size: 8
+
+--------------------------------------------------
+Examples of user-defined types:
+- Point1, a point with x,y,z coordinates
+- Point2, a point with N generic coordinates
+--------------------------------------------------
+--- ShowTypeShowable(p1, "p1") ---
+p1, Point1
+value:
+  Point1  { x:3, y:-42, z:1 }
+size: 8
+
+--------------------------------------------------
+Point2<T> is both Enumerable and Showable. That is,
+it implements both IEnumerable<T> and IShow.
+- so both ShowTypeEnum and ShowTypeShowable work
+--------------------------------------------------
+--- ShowTypeShowable(p2, "p2") ---
+p2, Point2`1
+value:
+  Point2<T> {
+    1.5, 2, 3.5, 4, 5.5, 6,
+    7.5
+ }
+size: 8
+--- ShowTypeEnum(p2, "p2") ---
+p2, Point2`1
+value:
+  Point2<T> {
+    1.5, 2, 3.5, 4, 5.5, 6,
+    7.5
+  }
+size: 8
+
+--------------------------------------------------
+Differences between value and reference types
+--------------------------------------------------
+
+--------------------------------------------------
+Assignment of reference types assigns their references,
+creating two references to the same instance in managed
+heap, so variables are coupled through single instance.
+--------------------------------------------------
+--- Point1 val1 = new Point1(), then initialize ---
+val1  Point1  { x:1, y:3, z:0 }
+--- Point1 val2 = val1 ---
+val2  Point1  { x:1, y:3, z:0 }
+val2 is same object as val1
+--- val2.z = 42; ---
+val2 is same object as val1
+val2  Point1  { x:1, y:3, z:42 }
+val1  Point1  { x:1, y:3, z:42 }
+--------------------------------------------------
+Note! Source of assignment, val1, changed when val2 changed.
+Point1 is ref type, so assignment just assigns references.
+--------------------------------------------------
+
+--------------------------------------------------
+Value types can be independently assigned and copied.
+--------------------------------------------------
+--- var s1 = new St(1, -0.5, 'z'); ---
+--- var s2 = s1 ---
+s2 is not same object as s1
+  s2 { a:1, b:-0.5, c:z }
+  s1 { a:1, b:-0.5, c:z }
+--- s2.c = 'q' ---
+  s2 { a:1, b:-0.5, c:q }
+  s1 { a:1, b:-0.5, c:z }
+--------------------------------------------------
+Change in destination, s2, did not alter source, s1.
+Assignment of value types creates independent objects.
+--------------------------------------------------
+
+--------------------------------------------------
+Instances of string are reference types, but simulate
+some value behaviors.  String objects are immutable.
+To modify an instance, a new string is created with
+copies of the source string characters inclucing any
+modifications.  This is called copy on write.
+--------------------------------------------------
+
+str2 is same object as str1
+str1: An immutable string
+str2: An immutable string
+str2 is not same object as str1
+str1: An immutable string
+str2: immutable string
+--------------------------------------------------
+There is no way for change in str2 to affect str1.
+--------------------------------------------------
+
+That's all Folks!
+
+
