@@ -22,7 +22,7 @@ using System.Text;                  // StringBuilder
       struct
     Reference types => assignment copies reference
     ----------------------------------------------
-      object, string, class
+      object, string, array, class
     ----------------------------------------------
       strings are immutable, so any change requires copy on write.
       That simulates value behavior.
@@ -46,7 +46,7 @@ namespace CSharpObjects
     - That affects the way assignments work - see demo near the
       end of main.
   */
-  public class Point1 : IShow  // value type with value type members
+  public class Point1 : IShow  // reference type with value type members
   { 
     public Point1() {
       /* 

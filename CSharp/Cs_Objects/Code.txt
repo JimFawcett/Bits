@@ -34,7 +34,7 @@ namespace CSharpObjects
     that implements it. See ShowTypeShowable<T>(T t, ...), below.
   */
   interface IShow {
-    void Show();              // show instance state as rows of elements
+    void Show(string name);   // show instance state as rows of elements
     int Length { get; }       // total number of elements
     int Width { get; set; }   // number of elements per row
     int Left { get; set; }    // offset from terminal Left
@@ -61,8 +61,8 @@ namespace CSharpObjects
     public int Width { get; set; } = 3;
     public int Left { get; set; } = 2;
     /* translates IShow::show to needs of class */
-    public void Show() {
-      PrintSelf("Point1");
+    public void Show(string name) {
+      PrintSelf(name);
     }
     /* Display Point1 structure and state */
     public void PrintSelf(string name) {
@@ -94,8 +94,8 @@ namespace CSharpObjects
       }
     }
     /* translates IShow::show() for needs of Point2 class */
-    public void Show() {
-      PrintSelf("Point2<T>");
+    public void Show(string name) {
+      PrintSelf(name);
     }
     /*
       Displays structure and state of N-dimensional point.
@@ -116,7 +116,8 @@ namespace CSharpObjects
           Console.Write(Program.Indent(Left + 2));
         }
       }
-      Console.Write("\n }\n");
+      Console.Write("\n{0}", Program.Indent(Left));
+      Console.WriteLine("}");
     }
     /* The three functions below support indexing and iterating */
     public T this[int index] {
@@ -132,7 +133,16 @@ namespace CSharpObjects
     public List<T> coor { get; set; }
     public int Length { get { return coor.Count; } }
     public int Width { get; set; } = 5;   // default row size
-    public int Left { get; set; } = 2;    // default offsett
+    public int Left { get; set; } = 2;    // default offset
+    /* initializers */
+    public Point2<T> width(int w) {
+      this.Width = w;
+      return this;
+    } 
+    public Point2<T> left(int l) {
+      this.Left = l;
+      return this;
+    } 
   }
   /* 
     Demonstration composite value type.
@@ -169,8 +179,7 @@ namespace CSharpObjects
       ShowLabel(" Demonstrate C# objects");
 
       ShowNote(
-        "Examples of creation and display of Primitive Types\n"
-        + "- displays type information using ShowTypeScalar"
+        "Examples of creation and display of Primitive Types"
       );
       short s = 123;
       ShowTypeScalar(s, "s", nl);
@@ -180,29 +189,30 @@ namespace CSharpObjects
       ShowTypeScalar(f, "f", nl);
       double d = 3.1415927;
       ShowTypeScalar(d, "d", nl);
-      ShowNote(
-        "ShowTypeScalar doesn't expect child elements\n" +
-        "so does not return a useful value for an array."
-      );
       int[] arr = new int[]{ 4, 3, 2, 1, 0, -1};
-      ShowTypeScalar(arr, "arr");
-      ShowNote(
-        "ShowTypeEnum does expect child elements so returns\n" +
-        "an appropriate state, e.g., list of values of array."
-      );
       ShowTypeEnum(arr, "arr", 10, nl);
+
       ShowNote(
         "Examples of creation and display of Library Types\n" + 
-        "- uses ShowTypeScalar for String\n" +
-        "- uses ShowTypeEnum for List<double>\n" +
         "- size is the size of reference, not instance"
       );
       string aString = "a string";  // hides construction
       ShowTypeScalar(aString, "aString", nl);
+
+      string another = new string("another string");
+      ShowTypeScalar(another, "another", nl);
+
       List<double> aList = 
         new List<double>{ 1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0 };
+    
       ShowTypeEnum(aList, "aList", 5, nl);
 
+      var d1 = new Dictionary<int, string>
+      {
+        { 0, "zero"}, {1, "one"}, {2, "two"}
+      };
+      ShowTypeEnum(d1, "d1", 5, nl);
+  
       ShowNote(
         "Examples of user-defined types:\n" + 
         "- Point1, a point with x,y,z coordinates\n" +
@@ -226,10 +236,17 @@ namespace CSharpObjects
       };
       ShowOp("ShowTypeShowable(p2, \"p2\")");
       p2.Width = 6;
-      ShowTypeShowable(p2, "p2");
+      ShowTypeShowable(p2, "p2", nl);
 
       ShowOp("ShowTypeEnum(p2, \"p2\")");
-      ShowTypeEnum<double>(p2, "p2", p2.Width);
+      ShowTypeEnum<double>(p2, "p2", p2.Width, nl);
+
+      ShowOp("ShowTypeShowable(p3, \"p3\")");
+      Point2<int> p3 = new Point2<int>(7);
+      p3.left(4).width(7);
+      ShowOp("set left(4) and width(7)");
+      p3.coor = new List<int>{1, 2, 3, 4, 5, 6, 7};
+      ShowTypeShowable(p3, "p3", nl);
 
       ShowLabel(
         "Differences between value and reference types"
@@ -324,6 +341,24 @@ namespace CSharpObjects
         them in order to follow the demonstrations above.  We will 
         look at them in some detail in Bits_Functions. 
     */
+    public static void ShowType<T>(T t, string nm) {
+      Type tt = t!.GetType();
+      string tnm = tt.Name;
+      if(tt.IsGenericType) {
+        if(tnm.Length > 1) {
+          tnm = tnm.Remove(tnm.Length - 2) + "<T>";
+        }
+      }
+      Console.Write("{0}: {1}, ", nm, tnm);
+      int size = Utils.GetManagedSize(tt);
+      Console.Write("size: {0}, ", size);
+      if (tt.IsValueType) {
+        Console.WriteLine("value type");
+      }
+      else {
+        Console.WriteLine("reference type");
+      }
+    }
     /*--------------------------------------------------------------------
       Display information about the type of any scalar type.
       - scalar types are those with a single value like:
@@ -332,13 +367,14 @@ namespace CSharpObjects
     */
     public static void ShowTypeScalar<T>(T t, string nm, string suffix = "")
     {
-      Type? tt = t!.GetType();
-      int size = 0;
-      if(tt != null) {
-        Console.WriteLine("{0}, {1}", nm, tt.Name);
-        size = Utils.GetManagedSize(tt);
-      }
-      Console.WriteLine("value: {0}, size: {1}{2}", t, size, suffix);
+      // Type? tt = t!.GetType();
+      // int size = 0;
+      // if(tt != null) {
+      //   Console.WriteLine("{0}, {1}", nm, tt.Name);
+      //   size = Utils.GetManagedSize(tt);
+      // }
+      ShowType(t, nm);
+      Console.WriteLine("value: \"{0}\"{1}", t, suffix);
     }
     /*--------------------------------------------------------------------
       Show type information about any type that implements the IShow
@@ -347,12 +383,14 @@ namespace CSharpObjects
     public static void ShowTypeShowable<T>(T t, string nm, string suffix="")
       where T:IShow
     {
-      Type tt = t.GetType();
-      Console.WriteLine("{0}, {1}", nm, tt.Name);
-      int size = Utils.GetManagedSize(tt);
+      ShowType(t, nm);
+      // Type tt = t.GetType();
+      // Console.WriteLine("{0}, {1}", nm, tt.Name);
+      // int size = Utils.GetManagedSize(tt);
       Console.WriteLine("value:");
-      t.Show();  // guaranteed availability by IShow implementation
-      Console.WriteLine("size: {0}{1}", size, suffix);
+      t.Show(nm);  // guaranteed availability by IShow implementation
+      // Console.WriteLine("size: {0}{1}", size, suffix);
+      Console.Write(suffix);
     }
     /*--------------------------------------------------------------------
       Provides name of caller, nm, as label for IShow() information.
@@ -360,7 +398,7 @@ namespace CSharpObjects
     */
     public static void ShowLabeledObject<T>(T t, string nm) where T:IShow {
       Console.Write(nm);
-      t.Show();
+      t.Show(nm);
     }
     /*--------------------------------------------------------------------
       Provides name of caller, nm, as label for value.
@@ -377,14 +415,8 @@ namespace CSharpObjects
       IEnumerable<T> t, string nm, int w = 5, string suffix = ""
     )
     {
-      Type tt = t.GetType();
-      Console.WriteLine("{0}, {1}", nm, tt.Name);
-      int size = Utils.GetManagedSize(tt);
-      string tnm = tt.Name;
-      if(tnm.Length > 1) {
-        tnm = tnm.Remove(tnm.Length - 2) + "<T>";
-      }
-      Console.WriteLine("value:\n{0}{1} {{", "  ", tnm);
+      ShowType(t, nm);
+      Console.WriteLine("value:\n{0}{1} {{", "  ", nm);
       /* 
         beautify value list into rows of w elements 
         indented by 4 spaces
@@ -392,7 +424,7 @@ namespace CSharpObjects
       string tmp = FoldArray(t.ToArray(), w, 4);
       Console.Write(tmp);
       Console.WriteLine("\n  }");
-      Console.WriteLine("size: {0}{1}", size, suffix);
+      Console.Write(suffix);
     }
     /*--------------------------------------------------------------------
       create string of count spaces, used to offset output 
@@ -576,4 +608,3 @@ namespace CSharpObjects
     }
   }
 }
-

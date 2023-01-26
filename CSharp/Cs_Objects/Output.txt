@@ -1,56 +1,50 @@
---------------------------------------------------
+ --------------------------------------------------
  Demonstrate C# objects
 --------------------------------------------------
 
 --------------------------------------------------
 Examples of creation and display of Primitive Types
-- displays type information using ShowTypeScalar
 --------------------------------------------------
-s, Int16
-value: 123, size: 2
+s: Int16, size: 2, value type
+value: "123"
 
-l, Int64
-value: 12345, size: 8
+l: Int64, size: 8, value type
+value: "12345"
 
-f, Single
-value: 3.1415927, size: 4
+f: Single, size: 4, value type
+value: "3.1415927"
 
-d, Double
-value: 3.1415927, size: 8
+d: Double, size: 8, value type
+value: "3.1415927"
 
---------------------------------------------------
-ShowTypeScalar doesn't expect child elements
-so does not return a useful value for an array.
---------------------------------------------------
-arr, Int32[]
-value: System.Int32[], size: 8
---------------------------------------------------
-ShowTypeEnum does expect child elements so returns
-an appropriate state, e.g., list of values of array.
---------------------------------------------------
-arr, Int32[]
+arr: Int32[], size: 8, reference type
 value:
-  Int32<T> {
+  arr {
     4, 3, 2, 1, 0, -1
   }
-size: 8
 
 --------------------------------------------------
 Examples of creation and display of Library Types
-- uses ShowTypeScalar for String
-- uses ShowTypeEnum for List<double>
 - size is the size of reference, not instance
 --------------------------------------------------
-aString, String
-value: a string, size: 8
+aString: String, size: 8, reference type
+value: "a string"
 
-aList, List`1
+another: String, size: 8, reference type
+value: "another string"
+
+aList: List<T>, size: 8, reference type
 value:
-  List<T> {
+  aList {
     1, 1.5, 2, 2.5, 3,
     3.5, 4
   }
-size: 8
+
+d1: Dictionary<T>, size: 8, reference type
+value:
+  d1 {
+    [0, zero], [1, one], [2, two]
+  }
 
 --------------------------------------------------
 Examples of user-defined types:
@@ -58,10 +52,9 @@ Examples of user-defined types:
 - Point2, a point with N generic coordinates
 --------------------------------------------------
 --- ShowTypeShowable(p1, "p1") ---
-p1, Point1
+p1: Point1, size: 8, reference type
 value:
-  Point1  { x:3, y:-42, z:1 }
-size: 8
+  p1  { x:3, y:-42, z:1 }
 
 --------------------------------------------------
 Point2<T> is both Enumerable and Showable. That is,
@@ -69,21 +62,29 @@ it implements both IEnumerable<T> and IShow.
 - so both ShowTypeEnum and ShowTypeShowable work
 --------------------------------------------------
 --- ShowTypeShowable(p2, "p2") ---
-p2, Point2`1
+p2: Point2<T>, size: 8, reference type
 value:
-  Point2<T> {
-    1.5, 2, 3.5, 4, 5.5, 6,
-    7.5
- }
-size: 8
---- ShowTypeEnum(p2, "p2") ---
-p2, Point2`1
-value:
-  Point2<T> {
+  p2 {
     1.5, 2, 3.5, 4, 5.5, 6,
     7.5
   }
-size: 8
+
+--- ShowTypeEnum(p2, "p2") ---
+p2: Point2<T>, size: 8, reference type
+value:
+  p2 {
+    1.5, 2, 3.5, 4, 5.5, 6,
+    7.5
+  }
+
+--- ShowTypeShowable(p3, "p3") ---
+--- set left(4) and width(7) ---
+p3: Point2<T>, size: 8, reference type
+value:
+    p3 {
+      1, 2, 3, 4, 5, 6, 7
+    }
+
 
 --------------------------------------------------
 Differences between value and reference types
@@ -95,14 +96,14 @@ creating two references to the same instance in managed
 heap, so variables are coupled through single instance.
 --------------------------------------------------
 --- Point1 val1 = new Point1(), then initialize ---
-val1  Point1  { x:1, y:3, z:0 }
+val1  val1  { x:1, y:3, z:0 }
 --- Point1 val2 = val1 ---
-val2  Point1  { x:1, y:3, z:0 }
+val2  val2  { x:1, y:3, z:0 }
 val2 is same object as val1
 --- val2.z = 42; ---
 val2 is same object as val1
-val2  Point1  { x:1, y:3, z:42 }
-val1  Point1  { x:1, y:3, z:42 }
+val2  val2  { x:1, y:3, z:42 }
+val1  val1  { x:1, y:3, z:42 }
 --------------------------------------------------
 Note! Source of assignment, val1, changed when val2 changed.
 Point1 is ref type, so assignment just assigns references.

@@ -1,5 +1,5 @@
 import sys
-# Python/Py_Data::Py_Data.py
+# Python/Py_Objects::Py_Objects.py
 # 
 # Python Dynamic Data Types
 #   int, float, complex
@@ -16,7 +16,7 @@ import sys
 nl = "\n"
 
 def showType(t, nm, suffix = "") :
-    print(nm, type(t))
+    print(nm, type(t), "dynamic")
     print("value: ", t, ', size: ', sys.getsizeof(t), suffix)
 
 def showIdent(t, n, suffix = "") :
@@ -28,8 +28,8 @@ def showNote(text, suffix = "") :
     print("-------------------------", suffix)
 
 def execute() : 
-    print(" Demonstrate Python Types")
-    print("--------------------------")
+    print(" Demonstrate Python Objects")
+    print("----------------------------")
     # types
     print("\n  -- instances of all types reside in managed heap --\n")
     t1 = 42
