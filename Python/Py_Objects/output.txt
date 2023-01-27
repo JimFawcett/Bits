@@ -1,91 +1,97 @@
- Demonstrate Python Types
---------------------------
-
-  -- instances of all types reside in managed heap --
-
-t1 <class 'int'>
-value:  42 , size:  28
-
-t1 <class 'float'>
-value:  3.14159 , size:  24
-
-t1 <class 'list'>
-value:  [1, 2, 3, 4] , size:  88
-
--- t2 = t1 --
-t1 [1, 2, 3, 4] 2480814681792
-t2 [1, 2, 3, 4] 2480814681792
-
-
--- t2 = 3.33333 : change of object --
-t2 3.33333 2480814399344
-t2 <class 'float'>
-value:  3.33333 , size:  24
-
--- t2 += -1.0 : modify object --
-t2 2.33333 2480814400880
-t2 <class 'float'>
-value:  2.33333 , size:  24
-
--- t3 = [1, "one"] --
-t3 [1, 'one'] 2480814699136
-t3 <class 'list'>
-value:  [1, 'one'] , size:  72
-
--- t4 = t3 --
-t3 [1, 'one'] 2480814699136
-t3 <class 'list'>
-value:  [1, 'one'] , size:  72
-t4 [1, 'one'] 2480814699136
-t4 <class 'list'>
-value:  [1, 'one'] , size:  72
-
--- t4.append('b') : no copy on write --
-t3 [1, 'one', 'b'] 2480814699136
-t3 <class 'list'>
-value:  [1, 'one', 'b'] , size:  120
-t4 [1, 'one', 'b'] 2480814699136
-t4 <class 'list'>
-value:  [1, 'one', 'b'] , size:  120
+ Demonstrate Python Objects
+----------------------------
 -------------------------
-t3 modified - same heap object, no copy on write
+All Python types are reference-based
+with values in the managed heap. That
+has consequences we explore in this demo.
+-------------------------
+s1 <class 'str'> dynamic
+value:  a string , size:  57
+--- s2 = s1 ---
+s1 a string 2624089302960
+s2 a string 2624089302960
+--- s2 += " and more" ---
+s2 a string and more 2624089315152
+s1 a string 2624089302960
+-------------------------
+Assignment, in Python, assignes references not
+values.  So s1 and s2 share same heap instance
+But strings are immutable. So when a change is
+made to one, that creates a new instance without
+changing the original.
+-------------------------
+
+l1 <class 'list'> dynamic
+value:  ['you', 'me', 'them', 'us'] , size:  88
+
+l1 =  ['you', 'me', 'them', 'us']
+--- l2 = l1 ---
+--- l2.append("everyone") ---
+l2 =  ['you', 'me', 'them', 'us', 'everyone']
+l1 =  ['you', 'me', 'them', 'us', 'everyone']
+--- l2[1] = "myself" ---
+l2 =  ['you', 'myself', 'them', 'us', 'everyone']
+l1 =  ['you', 'myself', 'them', 'us', 'everyone']
+-------------------------
+Assignment, in Python, assignes references
+not values.  So changes to target affect the
+source.  "caveat emptor"
+-------------------------
+
+--- p1a = Point1() ---
+--- showTypeShowable(p1a, "p1a", nl) ---
+p1a <class '__main__.Point1'> dynamic
+p1a {  x:0, y:0, z:0 }
+p1a {  x:2, y:-3.5, z:-42 }
+--- p1b = p1a ---
+p1b {  x:2, y:-3.5, z:-42 }
+--- p1b.y = 13 ---
+p1b {  x:2, y:13, z:-42 }
+p1a {  x:2, y:13, z:-42 }
+-------------------------
+Reference assigned, not value.
+So change in P1b changed source p1a.
+-------------------------
+
+--- p1c = copy.deepcopy(p1b) ---
+p1c {  x:2, y:13, z:-42 }
+p1b {  x:2, y:13, z:-42 }
+--- p1c.z = 12 ---
+p1c {  x:2, y:13, z:12 }
+p1b {  x:2, y:13, z:-42 }
+-------------------------
+p1c.z reference assigned, not value. But no
+change in p1b since p1c is deep clone of p1b.
 -------------------------
 
 -- t5 = (1, 2, 3) --
-t5 (1, 2, 3) 2480815021312
+t5 (1, 2, 3) 2624089300224
 -- t6 = [1, t5, "weird"] --
-t6 [1, (1, 2, 3), 'weird'] 2480815027072
-t6 <class 'list'>
+t6 [1, (1, 2, 3), 'weird'] 2624089307328
+t6 <class 'list'> dynamic
 value:  [1, (1, 2, 3), 'weird'] , size:  80
 -- t5 = 1 + 1j : new object --
-t5 (1+1j) 2480814399280
-t6 [1, (1, 2, 3), 'weird'] 2480815027072
+t5 (1+1j) 2624086515600
+t6 [1, (1, 2, 3), 'weird'] 2624089307328
 -------------------------
 new object for t5, t6 not affected
 -------------------------
 
--- t7 = "a string" --
-t7 a string 2480815025968
-t7 <class 'str'>
-value:  a string , size:  57
--- t8 = t7 --
-t8 a string 2480815025968
--- t8 += " and another string" : copy on write
-t7 a string 2480815025968
-t8 a string and another string 2480815035040
-t8 <class 'str'>
-value:  a string and another string , size:  76
--------------------------
-t7 not modified : copy on write
--------------------------
-
 -- iterate over t6 children --
-elem 1 2480813375728
-elem (1, 2, 3) 2480815021312
-elem weird 2480815025520
+elem 1 2624085491952
+elem (1, 2, 3) 2624089300224
+elem weird 2624089306288
 
 -- iterate over t6 methods --
-['__add__', '__class__', '__class_getitem__', '__contains__', '__delattr__', '__delitem__', '__dir__', '__doc__', '__eq__', '__format__', '__ge__', '__getattribute__', '__getitem__', '__gt__', '__hash__', '__iadd__', '__imul__', '__init__', '__init_subclass__', '__iter__', '__le__', '__len__', '__lt__', '__mul__', '__ne__', '__new__', '__reduce__', '__reduce_ex__', '__repr__', '__reversed__', '__rmul__', '__setattr__', '__setitem__', '__sizeof__', '__str__', '__subclasshook__', 'append', 'clear', 'copy', 'count', 'extend', 'index', 'insert', 'pop', 'remove', 'reverse', 'sort']
+['__add__', '__class__', '__class_getitem__', '__contains__', 
+'__delattr__', '__delitem__', '__dir__', '__doc__', '__eq__', 
+'__format__', '__ge__', '__getattribute__', '__getitem__', '__gt__', 
+'__hash__', '__iadd__', '__imul__', '__init__', '__init_subclass__', 
+'__iter__', '__le__', '__len__', '__lt__', '__mul__', '__ne__', 
+'__new__', '__reduce__', '__reduce_ex__', '__repr__', '__reversed__', 
+'__rmul__', '__setattr__', '__setitem__', '__sizeof__', '__str__', 
+'__subclasshook__', 'append', 'clear', 'copy', 'count', 'extend', 
+'index', 'insert', 'pop', 'remove', 'reverse', 'sort']
 
 That's all folks!
 
