@@ -260,7 +260,7 @@ namespace CSharpObjects
       Point1 val1 = new Point1();
       val1.x = 1;
       val1.y = 2;
-      val1.y = 3;
+      val1.z = 3;
       ShowLabeledObject(val1, "val1");
       ShowOp("Point1 val2 = val1");
       Point1 val2 = val1;
@@ -367,12 +367,6 @@ namespace CSharpObjects
     */
     public static void ShowTypeScalar<T>(T t, string nm, string suffix = "")
     {
-      // Type? tt = t!.GetType();
-      // int size = 0;
-      // if(tt != null) {
-      //   Console.WriteLine("{0}, {1}", nm, tt.Name);
-      //   size = Utils.GetManagedSize(tt);
-      // }
       ShowType(t, nm);
       Console.WriteLine("value: \"{0}\"{1}", t, suffix);
     }
@@ -384,12 +378,8 @@ namespace CSharpObjects
       where T:IShow
     {
       ShowType(t, nm);
-      // Type tt = t.GetType();
-      // Console.WriteLine("{0}, {1}", nm, tt.Name);
-      // int size = Utils.GetManagedSize(tt);
       Console.WriteLine("value:");
       t.Show(nm);  // guaranteed availability by IShow implementation
-      // Console.WriteLine("size: {0}{1}", size, suffix);
       Console.Write(suffix);
     }
     /*--------------------------------------------------------------------

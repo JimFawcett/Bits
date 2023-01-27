@@ -1,4 +1,4 @@
- --------------------------------------------------
+--------------------------------------------------
  Demonstrate C# objects
 --------------------------------------------------
 
@@ -96,14 +96,14 @@ creating two references to the same instance in managed
 heap, so variables are coupled through single instance.
 --------------------------------------------------
 --- Point1 val1 = new Point1(), then initialize ---
-val1  val1  { x:1, y:3, z:0 }
+val1  val1  { x:1, y:2, z:3 }
 --- Point1 val2 = val1 ---
-val2  val2  { x:1, y:3, z:0 }
+val2  val2  { x:1, y:2, z:3 }
 val2 is same object as val1
 --- val2.z = 42; ---
 val2 is same object as val1
-val2  val2  { x:1, y:3, z:42 }
-val1  val1  { x:1, y:3, z:42 }
+val2  val2  { x:1, y:2, z:42 }
+val1  val1  { x:1, y:2, z:42 }
 --------------------------------------------------
 Note! Source of assignment, val1, changed when val2 changed.
 Point1 is ref type, so assignment just assigns references.
