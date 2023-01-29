@@ -1,93 +1,254 @@
 <!DOCTYPE html>
 <html>
 <!-- 
-  Js_Data.html 
+  Js_Objects.html 
+
+  Illustrate creation and use of JavaScript objects.
+
+  JavaScript Types.
+    Number, Bigint, Boolean, String,
+    Undefined, Null, Symbol, Object
+    - arrays are typed as objects
+    Other important library types:
+    - Date, Maps, Sets, JSON, 
+
+    All of these are reference types.
+    https://developer.mozilla.org/en-US/docs/Web/JavaScript/Data_structures
 -->
 <head>
   <script>
-    var nl = "<br />";
-    var nil = "";
+    /*--------------------------------------------------------------------
+      Used as program-wide constants for display
+    */
+    const nl = "<br />";
+    const tab = "&nbsp;&nbsp;"
+    const nil = "";
 
-    /* Demonstration starts here */
     function heading() {
-	    document.getElementById("data").innerHTML = "<h2>Javascript Data</h2>";
+	    document.getElementById("objects").innerHTML = "<h2>Javascript Objects</h2>";
     }
+    /*--------------------------------------------------------------------
+      Demonstration starts here 
+    */
     function execute() {
-      showNote("Demo numbers")
-      println("-- let t1 = 42 --");
-      let t1 = 42;
-      showType(t1, "t1");
-      println(nil);
-      println("-- let t2 = t1 --");
-      let t2 = t1;
-      isSameObject(t2, "t2", t1, "t1");
-      println(nil);
-      println("-- let t2 = 3.1415927 -- : copy on write");
-      t2 = 3.1415927;
-      isSameObject(t2, "t2", t1, "t1");
-      print(nl);
-      showType(t1, "t1");
-      showType(t2, "t2");
-      println(nil);
+      showNote("Demo Objects")
+
+      /*------------------------------------------------------------------
+        built in objects
+      ------------------------------------------------------------------*/
+      showNote("Built-in instances");
+      let d = 3.1415927;
+      showType(d, "d");
+      println("---");
+
+      let s = "s";
+      showType(s, "string");
+      println("---");
       
-      showNote("Demo strings");
-      println("-- let t3 = \"a string\" --");
-      let t3 = "a string";
-      showType(t3, "t3");
-      print(nl);
-      println("-- let t4 = t3 --");
-      let t4 = t3;
-      isSameObject(t4, "t4", t3, "t3");
-      println(nil);
-      showType(t3, "t3");
-      showType(t4, "t4");
-      print(nl);
-      println("-- t4 += " + "\" and another string\" -- : copy on write");
-      t4 += " and another string";
-      isSameObject(t4, "t4", t3, "t3");
-      println(nil);
-      showType(t3, "t3");
-      showType(t4, "t4");
-      print(nl);
+      let a = [1, 2, 3];
+      showType(a, "array");
+      println("---");
       
-      showNote("Demo arrays");
-      println("--- t5 = [1, 2, 3] ---");
-      let t5 = [1, 2, 3];
-      showType(t5, "t5");
-      print(nl);
-      println("--- let t6 = t5 ---");
-      let t6 = t5;
-      isSameObject(t6, "t6", t5, "t5");
+      let o = new Object();
+      o.elem = "some element";
+      o.say = function() { document.write("Hello" + nl)};
+      showType(o, "o");
+      o.say();
+      
+      showOp("more elaborate data");
+      let arr = [1, 'z', [1, 2, 3], true];
+      showType(arr, "arr");
+      println("---");
+
+      /* add show method to existing array */
+      println(
+        "you can add methods to any object, including" + nl +
+        "arrays and functions."
+      )
+      arr.show = function(nm) {
+        document.write(nm, " [ ");
+        arr.forEach(element => {
+          document.write(element, " ");
+        });
+        document.write("]" + nl);
+      }
+      showOp("arr.show(nm)");
+      arr.show("arr");
       println(nil);
-      showType(t5, "t5");
-      showType(t6, "t6");
+
+      println(
+        "Here see the results of using two other analyzer methods" +nl +
+        "on the arr array:"
+      )
+      /*------------------------------------------------------------------
+        showTypeShowable uses show(...) method provided by analyzed type.
+        It works with any object that provides a show(...) method.
+      */
+      /* so now showTypeShowable can be used */
+      showOp("showTypeShowable(arr, \"arr\")");
+      showTypeShowable(arr, "arr");
+      showOp("showObject(arr, \"arr\")");
+      showObject(arr, "arr");
       print(nl);
-      println("--- t6[1] = -2 --- : no copy on write");
-      t6[1] = -2;
-      isSameObject(t6, "t6", t5, "t5");
+
+      /*------------------------------------------------------------------
+       crafting object by hand 
+      ------------------------------------------------------------------*/
+      showNote("User-defined object literal");
+    
+      const dev = {
+        name:"Jim", 
+        job:"Retired from Syracuse University", 
+        hobby:"Developing software",
+        projects: [ 'Bits language comparisons', 'Stories', 'Bites' ]
+      }
+      showObject(dev, "dev");
+
+      /* creating show function tailored to dev objects */
+      dev.show = function(nm) {
+        document.write(nm, ": {",nl,tab,"name: ", this.name, 
+        nl, tab, "job: ", this.job, nl, tab, "hobby: ", 
+        this.hobby, nl, tab, "projects: ", this.projects,  
+        nl, "}<br />");
+      }
+      /* using 3 ways to display information about an object */
+      showOp("dev.show(\"dev\")");
+      dev.show("dev");
+      showOp("showTypeShowable(dev, \"dev\")");
+      showTypeShowable(dev, "dev");
+      showOp("showType(dev, \"dev\")");
+      showType(dev, "dev", 4, 1);
+
+      /*------------------------------------------------------------------
+        using JavaScript class 
+      ------------------------------------------------------------------*/
+      showNote("Using JavaScript class");
+
+      class Point1 {
+        constructor(x, y, z) {
+          this.x = x;
+          this.y = y;
+          this.z = z;
+        }
+        show(name) {
+          document.write(name, ": Point1 {", nl, tab);
+          document.write(this.x, ", ", this.y, ", ", this.z);
+          document.write(nl, "}", nl);
+        }
+      }
+
+      let p1 = new Point1(1, 2, 3);
+
+      showOp("showObject(p1, \"p1\")");
+      showObject(p1, "p1");
+      showOp("p1.show(\"p1\")");
+      p1.show("p1");
+      showOp("showTypeShowable(p1, \"p1\")");
+      showTypeShowable(p1, "p1");
+      showOp("showType(p1, \"p1\")");
+      showType(p1, "p1: Point1");
       println(nil);
-      showType(t5, "t5");
-      showType(t6, "t6");
-      showNote("Source t5 modified!")
+
+      /*------------------------------------------------------------------
+        exploring concequences of JavaScript object model
+      */
+      showNote(
+        "Exploring consequences of JavaScript reference types:"
+      )
+      showOp("let p2 = p1");
+      let p2 = p1;
+      p2.show("p2");
+      isSameObject(p2, "p2", p1, "p1");
+      showOp("p2.z = -42");
+      p2.z = -42;
+      p2.show("p2");
+      p1.show("p1");
+      isSameObject(p2, "p2", p1, "p1");
+      showNote(
+        "All JavaScript variables are reference types. So assignments assign" + nl +
+        "references, not values. And so changing target, p2, changed source, p1"
+      )
+      print(nl);
+      /*------------------------------------------------------------------
+        Used for testing display functions
+      */
+      showNote(
+        "The displays below are used to test and demonstrate how" + nl +
+        "display and analysis functions work. Those are all defined" + nl +
+        "after the end of the execute() function."
+      )
+      showOp("p1.show(\"p1\")");
+      p1.show("p1");
+      println(nil);
+
+      showOp("showObject(p1, \"p1\")");
+      showObject(p1, "p1");
+      println(nil);
+
+      let tst = { "a":"1", "b":["2", "3"] };
+      showType(tst, "test display formatting");
+      println(nil);
+
+      showOp("let testarr = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]");
+      let testarr = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+      /* using default values for width=7 and left=4 */
+      showObject(testarr, "testarr");
+
+      print(nl + "That&apos;s all Folks!" + nl);
     }
-    /* display functions */
+    /*--------------------------------------------------------------------
+      Display and Analysis functions
+    */
     function print(str) {
       document.write(str);
     }
     function println(str) {
       document.write(str + "<br />");
     }
+    /*--------------------------------------------------------------------
+      Display emphasized text
+    */
     function showNote(text) {
-      println("-------------------------");
-      println(text);
-      println("-------------------------");
+      document.write("-------------------------<br />");
+      document.write(text, "<br />");
+      document.write("-------------------------<br />");
     }
-    /* Analysis functions */
-    function showType(t, nm) {
-      println(nm + ", " + typeof t);
-      print("size: " + sizeof(t) + ", value: " + t);
+    /*--------------------------------------------------------------------
+      Show an operation expression surrounded with a few dashes
+    */
+    function showOp(text) {
+      document.write("--- ");
+      document.write(text)
+      document.write(" ---<br />");
+    }
+    /*--------------------------------------------------------------------
+      Show basic type information: works for scalar types
+    */
+    function showType(t, nm, left=4, width=7) {
+      if(typeof t != typeof Object()) {
+        println(nm + ": " + typeof t);
+        print("size: " + sizeof(t) + ", value: " + t);
+      }
+      else {
+        println("type: " + typeof t);
+        showObject(t, nm, left, width);
+        print("size: " + sizeof(t));
+      }
       println(nil);
     }
+    /*--------------------------------------------------------------------
+      Show type information using object's show() method
+    */
+    function showTypeShowable(t, nm) {
+      print(nm + ", " + typeof t);
+      print(", size: ");
+      println(sizeof(t));
+      print("value: ");
+      t.show(nm);
+    }
+    /*--------------------------------------------------------------------
+      Do references o1 and o2 have same address (point to same instance)
+    */
     function isSameObject(o1, nm1, o2, nm2) {
       if (o1 === o2) {
         println(nm1 + " is same object as " + nm2)
@@ -96,7 +257,113 @@
         println(nm1 + " is not same object as " + nm2)
       }
     }
+    /*--------------------------------------------------------------------
+      Create a string containing n non-breaking spaces, &nbsp;....
+      Part of formatJSONstr(...)
+    */
+    function indent(n) {
+      let tmp = "";
+      for(i=0; i<n; ++i) {
+        tmp += "&nbsp;";
+      }
+      return tmp;
+    }
+    /*--------------------------------------------------------------------
+      Replace comma character with comma escape, e.g., &#44;.
+      Expects index to point to comma in str. This is done to
+      avoid splitting inner array by JSON.stringify.
+      Part of formatJSONstr(...)
+    */
+    function replaceComma(str, index) {
+      if(index < 0 || str.length <= index) {
+        return str;
+      }
+      let tmp = str.substr(0, index-1) + "&#44;" + str.substr(index);
+      // document.writeln("test: " + JSON.stringify('1&#44;2'));
+      return tmp;
+    }
+    /*--------------------------------------------------------------------
+      Treat inner array as a single element for JSON string formatting.
+      Part of formatJSONstr(...)
+    */
+    function weldArray(jstr) {
+      isArray = false;
+      tmp = jstr;
+      let j=0;
+      for(i=0; i<jstr.length; ++i) {
+        j += 1;
+        switch(jstr[i]) {
+          case '[':
+            if(i != 0) {  // don't count outer array
+              isArray = true;
+            }
+            break;
+          case ']':
+            isArray = false;
+            break;
+          case ',':
+            if(isArray) {
+              tmp = replaceComma(tmp, j);
+              j += 4;
+            }
+            break;
+        }
+      }
+      return tmp;
+    }
+    /*--------------------------------------------------------------------
+      Format JSON string to indent left spaces and show rows of width elements
+    */
+    function formatJSONstr(jstr, left=4, width=8) {
+      let indtCache = indent(left);
+      jstr = weldArray(jstr);
+      jstr = jstr.trim();
+      let char1 = jstr[0];
+      let char2 = jstr[jstr.length - 1];
+      let jstrm = jstr.substring(1, jstr.length - 1); // remove delimiters
+      let fstr = jstrm.split(/[,]+/); // regex selects on either " " or ,
+      let fm = char1 + "<br />" + indtCache;
+      for(i=0; i<fstr.length; ++i) {
+        fm += fstr[i] + ", ";
+        if((i+1) % width === 0 && i != fstr.length -1) {
+          fm += "<br />" + indtCache;
+        }
+      }
+      fm = fm.substring(0, fm.length - 2);
+      fm += "<br />" + char2 + "<br />";
+      return fm;
+    }
+    /*--------------------------------------------------------------------
+      Use JSONstringify to show all data members of object with body
+      indented by left spaces and elements shown in rows of specified 
+      width. Used in showType(...)
+    */
+    function showObject(obj, nm, left=4, width=7) {
+      document.write(nm, ": ");
+      let fmts = formatJSONstr(JSON.stringify(obj), left, width);
+      document.write(fmts);
+    }
+    /*--------------------------------------------------------------------
+      Iterate through object's own keys, ignore objects, and display
+      - only shows top level elements, e.g., no recursion
+      - not used in demo
+      - here to illustrate iterating through object elements
+    */
+    function showObject_alt(obj, nm) {
+      let str = "";
+      for(let [key, value] of Object.entries(obj)) {
+        if(obj.hasOwnProperty(key) && typeof value != typeof Object) {
+          str += "{" + key + ": " + value + "}, ";
+        }
+      }
+      /* remove trailing comma and space */
+      str = str.substring(0, str.length - 2);
+      document.write(nm, " { ", str, " }", nl);
+    }
+    /*--------------------------------------------------------------------
+      Evaluate object's size by iterating through own properties
     // https://gist.github.com/pgpbpadilla/10344038
+    */
     function sizeof(object) {
       var objectList = [],
         stack = [ object ],
@@ -135,7 +402,7 @@
   </style>
 </head>
 <body>
-  <div id="data"></div>
+  <div id="objects"></div>
   <script>
     heading();
     execute();

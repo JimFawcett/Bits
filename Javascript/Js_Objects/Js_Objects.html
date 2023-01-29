@@ -9,8 +9,11 @@
     Number, Bigint, Boolean, String,
     Undefined, Null, Symbol, Object
     - arrays are typed as objects
+    Other important library types:
+    - Date, Maps, Sets, JSON, 
 
     All of these are reference types.
+    https://developer.mozilla.org/en-US/docs/Web/JavaScript/Data_structures
 -->
 <head>
   <script>
@@ -21,25 +24,14 @@
     const tab = "&nbsp;&nbsp;"
     const nil = "";
 
-    /*--------------------------------------------------------------------
-      Demonstration starts here 
-    */
     function heading() {
 	    document.getElementById("objects").innerHTML = "<h2>Javascript Objects</h2>";
     }
+    /*--------------------------------------------------------------------
+      Demonstration starts here 
+    */
     function execute() {
       showNote("Demo Objects")
-
-      /*------------------------------------------------------------------
-        Used for testing display functions
-      */
-      let tst = { "a":"1", "b":["2", "3"] };
-      showType(tst, "test display formatting");
-
-      showOp("let testarr = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]");
-      let testarr = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
-      /* using default values for width=7 and left=4 */
-      showObject(testarr, "testarr");
 
       /*------------------------------------------------------------------
         built in objects
@@ -47,15 +39,32 @@
       showNote("Built-in instances");
       let d = 3.1415927;
       showType(d, "d");
-      let s = "a string";
-      showType(s, "s");
+      println("---");
 
-      showOp("let arr = [1, 'z', [1, 2, 3], true]");
+      let s = "s";
+      showType(s, "string");
+      println("---");
+      
+      let a = [1, 2, 3];
+      showType(a, "array");
+      println("---");
+      
+      let o = new Object();
+      o.elem = "some element";
+      o.say = function() { document.write("Hello" + nl)};
+      showType(o, "o");
+      o.say();
+      
+      showOp("more elaborate data");
       let arr = [1, 'z', [1, 2, 3], true];
-      showOp("showType(arr, \"arr\")");
       showType(arr, "arr");
+      println("---");
 
       /* add show method to existing array */
+      println(
+        "you can add methods to any object, including" + nl +
+        "arrays and functions."
+      )
       arr.show = function(nm) {
         document.write(nm, " [ ");
         arr.forEach(element => {
@@ -65,9 +74,15 @@
       }
       showOp("arr.show(nm)");
       arr.show("arr");
+      println(nil);
 
+      println(
+        "Here see the results of using two other analyzer methods" +nl +
+        "on the arr array:"
+      )
       /*------------------------------------------------------------------
-        showTypeShowable uses show(...) method provided by analyzed type
+        showTypeShowable uses show(...) method provided by analyzed type.
+        It works with any object that provides a show(...) method.
       */
       /* so now showTypeShowable can be used */
       showOp("showTypeShowable(arr, \"arr\")");
@@ -85,7 +100,7 @@
         name:"Jim", 
         job:"Retired from Syracuse University", 
         hobby:"Developing software",
-        plants: [ 'african_violets', 'suculent', 'cacti' ]
+        projects: [ 'Bits language comparisons', 'Stories', 'Bites' ]
       }
       showObject(dev, "dev");
 
@@ -93,7 +108,7 @@
       dev.show = function(nm) {
         document.write(nm, ": {",nl,tab,"name: ", this.name, 
         nl, tab, "job: ", this.job, nl, tab, "hobby: ", 
-        this.hobby, nl, tab, "plants: ", this.plants,  
+        this.hobby, nl, tab, "projects: ", this.projects,  
         nl, "}<br />");
       }
       /* using 3 ways to display information about an object */
@@ -137,6 +152,9 @@
       /*------------------------------------------------------------------
         exploring concequences of JavaScript object model
       */
+      showNote(
+        "Exploring consequences of JavaScript reference types:"
+      )
       showOp("let p2 = p1");
       let p2 = p1;
       p2.show("p2");
@@ -151,10 +169,30 @@
         "references, not values. And so changing target, p2, changed source, p1"
       )
       print(nl);
+      /*------------------------------------------------------------------
+        Used for testing display functions
+      */
+      showNote(
+        "The displays below are used to test and demonstrate how" + nl +
+        "display and analysis functions work. Those are all defined" + nl +
+        "after the end of the execute() function."
+      )
       showOp("p1.show(\"p1\")");
       p1.show("p1");
+      println(nil);
+
       showOp("showObject(p1, \"p1\")");
       showObject(p1, "p1");
+      println(nil);
+
+      let tst = { "a":"1", "b":["2", "3"] };
+      showType(tst, "test display formatting");
+      println(nil);
+
+      showOp("let testarr = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]");
+      let testarr = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+      /* using default values for width=7 and left=4 */
+      showObject(testarr, "testarr");
 
       print(nl + "That&apos;s all Folks!" + nl);
     }
@@ -184,7 +222,7 @@
       document.write(" ---<br />");
     }
     /*--------------------------------------------------------------------
-      Show basic type information: works for scalar types
+      Show basic type information
     */
     function showType(t, nm, left=4, width=7) {
       if(typeof t != typeof Object()) {

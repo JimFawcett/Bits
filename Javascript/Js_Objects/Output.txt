@@ -1,67 +1,149 @@
-Javascript Data
+Javascript Objects
 -------------------------
-Demo numbers
+Demo Objects
 -------------------------
--- let t1 = 42 --
-t1, number
-size: 8, value: 42
-
--- let t2 = t1 --
-t2 is same object as t1
-
--- let t2 = 3.1415927 -- : copy on write
-t2 is not same object as t1
-
-t1, number
-size: 8, value: 42
-t2, number
+-------------------------
+Built-in instances
+-------------------------
+d: number
 size: 8, value: 3.1415927
+---
+string: string
+size: 2, value: s
+---
+type: object
+array: [
+    1, 2, 3
+]
+size: 24
+---
+type: object
+o: {
+    "elem":"some element"
+}
+size: 24
+Hello
+--- more elaborate data ---
+type: object
+arr: [
+    1, "z", [1,2,3], true
+]
+size: 38
+---
+you can add methods to any object, including
+arrays and functions.
+--- arr.show(nm) ---
+arr [ 1 z 1,2,3 true ]
+
+Here see the results of using two other analyzer methods
+on the arr array:
+--- showTypeShowable(arr, "arr") ---
+arr, object, size: 38
+value: arr [ 1 z 1,2,3 true ]
+--- showObject(arr, "arr") ---
+arr: [
+    1, "z", [1,2,3], true
+]
 
 -------------------------
-Demo strings
+User-defined object literal
 -------------------------
--- let t3 = "a string" --
-t3, string
-size: 16, value: a string
-
--- let t4 = t3 --
-t4 is same object as t3
-
-t3, string
-size: 16, value: a string
-t4, string
-size: 16, value: a string
-
--- t4 += " and another string" -- : copy on write
-t4 is not same object as t3
-
-t3, string
-size: 16, value: a string
-t4, string
-size: 54, value: a string and another string
+dev: {
+    "name":"Jim", "job":"Retired from Syracuse University", "hobby":"Developing software", "projects":["Bits language comparisons","Stories","Bites"]
+}
+--- dev.show("dev") ---
+dev: {
+  name: Jim
+  job: Retired from Syracuse University
+  hobby: Developing software
+  projects: Bits language comparisons,Stories,Bites
+}
+--- showTypeShowable(dev, "dev") ---
+dev, object, size: 182
+value: dev: {
+  name: Jim
+  job: Retired from Syracuse University
+  hobby: Developing software
+  projects: Bits language comparisons,Stories,Bites
+}
+--- showType(dev, "dev") ---
+type: object
+dev: {
+    "name":"Jim",
+    "job":"Retired from Syracuse University",
+    "hobby":"Developing software",
+    "projects":["Bits language comparisons","Stories","Bites"]
+}
+size: 182
+-------------------------
+Using JavaScript class
+-------------------------
+--- showObject(p1, "p1") ---
+p1: {
+    "x":1, "y":2, "z":3
+}
+--- p1.show("p1") ---
+p1: Point1 {
+  1, 2, 3
+}
+--- showTypeShowable(p1, "p1") ---
+p1, object, size: 24
+value: p1: Point1 {
+  1, 2, 3
+}
+--- showType(p1, "p1") ---
+type: object
+p1: Point1: {
+    "x":1, "y":2, "z":3
+}
+size: 24
 
 -------------------------
-Demo arrays
+Exploring consequences of JavaScript reference types:
 -------------------------
---- t5 = [1, 2, 3] ---
-t5, object
-size: 24, value: 1,2,3
-
---- let t6 = t5 ---
-t6 is same object as t5
-
-t5, object
-size: 24, value: 1,2,3
-t6, object
-size: 24, value: 1,2,3
-
---- t6[1] = -2 --- : no copy on write
-t6 is same object as t5
-
-t5, object
-size: 24, value: 1,-2,3
-t6, object
-size: 24, value: 1,-2,3
+--- let p2 = p1 ---
+p2: Point1 {
+  1, 2, 3
+}
+p2 is same object as p1
+--- p2.z = -42 ---
+p2: Point1 {
+  1, 2, -42
+}
+p1: Point1 {
+  1, 2, -42
+}
+p2 is same object as p1
 -------------------------
-Source t5 modified!
+All JavaScript variables are reference types. So assignments assign
+references, not values. And so changing target, p2, changed source, p1
 -------------------------
+
+-------------------------
+The displays below are used to test and demonstrate how
+display and analysis functions work. Those are all defined
+after the end of the execute() function.
+-------------------------
+--- p1.show("p1") ---
+p1: Point1 {
+  1, 2, -42
+}
+
+--- showObject(p1, "p1") ---
+p1: {
+    "x":1, "y":2, "z":-42
+}
+
+type: object
+test display formatting: {
+    "a":"1", "b":["2","3"]
+}
+size: 6
+
+--- let testarr = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9] ---
+testarr: [
+    0, 1, 2, 3, 4, 5, 6,
+    7, 8, 9
+]
+
+That's all Folks!
