@@ -66,8 +66,12 @@ def execute() :
         "has consequences we explore in this demo."
     )
 
+    d1 = 3.1415927;
+    showType(d1, "d1");
+    
     s1 = "a string"
     showType(s1, "s1")
+
     showOp("s2 = s1")
     s2 = s1
     showIdent(s1, "s1")
@@ -80,7 +84,7 @@ def execute() :
     # print("s2 = {}".format(s2))
     # print("s1 = {}".format(s1))
     showNote(   
-        "Assignment, in Python, assignes references not\n"\
+        "Assignment, in Python, assigns references not\n"\
         "values.  So s1 and s2 share same heap instance\n"\
         "But strings are immutable. So when a change is\n"\
         "made to one, that creates a new instance without\n"\
