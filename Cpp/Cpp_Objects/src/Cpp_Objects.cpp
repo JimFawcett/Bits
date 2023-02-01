@@ -340,7 +340,7 @@ int main() {
     /* pPoint2 moved, so invalid */
 
     print();
-    showNote("Test and demonstrate formatCollting functions");
+    showNote("Test and demonstrate formatting functions");
     println("\n--- demonstrate Point2 show() ---");
     print("default indent = 4 and width = 7:");
     Point2<int> p2a(15);
