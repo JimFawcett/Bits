@@ -27,16 +27,6 @@ using Analysis;                     // namespace defined in Analysis.cs
 */
 namespace CSharpObjects
 {
-  // /*----------------------------------------------------------------------
-  //   IShow allows analysis functions to operate on instances of any class 
-  //   that implements it. See ShowTypeShowable<T>(T t, ...), below.
-  // */
-  // interface IShow {
-  //   void Show(string name);   // show instance state as rows of elements
-  //   int Length { get; }       // total number of elements
-  //   int Width { get; set; }   // number of elements per row
-  //   int Left { get; set; }    // offset from terminal Left
-  // }
   /*-----------------------------------------------------------------------
     Point1 is a basic point class with three integer coordinates.
     - It is a reference type because it's instances are created
@@ -170,7 +160,6 @@ namespace CSharpObjects
   class Program
   {
     const string nl = "\n";
-
     static void Main(string[] args)
     {
       Display.ShowLabel(" Demonstrate C# objects");
@@ -312,6 +301,14 @@ namespace CSharpObjects
         "There is no way for change in str2 to affect str1."
       );
 
+      Display.println();
+      
+      Display.ShowNote(
+        "Test formatting for Enumerable types", nl
+      );
+
+      int[] testarr = { 0,1, 2, 3, 4, 5, 6, 7, 8, 9 };
+      Display.ShowTypeEnum(testarr, "testarr", 5, nl);
       // ShowLabel("Test code for functions used above");
       // print("--- double[] to folded CSV ---");
       // int[] arr2 = { 0,1,2,3,4,5,6,7,8 };

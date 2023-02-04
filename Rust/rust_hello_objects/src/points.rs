@@ -1,16 +1,15 @@
 /*-------------------------------------------------------------------
   points.rs
   - defines types Point1 and Point2<T>
-*/
+-------------------------------------------------------------------*/
 
 use std::default::*;
 use std::fmt::*;
 
-#[path = "analysis.rs"]
-pub mod analysis;   // locate file analysis.rs
-use analysis::*;    // load public members of analysis
+use crate::analysis;    // identify source code
+use analysis::*;        // import public functions and types
 
-/*-------------------------------------
+/*---------------------------------------------------------
   - Declare Point1 struct, like a C++ class
   - Request compiler implement traits Debug & Clone
 */
@@ -56,7 +55,7 @@ impl Point1 {
     }
 }
 
-/*-------------------------------------
+/*---------------------------------------------------------
   - Declare Point2<T> struct, like a C++ template class
   - Request compiler implement traits Debug & Clone
 */
@@ -91,9 +90,9 @@ where
     pub fn coors(&mut self) -> &mut Vec<T> {
         &mut self.coor
     }
-    pub fn show(&self, width: usize, left: usize) {
+    pub fn show(&self, left: usize, width:usize) {
         print!("Point2<T> {{ ");
-        show_fold(&self.coor, width, left);
+        show_fold(&self.coor, left, width);
         print!("}}")
     }
 }
