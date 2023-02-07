@@ -13,19 +13,23 @@ use std::fmt::*;
 */
 pub fn show_type<T:Debug>(_t: &T, nm: &str) {
     let typename = std::any::type_name::<T>();
-    println!("\ncall name: {nm:?}, type: {typename:?}");
+    println!("call name: {nm:?}, type: {typename:?}");
 }
 /*---------------------------------------------------------
   Show enumerable input's values
   - 'a is an annotation saying that T's lifetime
     is as long as the function's lifetime.
+  - I is the type of T's elements, that is coll:T<I>.
+  - T can be any iterable type and both T and I must 
+    satisfy Debug trait.
+  - Does not consume input t since passed by reference.
 */
 pub fn show_value_enum<T:Debug, I:Debug>(
     t: &T, nm: &str, left:usize, width:usize
 ) 
   where for<'a> &'a T: IntoIterator<Item = &'a I>
 {
-    print!("{nm:?} {{");
+    print!("{nm:?} {{\n");
     show_fold(&t, left, width);
     print!("}}");
     println!("\nsize: {}", std::mem::size_of::<T>());
@@ -35,7 +39,9 @@ pub fn show_value_enum<T:Debug, I:Debug>(
   value, and size.
   - show_type is generic function with Debug bound.
     Using format "{:?} requires Debug."
-  - works with small enumerable collections
+  - works with small enumerable collections too because
+    {:?} knows how to format them, but won't fold long
+    sequences of elements. Use show_value_enum for that.
 */
 pub fn show_type_scalar<T:Debug>(t: &T, nm: &str) {
     show_type(t, nm);
@@ -81,7 +87,7 @@ fn find_last_utf8(s: &str, chr: char) -> Option<usize> {
 /*---------------------------------------------------------
   fold an enumerable's elements into rows of w elements
   - indent by left spaces
-  - consumes t - can enter ref to avoid move
+  - does not consume t since passed as reference
   - returns string
   https://users.rust-lang.org/t/generic-code-over-iterators/10907/3
 */
@@ -90,7 +96,7 @@ pub fn fold<T, I:Debug>(
 ) -> String
     where for<'a> &'a T: IntoIterator<Item = &'a I>, T:Debug
 {
-    let mut accum = "\n".to_string();
+    let mut accum = String::new();
     accum += &offset(left);
     let mut i = 0usize;
     for item in t {
@@ -118,16 +124,37 @@ pub fn show_fold<T:Debug, I:Debug>(t:&T, left:usize, width:usize)
   println!("{}",fold(t, left, width));
 }
 /*---------------------------------------------------------
+  show string wrapped with long dotted lines above and below 
+*/
+pub fn show_label(note: &str, n:usize) {
+  let mut line = String::new();
+  for _i in 0..n {
+    line.push('-');
+  }
+  print!("\n{}\n", line);
+  print!("  {note}");
+  print!("\n{}\n", line);
+}
+pub fn show_label_def(note:&str) {
+  show_label(note, 50);
+}
+/*---------------------------------------------------------
   show string wrapped with dotted lines above and below 
 */
 pub fn show_note(note: &str) {
-    print!("\n-------------------------\n");
-    print!("{note}");
-    print!("\n-------------------------\n");
+  print!("\n-------------------------\n");
+  print!(" {note}");
+  print!("\n-------------------------\n");
 }
 /*---------------------------------------------------------
   show string wrapped in short lines
 */
 pub fn show_op(opt: &str) {
-    println!("--- {} ---", opt);
+  println!("--- {} ---", opt);
+}
+/*---------------------------------------------------------
+  print newline
+*/
+pub fn nl() {
+  println!();
 }

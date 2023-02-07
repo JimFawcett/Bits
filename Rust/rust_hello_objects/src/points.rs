@@ -47,11 +47,11 @@ impl Point1 {
     pub fn set_z(&mut self, z: i32) {
         self.z = z
     }
-    pub fn show(&self) {
-        print!("Point1 {{ ");
+    pub fn show(&self, nm:&str) {
+        print!("{:?}: Point1 {{ ", nm);
         print!("{0}, ", self.x);
         print!("{0}, ", self.y);
-        print!("{0} }}", self.z);
+        println!("{0} }}", self.z);
     }
 }
 
@@ -90,9 +90,9 @@ where
     pub fn coors(&mut self) -> &mut Vec<T> {
         &mut self.coor
     }
-    pub fn show(&self, left: usize, width:usize) {
-        print!("Point2<T> {{ ");
+    pub fn show(&self, nm:&str, left: usize, width:usize) {
+        print!("{:?}: Point2<T> {{\n", nm);
         show_fold(&self.coor, left, width);
-        print!("}}")
+        println!("}}")
     }
 }

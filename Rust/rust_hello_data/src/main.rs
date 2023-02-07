@@ -1,7 +1,6 @@
 #![allow(unused_mut)]
 #![allow(clippy::approx_constant)]
 
-use std::fmt::Debug;
 /* rust_hello_data::main.rs */
 /*
   Static Data Types:
@@ -10,10 +9,14 @@ use std::fmt::Debug;
     u8, u16, u32, u64, u128, usize
     f32, f64
     (), reference
-    array, tuple
-    struct, enum, use
+    array, tuple, struct, enum
   Qualifiers:
     mutable, const
+
+  Library Types:
+    std::String, std::Vec<T>, std::HashMap<K,V>,
+    std::VecDeque<T>, std::BTreeSet<T>, std::BTreeMap<K,V>,
+    std::LinkedList<T>, std::BinaryHeap<T>
 
   Operations:
     Primitive types can all be copied.
@@ -26,11 +29,8 @@ use std::fmt::Debug;
     and no garbage collection is needed. Resources are
     returned at end of declr scope.
 */
-/*
-  First argument is passed by value, second passed
-  by reference. Non-copy types supplied to the first
-  argument will be moved.
-*/
+use std::fmt::Debug;
+
 fn main() {
     println!(
         "\n Demonstrate Rust types\n\
@@ -42,21 +42,27 @@ fn main() {
 
       Library types like String have a control block in stack
       and data in heap. So they do not satisfy the copy trait.
-      They can be cloned, but that requires an explicit call
-      to clone().
+
+      A move type can be cloned, but that requires an explicit 
+      call to clone(). Otherwise, assignment and pass by value
+      result in move which transfers ownership of heap 
+      resources and invalidates the moved instance.
+
+      Any attempt to use a moved instance results in compile
+      failure.
     */
 
-    /*-- values live in stack frame --*/
+    /*-- thesee values live in stack frame --*/
     println!("\n  -- initialize on stack from literals --");
-    let mut t1: i32 = 42;
+    let t1: i32 = 42;
     show_type(t1, "t1");
-    let t1a = 42i64;      // alternate declaration
+    let t1a = 42i64;    // alternate declaration style
     show_type(t1a, "t1a");
     /*
       Below is not type redefinition, it is shadowing,
       e.g., a new variable that hides the older t1a.
     */
-    let mut t1a: f64 = 42.0;
+    let mut t1a: f64 = 42.0;  // will change value later
     show_type(t1a, "t1a");
 
     /*-- create mutable reference --*/
@@ -66,7 +72,8 @@ fn main() {
 
     /*-- values live in heap when wrapped with box --*/
     println!("\n  -- initialize on heap --");
-    let t2 = Box::new(3.14159f64); // 3.14159f64 is value specified to be f64
+    // 3.14159f64 below is a value specified to be f64
+    let t2 = Box::new(3.14159f64); 
     show_type(*t2, "*t2");
     show_type(t2, "t2");    // moves t2, use t2.clone() to avoid move
     // print!("{}", &t2.to_string());  // error - t2 moved
@@ -81,7 +88,7 @@ fn main() {
     /*--
       String control block lives on stack, char data live in heap.
       Passing by value or assignment transfers ownership from
-      source to destination.  That is termed a move.
+      source to destination.  That is a move.
     --*/
     println!("\n  -- use clone to avoid src move --");
     let t3: String = String::from("Hello Data"); // temp moved
@@ -97,15 +104,30 @@ fn main() {
     txt += ", see:\nt5 = ";
     println!("{}{:?} is still valid", txt, t5);
 
+    println!("\n  -- vec is like an extendable array --");
+    let mut v1 = Vec::<i32>::new();
+    v1.push(1);
+    v1.push(-1);
+    v1.insert(1, 4);
+    show_type(v1, "\"v1\"");  // v1 moved
+
+    let v2 = vec![42, 84, 126];
+    show_type(&v2, "&v2");    // v2 not moved, passed reference
+                                    // size of &v2 is size of a pointer
     println!("\n\nThat's all Folks!!\n\n");
 }
 /*
   show_type is generic function with Debug bound.
-  Using format "{:?} requires Debug."
+  Using format "{:?}" requires Debug.
+  - mem::size_of::<T> measures size of T in stackframe.
+    It does not measure size of resources on heap.
 */
 fn show_type<T: Debug>(t: T, nm: &str) {
   let typename = std::any::type_name::<T>();
   println!("\n{}, {}", nm, typename);
-  println!("value: {:?}, size: {}", t, std::mem::size_of::<T>());
+  println!(
+    "value: {:?}, size: {}", 
+    t, std::mem::size_of::<T>()
+  );
 }
 
