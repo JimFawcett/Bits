@@ -1,5 +1,7 @@
-// Cpp_Data.cpp
-
+/*---------------------------------------------------------
+  Bits::Cpp::src::Cpp_Data.cpp
+  - Display creation and simple use of basic types
+*/
 #include <iostream>  // std::cout
 #include <typeinfo>  // typeid
 #include <memory>    // std::unique_ptr
@@ -10,16 +12,20 @@
     byte, bool, int, char, char16_t, char32_t, wchar_t
     float, double
     array, pointer, reference
-    struct, class, enum class, using
+    struct, class, enum class
   Qualifiers:
     short, long, const, unsigned
 
+  Library Types:
+    std::string, std::vector<T>, std::unordered_map<K,V>, 
+    std::unique_ptr<T>, std::shared_ptr<T>, and many more
+
   Operations:
     Primitive types can all be copied.
-    Most library and user-defined types can be copied, moved, and deleted
-    by providing member constructors and destructor.  Often compiler 
-    generation works well, but for classes with pointer members developers 
-    must provide them.
+    Most library and user-defined types can be copied, moved, 
+    and deleted by providing member constructors and destructor.
+    Often compiler generated functions work well, but for 
+    classes with pointer members developers must provide them.
 
   Processing:
     All types are static, operations run as native code, and no garbage
@@ -28,14 +34,19 @@
 /* C++ requires declaration before use */
 template<typename T>
 void showType(T t, const std::string &nm);
+void showOp(const std::string& text);
+void showLabel(const std::string& text, size_t n = 50);
 void print(const std::string& txt = "");
 void println(const std::string& txt = "");
 
+void nl();
+
 int main() {
-    print(" Demonstrate C++ types");
-    println("-----------------------");
+    showLabel(" Demonstrate C++ types");
+    nl();
+
     /*-- values live in stack frame --*/
-    println("-- initialize from literals --");
+    showOp("initialize from literals");
     int t1 = int{3}; 
     showType(t1, "t1");
     long long int t1a = 3;
@@ -67,21 +78,57 @@ int main() {
     showType(std::move(t5), "t5");  // unique_ptr can't be copied so move
     t5 = std::unique_ptr<int>(new int{-3});
     showType(*t5, "*t5"); // contents can be copied
-    println("-- t5 deleted when unique_ptr leaves scope");
-    std::cout << std::endl;
-}
+    nl();
 
+    showOp("t5 deleted when unique_ptr leaves scope");
+
+    println("\n  That's all Folks!\n\n");
+}
+/*---------------------------------------------------------
+  Truncates input string to n chars. Beware: side-effects.
+  - used in showType which may generate long type names.
+*/
+std::string truncate(const std::string& str, size_t n = 40) {
+  std::string tmp = str;
+  if(tmp.size() < n) {
+    return tmp;
+  }
+  tmp.resize(n);
+  tmp += "...";
+  return tmp;
+}
+/*---------------------------------------------------------
+  Show call name, static type, value, and size
+*/
 template<typename T>
 void showType(T t, const std::string &nm) {
   std::cout << "\n  " << nm;                // show name at call site
-  std::cout << ": type: " << typeid(t).name();  // show type
+  std::cout << ": type: " << truncate(typeid(t).name());  // show type
   std::cout << "\n  value: " << t;          // show value
   std::cout << ",  size:  " << sizeof(t);   // show size on stack
   std::cout << "\n";
+}
+/*---------------------------------------------------------
+  Show operation text surrounded by "---" strings
+*/
+void showOp(const std::string& text) {
+  std::cout << "  --- " << text << " ---" << std::endl;
+}
+/*---------------------------------------------------------
+  Show text surrounded by long lines of '-' characters
+*/
+void showLabel(const std::string& text, size_t n) {
+  auto line = std::string(n, '-');
+  std::cout << line << std::endl;
+  std::cout << "  " << text << std::endl;
+  std::cout << line << std::endl;
 }
 void print(const std::string& txt) {
   std::cout << "\n  " << txt;
 }
 void println(const std::string& txt) {
   std::cout << "\n  " << txt << "\n";
+}
+void nl() {
+  std::cout << std::endl;
 }

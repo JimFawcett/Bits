@@ -60,7 +60,7 @@ const std::string nl = "\n";
 struct displayParams {
   size_t left = 2;    // number of spaces to indent
   size_t width = 7;   // width of display row
-  size_t trunc = 55;  // replace text after trunc with ...
+  size_t trunc = 40;  // replace text after trunc with ...
 } DisplayParams;      // global object
 
 /*-----------------------------------------------
@@ -88,7 +88,7 @@ void showType(T t, const std::string &callname, const std::string& suffix) {
 */
 inline void showNote(const std::string& txt, const std::string& suffix) {
   print("--------------------------------------------------");
-  print(txt);
+  print("  " + txt);
   print("--------------------------------------------------");
   std::cout << suffix;
 }
@@ -236,7 +236,7 @@ std::string format(
   const T& t, const std::string& nm, const std::string& suffix,
   size_t left, size_t width
 ) {
-  if constexpr(is_iterable_v<T>) {
+  if constexpr(is_iterable_v<T>) {  // decision at compile-time
     return formatColl(t, nm, suffix, left, width);
   }
   else {

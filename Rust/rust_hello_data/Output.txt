@@ -28,13 +28,18 @@ value: 3.14159, size: 8
 size_of::<Box<i8>>() = 8
 size_of::<Box<i64>>() = 8
 
+  -- String is collection of utf8 chars --
+
+t3, &alloc::string::String
+value: "a string", size: 8
+
   -- use clone to avoid src move --
 
 t3.clone(), alloc::string::String
-value: "Hello Data", size: 24
+value: "a string", size: 24
 
 t4, &alloc::string::String
-value: "Hello Data", size: 8
+value: "a string", size: 8
 
   -- array of copy type elements is copy --
 
@@ -44,63 +49,16 @@ value: [1, 2, 3, 4, 5], size: 20
 t5 was copied into show_type(...), see:
 t5 = [1, 2, 3, 4, 5] is still valid
 
+  -- vec is like an extendable array --
 
-That's all Folks!!
+"v1", alloc::vec::Vec<i32>
+value: [1, 4, -1], size: 24
 
-
-C:\github\JimFawcett\Bits\Rust\rust_hello_data
-> cargo run
-   Compiling rust_hello_data v0.1.0 (C:\github\JimFawcett\Bits\Rust\rust_hello_data)
-    Finished dev [unoptimized + debuginfo] target(s) in 0.32s
-     Running `target\debug\rust_hello_data.exe`
-
- Demonstrate Rust types
-------------------------
-
-  -- initialize on stack from literals --
-
-t1, i32
-value: 42, size: 4
-
-t1a, i64
-value: 42, size: 8
-
-t1a, f64
-value: 42.0, size: 8
-
-t1b, &mut f64
-value: 84.0, size: 8
-
-  -- initialize on heap --
-
-*t2, f64
-value: 3.14159, size: 8
-
-t2, alloc::boxed::Box<f64>
-value: 3.14159, size: 8
-
-  -- size_of measures size of handle to heap element --
-
-size_of::<Box<i8>>() = 8
-size_of::<Box<i64>>() = 8
-
-  -- use clone to avoid src move --
-
-t3.clone(), alloc::string::String
-value: "Hello Data", size: 24
-
-t4, &alloc::string::String
-value: "Hello Data", size: 8
-
-  -- array of copy type elements is copy --
-
-t5, [i32; 5]
-value: [1, 2, 3, 4, 5], size: 20
-
-t5 was copied into show_type(...), see:
-t5 = [1, 2, 3, 4, 5] is still valid
+&v2, &alloc::vec::Vec<i32>
+value: [42, 84, 126], size: 8
 
 
 That's all Folks!!
+
 
 

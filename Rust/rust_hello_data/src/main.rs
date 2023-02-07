@@ -85,13 +85,22 @@ fn main() {
     println!("\nsize_of::<Box<i8>>() = {}", s1);
     println!("size_of::<Box<i64>>() = {}", s2);
 
+    print!("\n  -- String is collection of utf8 chars --\n");
     /*--
+      Each utf8 character may take from 1 to 4 bytes. The first
+      byte in a char sequence has bits that describe the size of
+      the character. utf8 can represent many more characters than
+      ASCII, so Rust strings can contain SanSkrit, Kangi, Arabic,
+      and emojis, as well as English.
+
       String control block lives on stack, char data live in heap.
       Passing by value or assignment transfers ownership from
       source to destination.  That is a move.
     --*/
+    let t3: String = String::from("a string"); // temp moved
+    show_type(&t3, "t3");
+
     println!("\n  -- use clone to avoid src move --");
-    let t3: String = String::from("Hello Data"); // temp moved
     show_type(t3.clone(), "t3.clone()"); // moves t3s clone, not t3
 
     let t4 = &t3; // reference to still valid t3

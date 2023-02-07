@@ -91,8 +91,9 @@ int main() {
     std::cout << "\n  vec2: " << vec2;
     std::cout << "\n  vec: " << vec;
     showNote(
-      "Copy construction, auto vec2 = vec, creates independent instance.\n  "
-      "So changing target vec2 has no affect on source vec.", nl
+      "Copy construction, auto vec2 = vec, creates\n    " 
+      "independent instance. So changing target vec2\n    "
+      "has no affect on source vec.", nl
     );
 
     showNote("user-defined types Point1 and Point2<T>");
@@ -101,6 +102,8 @@ int main() {
     p1.xCoor() = 42;
     p1.zCoor() = -3;
     p1.show();
+    print();
+    
     print("--- showType(p1, \"p1\", nl) ---");
     showType(p1, "p1", nl);
     std::cout << "  p1.xCoor() returns value " 
@@ -109,7 +112,7 @@ int main() {
     Point2<double> p2(5);
     p2.show();
     showNote(
-      "p2.coords() = std::vector<double>"
+      "p2.coords() = std::vector<double>\n    "
       "{ 1.0, -2.0, 3.0, 4.5, -42.0 }"
     );
     p2.coords() = std::vector<double>{1.0, -2.0, 3.0, 4.5, -42.0 };
@@ -159,6 +162,7 @@ int main() {
     pPoint1->yCoor() = 2;
     pPoint1->zCoor() = -3;
     pPoint1->show();
+
     std::cout << "\n  pPoint1->zCoor() = " << pPoint1->zCoor();
     showOp("showType(*pPoint1, \"*pPoint1\");");
     showType(*pPoint1, "*pPoint1");
