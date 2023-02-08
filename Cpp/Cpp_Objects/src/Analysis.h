@@ -17,6 +17,7 @@
   definitions below may be placed in any order. That's
   needed because C++ requires declaration before use.
 */
+#pragma region
 template<typename T>
 void showType(T t, const std::string &nm, const std::string& suffix = "");
 void showNote(const std::string& txt, const std::string& suffix = "");
@@ -47,6 +48,7 @@ std::string format(
   const T& t, const std::string& nm, const std::string& suffix = "",
   size_t left = 2, size_t width = 7
 );
+#pragma endregion
 /*-------------------------------------------------------------------
   Display and Analysis function and globals definitions
 ---------------------------------------------------------------------

@@ -11,6 +11,15 @@ using System.Collections.Generic;   // IEnumerable<T>, List<T>
 using System.Linq;                  // IEnumerable<T>.ToArray
 using System.Text;
 
+/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    cut here
+
+    The functions below are used for analysis and display. They
+    have varying complexities. It is not essential to understand 
+    them in order to follow the demonstrations in this demo.  
+    We will look at them in some detail in Bits_Functions. 
+*/
+
 namespace Analysis {
     /*----------------------------------------------------------------------
         IShow allows analysis functions to operate on instances of any class 

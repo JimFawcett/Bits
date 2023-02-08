@@ -22,30 +22,43 @@ fn main() {
     );
     nl();
 
+    /* #region - to use this feature install #region folding */
     show_op("let mut s1 = \"a string\".to_string()");
+    /* #endregion */
     let mut s1 = "a string".to_string();
+
+    /* #region */
     show_op("show_type_scalar(&s1, \"&s1\")");
+    /* #endregion */
     show_type_scalar(&s1, "&s1");
     nl();
 
+    /* #region */
     show_op("s1.push_str(\" and more\");");
+    /* #endregion */
     s1.push_str(" and more");
     show_type_scalar(&s1, "&s1");
     nl();
     
+    /* #region */
     show_op("let mut v:Vec<i32> = vec![1, 2, 3, 2, 1];");
+    /* #endregion */
     let mut v: Vec<i32> = vec![1, 2, 3, 2, 1];
     show_type_scalar(&v, "&v");
     nl();
     
+    /* #region */
     show_op("v.push(42);");
+    /* #endregion */
     v.push(42);
     show_type_scalar(&v, "&v");
 
     show_label("instances of user-defined types", 35);
     nl();
 
+    /* #region */
     show_op("let mut p1 = Point1::new()");
+    /* #endregion */
     let mut p1 = Point1::new();
     p1.show("p1");
     p1.set_x(42);
@@ -55,22 +68,35 @@ fn main() {
     show_type_scalar(&p1, "p1");
     nl();
 
+    /* #region */
     show_op("let p1a = p1.clone()");
+    /* #endregion */
     let p1a = p1.clone();
     p1a.show("p1a.clone()");    
     nl();
 
     let mut p2 = Point2::<f64>::new(10);
     p2.show("p2", 2, 7);
+
+    /* #region */
     show_op("show_type(p2, \"p2\")");
+    /* #endregion */
     show_type(&p2, "p2");
+
+    /* #region */
     show_op("show_value_enum(p2.coors(), \"p2\", 2, 7)");
+    /* #endregion */
     show_value_enum(p2.coors(), "p2.coors()", 2, 7);
     nl();
     
+    /* #region */
     show_op("p2.coors()[2] = 3.1415");
+    /* #endregion */
     p2.coors()[2] = 3.1415;
+
+    /* #region */
     show_op("show_value_enum(p2.coors(), \"p2.coors()\", 2, 7)");
+    /* #endregion */
     show_value_enum(p2.coors(), "p2.coors()", 2, 7);
     nl();
 
@@ -81,13 +107,17 @@ fn main() {
     p2a.show("p2a", 2,7);
     nl();
 
+    /* #region */
     show_op("show_type_scalar(p2a, \"p2a\")");
+    /* #endregion */
     show_type_scalar(&p2a, "p2a");
     
     println!("p2a.len() = {:?}", p2a.len());
     nl();
 
+    /* #region */
     show_op("p2a.show(\"p2a\", 2, 7)");
+    /* #endregion */
     p2a.show("p2a", 2, 7);
 
     show_label("Testing formats for collections", 35);
@@ -99,21 +129,29 @@ fn main() {
         10, -11, 12, -13, 14
       ];
 
+    /* #region */
     show_op("show_type_scalar(&v, \"&v\")");
+    /* #endregion */
     show_type_scalar(&v, "&v");
     nl();
 
+    /* #region */
     show_op("show_fold(&v, 2, 5)");
+    /* #endregion */
     show_fold(&v, 2, 5);
     nl();
 
+    /* #region */
     show_op("let v = vec![0i32, ... ];");
     show_op("fold(&v, 2, 12)");
+    /* #endregion */
     let stmp = fold(&v, 2, 12);
     println!("{stmp}");
     nl();
 
+    /* #region */
     show_op("let a = &[f64; 8];");
+    /* #endregion */
     let a = 
       &[1.0, 2.5, -3.1, 4.3, 5.0, 6.0, 7.0, -8.0];
     show_op("show_fold(a, 4, 5)");
