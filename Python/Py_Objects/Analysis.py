@@ -33,9 +33,12 @@ def fold(enum, left, width):
 
 # show name, type, value, and size of a Python instance
 def showTypeEnum(enum, nm, left = 2, width = 7, suffix = "") :
-    print(nm, type(enum), "dynamic")
-    print(fold(enum, left, width))
-    print("size:", sys.getsizeof(enum), suffix)
+    # topStr = indent(left) + nm + type(enum) + "dynamic"
+    print(indent(left),nm, ' ', type(enum), ' ', "dynamic", sep='')
+    print(indent(left), "{", sep='')
+    print(fold(enum, left+2, width))
+    print(indent(left), "}", sep = '')
+    print(indent(left), "size: ", sys.getsizeof(enum), suffix, sep='')
 
 # same as showType except uses class method to show value
 def showTypeShowable(t, nm, suffix = ""):
@@ -47,10 +50,13 @@ def showIdent(t, n, suffix = "") :
     print(n, t, id(t), suffix)
 
 # show emphasized note
-def showNote(text, suffix = "") :
-    print("-------------------------")
+def showNote(text, suffix = "", n: int = 50) :
+    tmpStr = ""
+    for i in range(n):
+      tmpStr += '-'
+    print(tmpStr)
     print(text)
-    print("-------------------------", suffix)
+    print(tmpStr, suffix)
 
 # show delineated string to announce a program operation
 def showOp(text):
