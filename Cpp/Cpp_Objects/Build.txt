@@ -1,9 +1,9 @@
 C:\github\JimFawcett\Bits\Cpp\Cpp_Objects\build
 > cmake ..
 -- Building for: Visual Studio 17 2022
--- Selecting Windows SDK version 10.0.22000.0 to target Windows 10.0.22621.    
--- The C compiler identification is MSVC 19.34.31935.0
--- The CXX compiler identification is MSVC 19.34.31935.0
+-- Selecting Windows SDK version 10.0.22000.0 to target Windows 10.0.22621.
+-- The C compiler identification is MSVC 19.34.31937.0
+-- The CXX compiler identification is MSVC 19.34.31937.0
 -- Detecting C compiler ABI info
 -- Detecting C compiler ABI info - done
 -- Check for working C compiler: C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.34.31933/bin/Hostx64/x64/cl.exe - skipped
@@ -18,10 +18,14 @@ C:\github\JimFawcett\Bits\Cpp\Cpp_Objects\build
 -- Generating done
 -- Build files have been written to: C:/github/JimFawcett/Bits/Cpp/Cpp_Objects/build
 C:\github\JimFawcett\Bits\Cpp\Cpp_Objects\build
-> cmake build .
--- Selecting Windows SDK version 10.0.22000.0 to target Windows 10.0.22621.
--- Configuring done
--- Generating done
--- Build files have been written to: C:/github/JimFawcett/Bits/Cpp/Cpp_Objects/build
+> cmake --build .
+MSBuild version 17.4.1+9a89d02ff for .NET Framework
+  Checking Build System
+  Building Custom Rule C:/github/JimFawcett/Bits/Cpp/Cpp_Objects/C
+  MakeLists.txt
+  Cpp_Objects.cpp
+  Cpp_Objects.vcxproj -> C:\github\JimFawcett\Bits\Cpp\Cpp_Objects
+  \build\Debug\Cpp_Objects.exe
+  Building Custom Rule C:/github/JimFawcett/Bits/Cpp/Cpp_Objects/C
+  MakeLists.txt
 C:\github\JimFawcett\Bits\Cpp\Cpp_Objects\build
->

@@ -30,8 +30,8 @@ arr: [
 ]
 size: 38
 ---
-you can add methods to any object, including
-arrays and functions.
+you can add new elements to any object, including
+scalar data, composite data like arrays and functions.
 --- arr.show(nm) ---
 arr [ 1 z 1,2,3 true ]
 

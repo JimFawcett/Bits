@@ -1,6 +1,10 @@
 /*-------------------------------------------------------------------
   analysis.rs
   - provides analysis and display functions for Objects demo.
+  - a few of these require advanced generics code.
+  - You don't need to know how these work to understand this
+    demo. 
+  - We will come back to these functions in a later Bit. 
 -------------------------------------------------------------------*/
 
 use std::fmt::*;

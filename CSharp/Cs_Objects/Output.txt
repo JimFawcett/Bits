@@ -1,3 +1,6 @@
+C:\github\JimFawcett\Bits\CSharp\Cs_Objects
+> dotnet run
+
 --------------------------------------------------
  Demonstrate C# objects
 --------------------------------------------------
@@ -105,7 +108,7 @@ val2 is same object as val1
 val2  val2  { x:1, y:2, z:42 }
 val1  val1  { x:1, y:2, z:42 }
 --------------------------------------------------
-Note! Source of assignment, val1, changed when val2 changed.
+Note! Source of assignment, val1, changed when val2 changed.       
 Point1 is ref type, so assignment just assigns references.
 --------------------------------------------------
 
@@ -143,6 +146,19 @@ str2: immutable string
 There is no way for change in str2 to affect str1.
 --------------------------------------------------
 
+--------------------------------------------------
+Test formatting for Enumerable types
+--------------------------------------------------
+
+testarr: Int32[], size: 8, reference type
+value:
+  testarr {
+    0, 1, 2, 3, 4,
+    5, 6, 7, 8, 9
+  }
+
+
 That's all Folks!
 
+do
 

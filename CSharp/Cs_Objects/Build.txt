@@ -1,15 +1,15 @@
 C:\github\JimFawcett\Bits\CSharp\Cs_Objects
 > dotnet build
-MSBuild version 17.4.0+18d5aef85 for .NET
+MSBuild version 17.4.1+9a89d02ff for .NET
   Determining projects to restore...
   All projects are up-to-date for restore.
-  Cs_Objects -> C:\github\JimFawcett\Bits\CSharp\Cs_Objects\bin\Debug\net7.0
-  \Cs_Objects.dll
+  Cs_Objects -> C:\github\JimFawcett\Bits\CSharp\Cs_Objects\bin\De
+  bug\net7.0\Cs_Objects.dll
 
 Build succeeded.
     0 Warning(s)
     0 Error(s)
 
-Time Elapsed 00:00:00.63
+Time Elapsed 00:00:00.80
 C:\github\JimFawcett\Bits\CSharp\Cs_Objects
-
+>

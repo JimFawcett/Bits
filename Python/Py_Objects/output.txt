@@ -1,25 +1,28 @@
  Demonstrate Python Objects
 ----------------------------
--------------------------
-All Python types are reference-based
-with values in the managed heap. That
-has consequences we explore in this demo.
--------------------------
+--------------------------------------------------
+  All Python types are reference-based
+  with values in the managed heap. That
+  has consequences we explore in this demo.
+--------------------------------------------------
+
+d1 <class 'float'> dynamic
+value:  3.1415927 , size:  24
 s1 <class 'str'> dynamic
 value:  a string , size:  57
 --- s2 = s1 ---
-s1 a string 2624089302960
-s2 a string 2624089302960
+s1 a string 2950105212208
+s2 a string 2950105212208
 --- s2 += " and more" ---
-s2 a string and more 2624089315152
-s1 a string 2624089302960
--------------------------
-Assignment, in Python, assignes references not
+s2 a string and more 2950105224480
+s1 a string 2950105212208
+--------------------------------------------------
+Assignment, in Python, assigns references not
 values.  So s1 and s2 share same heap instance
 But strings are immutable. So when a change is
 made to one, that creates a new instance without
 changing the original.
--------------------------
+--------------------------------------------------
 
 l1 <class 'list'> dynamic
 value:  ['you', 'me', 'them', 'us'] , size:  88
@@ -32,15 +35,16 @@ l1 =  ['you', 'me', 'them', 'us', 'everyone']
 --- l2[1] = "myself" ---
 l2 =  ['you', 'myself', 'them', 'us', 'everyone']
 l1 =  ['you', 'myself', 'them', 'us', 'everyone']
--------------------------
-Assignment, in Python, assignes references
-not values.  So changes to target affect the
-source.  "caveat emptor"
--------------------------
+--------------------------------------------------
+Changes to target of assignment affect source
+except for immutable strings, as we are required
+to create new string instead of modify.
+"caveat emptor"
+--------------------------------------------------
 
 --- p1a = Point1() ---
---- showTypeShowable(p1a, "p1a", nl) ---
-p1a <class '__main__.Point1'> dynamic
+--- Analysis.showTypeShowable(p1a, "p1a", nl) ---
+p1a <class 'Points.Point1'> dynamic
 p1a {  x:0, y:0, z:0 }
 p1a {  x:2, y:-3.5, z:-42 }
 --- p1b = p1a ---
@@ -48,10 +52,10 @@ p1b {  x:2, y:-3.5, z:-42 }
 --- p1b.y = 13 ---
 p1b {  x:2, y:13, z:-42 }
 p1a {  x:2, y:13, z:-42 }
--------------------------
+--------------------------------------------------
 Reference assigned, not value.
 So change in P1b changed source p1a.
--------------------------
+--------------------------------------------------
 
 --- p1c = copy.deepcopy(p1b) ---
 p1c {  x:2, y:13, z:-42 }
@@ -59,39 +63,41 @@ p1b {  x:2, y:13, z:-42 }
 --- p1c.z = 12 ---
 p1c {  x:2, y:13, z:12 }
 p1b {  x:2, y:13, z:-42 }
--------------------------
+--------------------------------------------------
 p1c.z reference assigned, not value. But no
 change in p1b since p1c is deep clone of p1b.
--------------------------
+--------------------------------------------------
 
--- t5 = (1, 2, 3) --
-t5 (1, 2, 3) 2624089300224
--- t6 = [1, t5, "weird"] --
-t6 [1, (1, 2, 3), 'weird'] 2624089307328
+--- p2.show("p2") ---
+p2 {  coors:[0, 0, 0] }
+p2 {  coors:[0, 1, 2, 3] }
+--- p2.show("p2") ---
+p2 {  coors:[0, 1, 2, 3, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1] }   
+--- showTypeEnum(p2, "p2", 2, 7) ---
+  p2 <class 'Points.Point2'> dynamic
+  {
+    0, 1, 2, 3, 10, 9, 8,
+    7, 6, 5, 4, 3, 2, 1
+  }
+  size: 48
+
+--- t5 = (1, 2, 3) ---
+t5 (1, 2, 3) 2950105210176
+--- t6 = [1, t5, "weird"] ---
+t6 [1, (1, 2, 3), 'weird'] 2950105545792
 t6 <class 'list'> dynamic
 value:  [1, (1, 2, 3), 'weird'] , size:  80
 -- t5 = 1 + 1j : new object --
-t5 (1+1j) 2624086515600
-t6 [1, (1, 2, 3), 'weird'] 2624089307328
--------------------------
+t5 (1+1j) 2950104588272
+t6 [1, (1, 2, 3), 'weird'] 2950105545792
+--------------------------------------------------
 new object for t5, t6 not affected
--------------------------
+--------------------------------------------------
 
 -- iterate over t6 children --
-elem 1 2624085491952
-elem (1, 2, 3) 2624089300224
-elem weird 2624089306288
-
--- iterate over t6 methods --
-['__add__', '__class__', '__class_getitem__', '__contains__', 
-'__delattr__', '__delitem__', '__dir__', '__doc__', '__eq__', 
-'__format__', '__ge__', '__getattribute__', '__getitem__', '__gt__', 
-'__hash__', '__iadd__', '__imul__', '__init__', '__init_subclass__', 
-'__iter__', '__le__', '__len__', '__lt__', '__mul__', '__ne__', 
-'__new__', '__reduce__', '__reduce_ex__', '__repr__', '__reversed__', 
-'__rmul__', '__setattr__', '__setitem__', '__sizeof__', '__str__', 
-'__subclasshook__', 'append', 'clear', 'copy', 'count', 'extend', 
-'index', 'insert', 'pop', 'remove', 'reverse', 'sort']
+elem 1 2950103564528
+elem (1, 2, 3) 2950105210176
+elem weird 2950105216560
 
 That's all folks!
 

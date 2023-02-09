@@ -16,6 +16,7 @@
     https://developer.mozilla.org/en-US/docs/Web/JavaScript/Data_structures
 -->
 <head>
+  <script src="Analysis.js"></script>
   <script>
     /*--------------------------------------------------------------------
       Used as program-wide constants for display
