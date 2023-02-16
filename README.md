@@ -1,10 +1,9 @@
 # Bits
 Code bits - small compilable demos of syntax, idoms, and small patterns 
 
-Repository holds code demos that are the same as those used in Rust Playground linked
-from JimFawcett.github.io/RustBits.html
+Repository holds smallish code demos in C++, Rust, C#, Python, and JavaScript,
+meant for language comparisons.
 
-Each demo has project structure created using cargo new and suitable for editing in VS Code
-and running from VS Code terminal using cargo commands.
+Each demo attempts to use the accepted structure and idioms for the demo language.
 
 https://jimfawcett.github.io/CodeBits.html
