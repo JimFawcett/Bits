@@ -6,4 +6,4 @@ meant for language comparisons.
 
 Each demo attempts to use the accepted structure and idioms for the demo language.
 
-https://jimfawcett.github.io/CodeBits.html
+https://jimfawcett.github.io/CodeBitsRepo.html
