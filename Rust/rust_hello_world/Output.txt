@@ -1,0 +1,7 @@
+C:\github\JimFawcett\Bits\Rust\rust_hello_world
+> cargo run -q
+
+Hello Rust world
+
+C:\github\JimFawcett\Bits\Rust\rust_hello_world
+> 

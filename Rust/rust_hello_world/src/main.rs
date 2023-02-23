@@ -1,6 +1,6 @@
 // HelloWorld::main.rs
 
 fn main() {
-    println!("Hello Rust world");
+    println!("\nHello Rust world\n");
 }
  

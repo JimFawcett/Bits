@@ -1,0 +1,7 @@
+C:\github\JimFawcett\Bits\Cpp\Cpp_Hello\build
+> debug/Cpp_Hello
+
+  Hello C++ World
+
+C:\github\JimFawcett\Bits\Cpp\Cpp_Hello\build
+> 

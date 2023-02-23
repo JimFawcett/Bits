@@ -1,0 +1,5 @@
+C:\github\JimFawcett\Bits\Rust\rust_hello_world
+> cargo build
+   Compiling rust_hello_world v0.1.0 (C:\github\JimFawcett\Bits\Rust\rust_hello_world)
+    Finished dev [unoptimized + debuginfo] target(s) in 0.31s
+C:\github\JimFawcett\Bits\Rust\rust_hello_world

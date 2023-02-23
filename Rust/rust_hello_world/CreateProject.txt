@@ -1,0 +1,30 @@
+C:\github\JimFawcett\test
+> cargo new --bin rust_hello_world
+     Created binary (application) `rust_hello_world` package
+C:\github\JimFawcett\test
+> cd rust_hello_world
+C:\github\JimFawcett\test\rust_hello_world
+> dir
+
+
+    Directory: C:\github\JimFawcett\test\rust_hello_world
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----         2/23/2023   3:11 PM                src
+-a----         2/23/2023   3:11 PM            185 Cargo.toml
+
+
+C:\github\JimFawcett\test\rust_hello_world
+> type Cargo.toml
+[package]
+name = "rust_hello_world"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+C:\github\JimFawcett\test\rust_hello_world
+>

@@ -25,7 +25,7 @@ set(CMake_CXX_STANDARD 23)
 #---------------------------------------------------
 # build HelloCMake.obj in folder build/Cpp_Hello.dir/debug
 #---------------------------------------------------
-add_executable(Cpp_Hello src/Cpp_Hello.cpp)
+add_executable(Cpp_Hello src/Bits_Hello.cpp)
 
 #---------------------------------------------------
 # build HelloCMakeLib.lib in folder build/debug
