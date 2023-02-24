@@ -1,6 +1,8 @@
+C:\github\JimFawcett\Bits\Cpp\Cpp_Data\build
+> ./Debug/Cpp_Data
 --------------------------------------------------
    Demonstrate C++ types
---------------------------------------------------
+--------------------------------------------------        
 
   --- initialize from literals ---
 
@@ -18,25 +20,25 @@
   -- store in heap --
 
   t2: type: double * __ptr64
-  value: 000001D83D9FA480,  size:  8
+  value: 00000172B9F4EE40,  size:  8
 
   *t2: type: double
   value: 3.14159,  size:  8
 
-  -- string: control block in stack, data in heap --
+  -- string: control block in stack, data in heap --      
 
-  t3: type: class std::basic_string<char,struct std:...      
+  t3: type: class std::basic_string<char,struct std:...   
   value: Hello Data,  size:  40
 
   -- C++ reference --
 
-  t4: type: class std::basic_string<char,struct std:...      
+  t4: type: class std::basic_string<char,struct std:...   
   value: Hello Data,  size:  40
 
   -- unique_ptr owns data --
 
-  t5: type: class std::unique_ptr<int,struct std::de...      
-  value: 000001D83D9E6C20,  size:  8
+  t5: type: class std::unique_ptr<int,struct std::de...   
+  value: 00000172B9F46040,  size:  8
 
   *t5: type: int
   value: -3,  size:  4
@@ -47,4 +49,5 @@
   That's all Folks!
 
 
-
+C:\github\JimFawcett\Bits\Cpp\Cpp_Data\build
+>

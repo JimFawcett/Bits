@@ -1,11 +1,6 @@
-C:\github\JimFawcett\Bits\cpp\Cpp_Data\build
-> cmake --build .     
-MSBuild version 17.4.0+18d5aef85 for .NET Framework
-  Cpp_Data.vcxproj -> C:\github\JimFawcett\Bits\Cpp\Cpp_Data\build\Debug\Cpp_Data.e
-  xe
-C:\github\JimFawcett\Bits\cpp\Cpp_Data\build
-> ./debug/Cpp_Data.exe
-
-   Demonstrate C++ types
-  -----------------------
-
+C:\github\JimFawcett\Bits\Rust\rust_hello_data
+> cargo build
+    Finished dev [unoptimized + debuginfo] target(s) in 0.00s
+C:\github\JimFawcett\Bits\Rust\rust_hello_data
+> 
+>
