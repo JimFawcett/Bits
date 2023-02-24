@@ -1,0 +1,6 @@
+C:\github\JimFawcett\Bits\CSharp\Cs_Hello
+> dotnet run
+
+  Hello C# World
+
+C:\github\JimFawcett\Bits\CSharp\Cs_Hello

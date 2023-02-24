@@ -1,0 +1,29 @@
+C:\github\JimFawcett\test
+> dotnet new console -n CSharp_Hello
+The template "Console App" was created successfully.
+
+Processing post-creation actions...
+Restoring C:\github\JimFawcett\test\CSharp_Hello\CSharp_Hello.csproj:
+  Determining projects to restore...
+  Restored C:\github\JimFawcett\test\CSharp_Hello\CSharp_Hello.csproj (in 50 ms).
+Restore succeeded.
+
+
+C:\github\JimFawcett\test
+> cd CSharp_Hello
+C:\github\JimFawcett\test\CSharp_Hello
+> dir
+
+
+    Directory: C:\github\JimFawcett\test\CSharp_Hello
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----         2/24/2023   9:41 AM                obj
+-a----         2/24/2023   9:41 AM            249 CSharp_Hello.csproj
+-a----         2/24/2023   9:41 AM            105 Program.cs
+
+
+C:\github\JimFawcett\test\CSharp_Hello
+>

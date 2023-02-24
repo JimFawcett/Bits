@@ -7,7 +7,8 @@ namespace HelloWorld
   {
     static void Main(string[] args)
     {
-      Console.WriteLine("Hello C# World");
+      String s = "\\n  Hello C# World\\n";
+      Console.WriteLine(s);
     }
   }
 }

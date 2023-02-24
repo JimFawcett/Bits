@@ -1,0 +1,28 @@
+C:\github\JimFawcett\test
+> mkdir Python_Hello
+
+
+    Directory: C:\github\JimFawcett\test
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----         2/24/2023   3:02 PM                Python_Hello
+
+
+C:\github\JimFawcett\test
+> cd Python_Hello
+C:\github\JimFawcett\test\Python_Hello
+> New-Item -path "." -type file -name "Py_Hello.py"
+
+
+    Directory: C:\github\JimFawcett\test\Python_Hello
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----         2/24/2023   3:03 PM              0 Py_Hello.py
+
+
+C:\github\JimFawcett\test\Python_Hello
+>

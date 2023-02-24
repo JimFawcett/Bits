@@ -1,0 +1,7 @@
+C:\github\JimFawcett\Bits\Python\Py_Hello
+> python Py_Hello.py
+
+  Hello Python World
+
+C:\github\JimFawcett\Bits\Python\Py_Hello
+> 
