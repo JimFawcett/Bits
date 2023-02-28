@@ -9,7 +9,7 @@ size: 8, value: 42
 -- let t2 = t1 --
 t2 is same object as t1
 
--- let t2 = 3.1415927 -- : copy on write
+-- let t2 = 3.1415927 -- : change of object
 t2 is not same object as t1
 
 t1, number

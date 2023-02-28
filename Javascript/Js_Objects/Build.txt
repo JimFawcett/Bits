@@ -1,5 +1,5 @@
-C:\github\JimFawcett\Bits\JavaScript\Js_Objects
-> start firefox C:\github\JimFawcett\Bits\JavaScript\Js_Objects\Js_Objects.html
-C:\github\JimFawcett\Bits\JavaScript\Js_Objects
-
+C:\github\JimFawcett\Bits\Javascript\Js_Objects
+> start firefox C:\github\JimFawcett\Bits\Javascript\Js_Objects\Js_Objects.html    
+C:\github\JimFawcett\Bits\Javascript\Js_Objects
+>
 
