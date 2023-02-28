@@ -1,3 +1,8 @@
+C:\github\JimFawcett\Bits\Rust\rust_hello_objects
+> cargo run
+   Compiling rust_hello_objects v0.1.0 (C:\github\JimFawcett\Bits\Rust\rust_hello_objects)
+    Finished dev [unoptimized + debuginfo] target(s) in 0.42s  
+     Running `target\debug\rust_hello_objects.exe`
 
 --------------------------------------------------
   demonstrate object creation
@@ -31,7 +36,7 @@ value: [1, 2, 3, 2, 1, 42], size: 24
 --- let mut p1 = Point1::new() ---
 "p1": Point1 { 0, 0, 0 }
 "p1": Point1 { 42, -3, 2 }
-call name: "p1", type: "rust_hello_objects::points::Point1"       
+call name: "p1", type: "rust_hello_objects::points::Point1"     
 value: Point1 { x: 42, y: -3, z: 2 }, size: 12
 
 --- let p1a = p1.clone() ---
@@ -42,7 +47,7 @@ value: Point1 { x: 42, y: -3, z: 2 }, size: 12
   0.0, 0.0, 0.0
 }
 --- show_type(p2, "p2") ---
-call name: "p2", type: "rust_hello_objects::points::Point2<f64>"  
+call name: "p2", type: "rust_hello_objects::points::Point2<f64>"
 --- show_value_enum(p2.coors(), "p2", 2, 7) ---
 "p2.coors()" {
   0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
@@ -63,10 +68,8 @@ size: 24
   2, 1, 0
 }
 
---- show_type_scalar(p2a, "p2a") ---
-call name: "p2a", type: "rust_hello_objects::points::Point2<i32>" 
-value: Point2 { coor: [0, 1, 2, 3, 4, 4, 3, 2, 1, 0] }, size: 24  
-p2a.len() = 10
+"
+value: Point2 { coor: [0, 1, 2, 3, 4, 4, 3, 2, 1, 0] }, size: 24p2a.len() = 10
 
 --- p2a.show("p2a", 2, 7) ---
 "p2a": Point2<T> {
@@ -100,4 +103,6 @@ value: [0, -1, 2, -3, 4, -5, 6, -7, 8, -9, 10, -11, 12, -13, 14], size: 24
 
   That's all Folks!
 
+C:\github\JimFawcett\Bits\Rust\rust_hello_objects
+>
 

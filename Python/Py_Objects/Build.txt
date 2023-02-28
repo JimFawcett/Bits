@@ -1,5 +1,5 @@
-C:\github\JimFawcett\Bits\Python\Py_Data
-> python Py_Data.py
- Demonstrate Python Types
---------------------------
+C:\github\JimFawcett\Bits\Python\Py_Objects
+> python Py_Objects.py
+ Demonstrate Python Objects
+----------------------------
 

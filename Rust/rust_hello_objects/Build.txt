@@ -1,11 +1,8 @@
 C:\github\JimFawcett\Bits\Rust\rust_hello_objects
-> cargo clean
-C:\github\JimFawcett\Bits\Rust\rust_hello_objects
-> cargo run  
+> cargo build
    Compiling rust_hello_objects v0.1.0 (C:\github\JimFawcett\Bits\Rust\rust_hello_objects)
-    Finished dev [unoptimized + debuginfo] target(s) in 0.41s                  
-     Running `target\debug\rust_hello_objects.exe`
-
- -- demonstrate object creation --
+    Finished dev [unoptimized + debuginfo] target(s) in 0.42s
+C:\github\JimFawcett\Bits\Rust\rust_hello_objects
+> 
 
 

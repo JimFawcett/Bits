@@ -1,4 +1,7 @@
-   Demonstrate C++ Objects
+C:\github\JimFawcett\Bits\Cpp\Cpp_Objects\build
+> ./Debug/Cpp_Objects.exe
+
+  Demonstrate C++ Objects
 
   --------------------------------------------------
     primitive C++ types size_t and double
@@ -80,31 +83,31 @@
   --------------------------------------------------
     heap-based string instance
   --------------------------------------------------
-  --- pU<std::string> pStr(new std::string("\"Road Runner\"") ---  
+  --- pU<std::string> pStr(new std::string("\"Road Runner\"") ---
   pStr contents = "Road Runner"
 
   --- showType(*pStr, "*pStr") ---
-  *pStr type: class std::basic_string<char,struct std:...
+  *pStr type: class std::basic_string<char,struct std:...     
   size:  40
 
   --- showType(move(pStr), "pStr") ---
-  pStr type: class std::unique_ptr<class std::basic_s...
+  pStr type: class std::unique_ptr<class std::basic_s...      
   size:  8
 
   --------------------------------------------------
     heap-based vector instance
   --------------------------------------------------
   --- pU<std::vector<double>>
-      pVec(new std::vector<double>{ 1.5, 2.5, 3.5 }); ---
+      pVec(new std::vector<double>{ 1.5, 2.5, 3.5 }); ---     
   *pVec =
   vector<T>: {
     1.5, 2.5, 3.5
   }
-  *pVec type: class std::vector<double,class std::allo...
+  *pVec type: class std::vector<double,class std::allo...     
   size:  32
 
-  pVec = 000001948FAB3200
-  move(pVec) type: class std::unique_ptr<class std::vector<...     
+  pVec = 0000025AD31F20A0
+  move(pVec) type: class std::unique_ptr<class std::vector<...
   size:  8
 
   --------------------------------------------------
@@ -118,18 +121,18 @@
   *pPoint1 type: class Point1
   size:  12
   --- showType(std::move(pPoint1), "pPoint1"); ---
-  pPoint1 type: class std::unique_ptr<class Point1,struc...        
+  pPoint1 type: class std::unique_ptr<class Point1,struc...   
   size:  8
 
   --------------------------------------------------
     heap-based Point2<T> instance
   --------------------------------------------------
-  --- pU<Point2<double>> pPoint2(new Point2<double>(4)) ---        
+  --- pU<Point2<double>> pPoint2(new Point2<double>(4)) ---   
   Point2<T> {
     0, 0, 0, 0
   }
   --- pPoint2->coords() =
-      std::vector<double>{ 1.0, 3.5, -2.0, 42.0 }; ---
+      std::vector<double>{ 1.0, 3.5, -2.0, 42.0 }; ---        
   Point2<T> {
     1, 3.5, -2, 42
   }
@@ -138,7 +141,7 @@
   *pPoint2 type: class Point2<double>
   size:  48
   --- showType(std::move(pPoint2), "pPoint2"); ---
-  pPoint2 type: class std::unique_ptr<class Point2<doubl...        
+  pPoint2 type: class std::unique_ptr<class Point2<doubl...   
   size:  8
 
   --------------------------------------------------
@@ -157,7 +160,7 @@
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
         0, 0, 0
       }
-  --- demonstrate operator<< overload for Point2 --- ---
+  --- demonstrate operator<< overload for Point2 --- ---      
   default indent = 4 and width = 7:
   Point2<T> {
     0, 0, 0, 0, 0, 0, 0,
@@ -240,5 +243,5 @@
 
   That's all Folks!
 
-
-
+C:\github\JimFawcett\Bits\Cpp\Cpp_Objects\build
+>
