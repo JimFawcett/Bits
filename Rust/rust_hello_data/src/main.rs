@@ -82,8 +82,8 @@ fn main() {
     println!("\n  -- size_of measures size of handle to heap element --");
     let s1 = std::mem::size_of::<Box<i8>>();
     let s2 = std::mem::size_of::<Box<i64>>();
-    println!("\nsize_of::<Box<i8>>() = {}", s1);
-    println!("size_of::<Box<i64>>() = {}", s2);
+    println!("\nsize_of::<Box<i8>>() = {s1}");
+    println!("size_of::<Box<i64>>() = {s2}");
 
     print!("\n  -- String is collection of utf8 chars --\n");
     /*--
@@ -111,7 +111,7 @@ fn main() {
     show_type(t5, "t5");
     let mut txt = String::from("\nt5 was copied into show_type(...)");
     txt += ", see:\nt5 = ";
-    println!("{}{:?} is still valid", txt, t5);
+    println!("{txt}{t5:?} is still valid");
 
     println!("\n  -- vec is like an extendable array --");
     let mut v1 = Vec::<i32>::new();
@@ -122,7 +122,9 @@ fn main() {
 
     let v2 = vec![42, 84, 126];
     show_type(&v2, "&v2");    // v2 not moved, passed reference
-                                    // size of &v2 is size of a pointer
+                              // size of &v2 is size of a pointer
+    show_type(v2, "v2");      // v2 moved, can't be used again
+
     println!("\n\nThat's all Folks!!\n\n");
 }
 /*
@@ -133,7 +135,7 @@ fn main() {
 */
 fn show_type<T: Debug>(t: T, nm: &str) {
   let typename = std::any::type_name::<T>();
-  println!("\n{}, {}", nm, typename);
+  println!("\n{nm}, {typename}");
   println!(
     "value: {:?}, size: {}", 
     t, std::mem::size_of::<T>()

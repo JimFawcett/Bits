@@ -48,7 +48,7 @@ impl Point1 {
         self.z = z
     }
     pub fn show(&self, nm:&str) {
-        print!("{:?}: Point1 {{ ", nm);
+        print!("{nm:?}: Point1 {{ ");
         print!("{0}, ", self.x);
         print!("{0}, ", self.y);
         println!("{0} }}", self.z);
@@ -91,7 +91,7 @@ where
         &mut self.coor
     }
     pub fn show(&self, nm:&str, left: usize, width:usize) {
-        print!("{:?}: Point2<T> {{\n", nm);
+        println!("{nm:?}: Point2<T> {{");
         show_fold(&self.coor, left, width);
         println!("}}")
     }

@@ -33,10 +33,12 @@ pub fn show_value_enum<T:Debug, I:Debug>(
 ) 
   where for<'a> &'a T: IntoIterator<Item = &'a I>
 {
-    print!("{nm:?} {{\n");
-    show_fold(&t, left, width);
-    print!("}}");
-    println!("\nsize: {}", std::mem::size_of::<T>());
+  println!("{nm:?} {{");
+  // print!("{nm:?} {{\n");
+  //show_fold(&t, left, width);
+  show_fold(t, left, width);
+  print!("}}");
+  println!("\nsize: {}", std::mem::size_of::<T>());
 }
 /*---------------------------------------------------------
   Show facts about a type's elements, e.g., name, type,
@@ -81,12 +83,14 @@ pub fn offset(left: usize) -> String {
   https://stackoverflow.com/questions/50101842/how-to-find-the-last-occurrence-of-a-char-in-a-string
 */
 fn find_last_utf8(s: &str, chr: char) -> Option<usize> {
-    if let Some(rev_pos) = 
-      s.chars().rev().position(|c| c == chr) {
-        Some(s.chars().count() - rev_pos - 1)
-    } else {
-        None
-    }
+    // if let Some(rev_pos) = 
+    //   s.chars().rev().position(|c| c == chr) {
+    //     Some(s.chars().count() - rev_pos - 1)
+    // } else {
+    //     None
+    // }
+    s.chars().rev().position(|c| c== chr)
+     .map(|rev_pos| s.chars().count() - rev_pos - 1)
 }
 /*---------------------------------------------------------
   fold an enumerable's elements into rows of w elements
@@ -100,22 +104,30 @@ pub fn fold<T, I:Debug>(
 ) -> String
     where for<'a> &'a T: IntoIterator<Item = &'a I>, T:Debug
 {
-    let mut accum = String::new();
-    accum += &offset(left);
-    let mut i = 0usize;
-    for item in t {
-        accum += &format!("{item:?}, ");
-        if ((i + 1) % width) == 0 && i != 0 {
-            accum += "\n";
-            accum += &offset(left);
-        }
-        i += 1;
+  let mut accum = String::new();
+  accum += &offset(left);
+  //let mut i = 0usize;
+  // for item in t {
+  //   accum += &format!("{item:?}, ");
+  //   if ((i + 1) % width) == 0 && i != 0 {
+  //       accum += "\n";
+  //       accum += &offset(left);
+  //   }
+  //   i += 1;
+  // }
+  //let i = 0usize;
+  for (i, item) in t.into_iter().enumerate() {
+    accum += &format!("{item:?}, ");
+    if ((i + 1) % width) == 0 && i != 0 {
+        accum += "\n";
+        accum += &offset(left);
     }
-    let opt = find_last_utf8(&accum, ',');
-    if let Some(index) = opt {
-        accum.truncate(index);
-    }
-    accum
+  }
+  let opt = find_last_utf8(&accum, ',');
+  if let Some(index) = opt {
+    accum.truncate(index);
+  }
+  accum
 }
 /*---------------------------------------------------------
   show enumerables's elements as folded rows
@@ -135,9 +147,9 @@ pub fn show_label(note: &str, n:usize) {
   for _i in 0..n {
     line.push('-');
   }
-  print!("\n{}\n", line);
+  print!("\n{line}\n");
   print!("  {note}");
-  print!("\n{}\n", line);
+  print!("\n{line}\n");
 }
 pub fn show_label_def(note:&str) {
   show_label(note, 50);
@@ -154,7 +166,7 @@ pub fn show_note(note: &str) {
   show string wrapped in short lines
 */
 pub fn show_op(opt: &str) {
-  println!("--- {} ---", opt);
+  println!("--- {opt} ---");
 }
 /*---------------------------------------------------------
   print newline

@@ -104,7 +104,7 @@ fn main() {
       Point2::<i32>::new(1).init(
         vec![0, 1, 2, 3, 4, 4, 3, 2, 1, 0]
       );
-    p2a.show("p2a", 2,7);
+    p2a.show("p2a", 2, 7);
     nl();
 
     /* #region */
