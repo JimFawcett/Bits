@@ -1,22 +1,10 @@
-/*-----------------------------------------------
-  Bits::rust_iter::main.rs
-  - demonstrates iteration over collections with
-    Rust iterators
-  - Most collections implement the Rust trait
-    IntoIterator which consumes the collection
-    to generate an iterator.
-  - Demonstrates iteration over arrays, slices,
-    Vecs, VecDeques, and custom Point<T> type. 
------------------------------------------------*/
-
 use std::fmt::*;
 use std::cmp::*;
 use std::collections::*;
-use std::convert::*;
 
 /*-----------------------------------------------
   Simplest case - displays Vector with
-  generic Item type.
+  generic type.
   - very close to C++ version
   - see comments for simple_indexer, below
 */
@@ -60,7 +48,6 @@ fn simple_indexer<T:Debug>(s:&[T]) {
   - works with any collection with contiguous
     fixed size elements.
 */
-#[allow(clippy::needless_range_loop)]
 fn sub_range_indexer<T:Debug>(
     s:&[T], mut lower:usize, mut upper:usize
 ) {
@@ -77,7 +64,7 @@ fn sub_range_indexer<T:Debug>(
   Iterates over slice s without indexing
   - Works with any collection with contiguous
     fixed size elements,
-    e.g., array, Vector, Point, ...
+    e.g., array, Vector
 */
 fn simple_looper<T:Debug>(s:&[T]) {
     let mut iter = s.iter();
@@ -96,6 +83,8 @@ fn simple_looper<T:Debug>(s:&[T]) {
   - where clause requires C to implement 
     IntoIterator trait. 
   - C is type of collection, I is type of C's items
+  - 'a annotation says that c and its items last 
+    at least as long as the function call.
   - Accepts any collection type that implements
     IntoIterator trait, e.g., array, slice, Vector, ...
   - looper can't accept String or &str
@@ -106,11 +95,11 @@ fn simple_looper<T:Debug>(s:&[T]) {
     https://stackoverflow.com/questions/49962611/why-does-str-not-implement-intoiterator
 */
 fn looper<C: Debug, I: Debug>(c:&C) 
-  where C: IntoIterator<Item = I> + Clone
+   where for<'a> &'a C: IntoIterator<Item = &'a I>, 
+   I: Default + Clone
 {
-    let cc = c.clone();
-    let iter = cc.into_iter();
     /* convert c into Vec to get len() method */
+    let iter = c.into_iter();
     let v:Vec<_> = iter.collect();
     let mut iter = v.iter();  // shadowing
     let mut count = 0;
@@ -131,13 +120,12 @@ fn looper<C: Debug, I: Debug>(c:&C)
   last comma
 */
 fn for_looper<C: Debug, I: Debug>(c:&C) 
-    where C: IntoIterator<Item = I> + Clone
+    where for<'a> &'a C: IntoIterator<Item = &'a I>,
+    I: Default + Clone
 {
     /* build string of comma separated values */
     let mut accum = String::new();
-    let cc = c.clone();
-
-    for item in cc {
+    for item in c {
         accum += &format!("{item:?}, ");
     }
     /* remove last comma */
@@ -164,11 +152,14 @@ fn ranger<T: Debug>(iter: &mut T)
     }
     println!();
 }
+use core::default::*;
+use std::option::*;
 #[derive(Debug, Clone)]
 struct Point<T> 
     where T:Debug + Default + Clone
 {
-    coor: Vec<T>
+    coor: Vec<T>,
+    // iter: PointIter<'a, T>
 }
 impl<T> Point<T> 
     where T:Debug + Default + Clone
@@ -176,14 +167,10 @@ impl<T> Point<T>
     fn new(n:usize) -> Point<T> {
         Point::<T> { 
             coor: vec![T::default(); n],
+            //iter: PointIter{ pt:None, count:0 }
         }
     }
-    #[allow(dead_code)]
-    fn coors(&self) -> &Vec<T> {
-        &self.coor
-    }
 }
-/*-- implements const indexer -----------------*/
 impl<T:Debug, Idx> std::ops::Index<Idx> for Point<T> 
     where
         T:Debug + Default + Clone, 
@@ -195,8 +182,7 @@ impl<T:Debug, Idx> std::ops::Index<Idx> for Point<T>
         &self.coor[index]
     }
 }
-/*-- implements mutable indexer ---------------*/
-impl<T, Idx> std::ops::IndexMut<Idx> for Point<T> 
+impl<'a, T, Idx> std::ops::IndexMut<Idx> for Point<T> 
     where
         T:Debug + Default + Clone, 
         Idx: std::slice::SliceIndex<[T]>
@@ -205,18 +191,47 @@ impl<T, Idx> std::ops::IndexMut<Idx> for Point<T>
         &mut self.coor[index]
     }
 }
-/*-- IntoIterator trait for &Point<T> ---------*/
-impl<'a, T> IntoIterator for &'a Point<T>
-    where T:Debug + Default + Clone
+#[derive(Debug, Clone)]
+struct PointIter<'a, T>
+    where T: Debug + Default + Clone
 {
-    type Item = T;
-    type IntoIter = std::vec::IntoIter<Self::Item>;
-    fn into_iter(self) -> Self::IntoIter {
-        let ccln = self.coor.clone();
-        ccln.into_iter()
+    pt: Option<&'a Point<T>>,
+    count: usize,
+}
+impl<'a, T:Debug> Point<T> 
+    where T: Debug + Default + Clone
+{
+    fn iter(&self) -> PointIter<T> {
+        PointIter{ pt: Some(&self), count:0 }
     }
 }
-/*-- IntoIterator trait for Point<T> ----------*/
+impl<'a, T> Iterator for PointIter<'a, T> 
+    where T: Debug + Default + Clone
+{
+    type Item = &'a T;
+    fn next(&mut self) -> Option<Self::Item> {
+        match self.pt.unwrap().coor.get(self.count) {
+            None => None,
+            Some(val) => {
+                self.count += 1;
+                Some(val)
+            }
+        }
+    }
+}
+// impl<T> Iterator for Point<T>
+//     where T: Debug + Default + Clone
+// {
+//     type Item = T;
+//     fn next(&mut self) -> Option<T> {
+//         let mut tmp = self.coor.iter();
+//         tmp.next()
+//         // let mut iter = self.coor.iter();
+//         // let item = iter.next().cloned();
+//         // print!("{item:?} ");
+//         // item
+//     }
+// }
 impl<T> IntoIterator for Point<T>
     where T:Debug + Default + Clone
 {
@@ -226,39 +241,58 @@ impl<T> IntoIterator for Point<T>
         self.coor.into_iter()
     }
 }
-/*-- Begin demonstrations ---------------------*/
+fn test<T>(point_test:&Point<T>) 
+    where T: Debug + Default + Clone
+{
+    let mut iter = point_test.iter();
+    loop {
+        let item = iter.next();
+        match item {
+            Some(val) => print!("{val:?} "),
+            None => break,
+        }
+    }
+    println!();
+}
 fn main() {
     println!("----------------------------------");
     println!("--- Demonstrate Rust Iteration ---");
     println!("----------------------------------");
-    let s = &mut [1usize, 2, 3, 4, 3, 2, 1];
-    println!("slice s = {s:?}");
-    println!("s[2] = {:?}", s[2usize]);
-    
-    /*-- Point<T>.into_iter() -----------------*/
-    let mut p = Point::<i32>::new(5);
-    p[1] = 1;
-    p[3] = -1;
-    println!("using Point<i32>.into_iter");
-    let iter = p.clone().into_iter();
-    for item in iter {
+
+    let mut point_test = Point::<i32>::new(6);
+    point_test[0] = 1;
+    point_test[4] = -1;
+    let mut iter = point_test.iter();
+    loop {
+        let item = iter.next();
+        match item {
+            Some(val) => print!("{val} "),
+            None => break,
+        }
+    }
+    println!();
+    test(&point_test);
+
+    for item in point_test.iter() {
         print!("{item} ");
     }
     println!();
-    println!("using Point<i32>.into_iter()");
-    let pc = p.clone();
-    for item in pc {
-        print!("{item} " )
-    }
-    println!("\n");
+
+    let s = &[1usize, 2, 3, 4, 3, 2, 1];
+    println!("slice s = {s:?}");
+    println!("s[2] = {:?}", s[2usize]);
     
-    /*-- whiler -------------------------------*/
     println!("\nwhiler displays Vec<T>");
     let v = vec![1, 6, 2, 5, 3, 4];
-    whiler(&v);  // can only display vecs
+    // let vc = v.clone();
+    // let iter = vc.iter();
+    // for item in iter {
+    //     print!("{item} ");
+    // }
+    // println!();
+    whiler(&v);
     println!();
 
-    /*-- simple_indexer -----------------------*/
     println!("simple_indexer displays slice");
     simple_indexer(s);
     println!("simple_indexer displays vector");
@@ -269,12 +303,10 @@ fn main() {
     simple_indexer(str1.as_bytes());
     println!();
     
-    /*-- sub_range_indexer --------------------*/
     println!("sub_range_indexer displays slice");
     sub_range_indexer(s, 2, 5);
     println!();
-    
-    /*-- simple_looper ------------------------*/
+
     println!("simple_looper displays slice");
     simple_looper(s);
     println!("simple_looper displays vector");
@@ -283,11 +315,10 @@ fn main() {
     let mut point = Point::<i32>::new(5);
     point[1] = 1;
     point[3] = -1;
-    let ps = &point[0..];  // take slice
-    simple_looper(ps);
+    let ps = &point[0..];
+    simple_looper(&ps);
     println!();
 
-    /*-- looper -------------------------------*/
     println!("looper displays slice:");
     looper(s);
     println!("looper displays array");
@@ -298,10 +329,24 @@ fn main() {
     looper(&vecdeq);
     println!("looper displays point");
     let pc = point.clone();
-    looper(&pc);
+    let iter = pc.iter();
+    for item in iter {
+        print!("{item} ");
+    }
     println!();
+    let pc = point.clone();
+    for item in pc.into_iter() {
+        print!("{item} " )
+    }
+    println!();
+    let pc = point.clone();
+    // let mut iter = pc.into_iter();
+    looper(&pc);
+    //for_looper(&pc);
+    println!();
+   
+    //looper(&ps);
 
-    /*-- for_looper ---------------------------*/
     println!("for_looper displays slice:");
     for_looper(s);
     println!("for_looper displays vector:");
@@ -309,16 +354,11 @@ fn main() {
     for_looper(&t);
     println!("for_looper displays VecDeque");
     for_looper(&vecdeq);
-    println!("for_looper displays Point<T>");
-    let pc = point.clone();
-    for_looper(&pc);
-    println!();
     /*------------------------------------------- 
       for_looper can't accept String or &str
       because they do not implement IntoIterator
       https://stackoverflow.com/questions/49962611/why-does-str-not-implement-intoiterator
     */
-
     println!("ranger displays string:");
     let str = "a literal string".to_string();
     ranger(&mut str.chars());
@@ -328,8 +368,6 @@ fn main() {
     ranger(&mut t.iter());
     println!("ranger accepts VecDeque iterator");
     ranger(&mut vecdeq.iter());
-    println!("ranger accepts Point<T> iterator");
-    ranger(&mut point.coor.iter());
 
     println!("\nThat's all folks!\n");
 }
