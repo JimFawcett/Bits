@@ -156,7 +156,7 @@ fn find_last_utf8(s:&str, chr: char) -> Option<usize> {
   Displays contents of iterator, often passed in
   as a range.
 */
-fn ranger<T: Debug>(iter: &mut T)
+fn ranger<T>(iter: &mut T)
     where T: Iterator, T::Item: Debug
 {
     for item in iter {
@@ -168,19 +168,22 @@ fn ranger<T: Debug>(iter: &mut T)
 struct Point<T> 
     where T:Debug + Default + Clone
 {
-    coor: Vec<T>
+    items: Vec<T>
 }
 impl<T> Point<T> 
     where T:Debug + Default + Clone
 {
     fn new(n:usize) -> Point<T> {
         Point::<T> { 
-            coor: vec![T::default(); n],
+            items: vec![T::default(); n],
         }
     }
     #[allow(dead_code)]
-    fn coors(&self) -> &Vec<T> {
-        &self.coor
+    fn items(&self) -> &Vec<T> {
+        &self.items
+    }
+    fn iter(&self) -> impl Iterator<Item = &T> {
+        self.items.iter()
     }
 }
 /*-- implements const indexer -----------------*/
@@ -192,7 +195,7 @@ impl<T:Debug, Idx> std::ops::Index<Idx> for Point<T>
     type Output = Idx::Output;
 
     fn index(&self, index:Idx) -> &Self::Output {
-        &self.coor[index]
+        &self.items[index]
     }
 }
 /*-- implements mutable indexer ---------------*/
@@ -202,7 +205,7 @@ impl<T, Idx> std::ops::IndexMut<Idx> for Point<T>
         Idx: std::slice::SliceIndex<[T]>
 {
     fn index_mut(&mut self, index:Idx) -> &mut Self::Output {
-        &mut self.coor[index]
+        &mut self.items[index]
     }
 }
 /*-- IntoIterator trait for &Point<T> ---------*/
@@ -212,7 +215,7 @@ impl<'a, T> IntoIterator for &'a Point<T>
     type Item = T;
     type IntoIter = std::vec::IntoIter<Self::Item>;
     fn into_iter(self) -> Self::IntoIter {
-        let ccln = self.coor.clone();
+        let ccln = self.items.clone();
         ccln.into_iter()
     }
 }
@@ -223,7 +226,7 @@ impl<T> IntoIterator for Point<T>
     type Item = T;
     type IntoIter = std::vec::IntoIter<Self::Item>;
     fn into_iter(self) -> Self::IntoIter {
-        self.coor.into_iter()
+        self.items.into_iter()
     }
 }
 /*-- Begin demonstrations ---------------------*/
@@ -239,15 +242,19 @@ fn main() {
     let mut p = Point::<i32>::new(5);
     p[1] = 1;
     p[3] = -1;
-    println!("using Point<i32>.into_iter");
+    println!("using Point<i32>.iter");
+    for item in p.iter() {
+        print!("{item:?} ");
+    }
+    println!("\nusing Point<i32>.into_iter");
     let iter = p.clone().into_iter();
     for item in iter {
         print!("{item} ");
     }
     println!();
-    println!("using Point<i32>.into_iter()");
+    println!("using Point<i32>.into_iter iter() with auto deref");
     let pc = p.clone();
-    for item in pc {
+    for item in pc {  // auto deref of pc into pc.iter()
         print!("{item} " )
     }
     println!("\n");
@@ -299,6 +306,7 @@ fn main() {
     println!("looper displays point");
     let pc = point.clone();
     looper(&pc);
+    println!("{pc:?}");
     println!();
 
     /*-- for_looper ---------------------------*/
@@ -329,7 +337,7 @@ fn main() {
     println!("ranger accepts VecDeque iterator");
     ranger(&mut vecdeq.iter());
     println!("ranger accepts Point<T> iterator");
-    ranger(&mut point.coor.iter());
+    ranger(&mut point.iter());
 
     println!("\nThat's all folks!\n");
 }
