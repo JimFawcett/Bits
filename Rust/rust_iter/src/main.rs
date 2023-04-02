@@ -15,6 +15,25 @@ use std::collections::*;
 use std::convert::*;
 
 /*-----------------------------------------------
+  Test functions with increasing functionality 
+  and increasing generality of inputs:
+  -----------------------------------------------
+  - whiler<T:Debug>(v:&Vec<T>)
+  - simple_indexer<T:Debug>(s:&[T])
+  - sub_range_indexer<T:Debug>(
+      s:&[T], 
+      mut lower:usize, mut upper:usize
+    )
+  - simple_looper<T:Debug>(s:&[T])
+  - looper<C: Debug, I: Debug>(c:&C)
+      where C: IntoIterator<Item = I> + Clone
+  - for_looper<C: Debug, I: Debug>(c:&C) 
+      where C: IntoIterator<Item = I> + Clone
+  - ranger<T>(iter: &mut T)
+      where T: Iterator, T::Item: Debug
+*/
+
+/*-----------------------------------------------
   Simplest case - displays Vector with
   generic Item type.
   - very close to C++ version
@@ -164,6 +183,17 @@ fn ranger<T>(iter: &mut T)
     }
     println!();
 }
+/*-- Point<T> -----------------------------------
+  Point<T> implements a point class holding a
+  Vec<T>.
+  It implements:
+  - new(n)  constructor
+  - items() returns ref to its internal vec
+  - iter()  returns iterator over items
+  - trait IntoIterator for Point<T>
+  - trait IntoIterator for &Point<T>
+  - immutable and mutable indexing
+*/
 #[derive(Debug, Clone)]
 struct Point<T> 
     where T:Debug + Default + Clone
@@ -231,9 +261,9 @@ impl<T> IntoIterator for Point<T>
 }
 /*-- Begin demonstrations ---------------------*/
 fn main() {
-    println!("----------------------------------");
-    println!("--- Demonstrate Rust Iteration ---");
-    println!("----------------------------------");
+    println!("------------------------------------");
+    println!(" --- Demonstrate Rust Iteration ---");
+    println!("------------------------------------");
     let s = &mut [1usize, 2, 3, 4, 3, 2, 1];
     println!("slice s = {s:?}");
     println!("s[2] = {:?}", s[2usize]);
