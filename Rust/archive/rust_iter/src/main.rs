@@ -9,8 +9,6 @@
     Vecs, VecDeques, and custom Point<T> type. 
 -----------------------------------------------*/
 
-#![allow(dead_code)]
-
 use std::fmt::*;
 use std::cmp::*;
 use std::collections::*;
@@ -217,9 +215,6 @@ impl<T> Point<T>
     fn iter(&self) -> impl Iterator<Item = &T> {
         self.items.iter()
     }
-    fn iter_mut(&mut self) -> impl Iterator<Item = &mut T> {
-        self.items.iter_mut()
-    }
 }
 /*-- implements const indexer -----------------*/
 impl<T:Debug, Idx> std::ops::Index<Idx> for Point<T> 
@@ -277,13 +272,12 @@ fn main() {
     let mut p = Point::<i32>::new(5);
     p[1] = 1;
     p[3] = -1;
-    println!("\n{p:?}");
     println!("using Point<i32>.iter");
     for item in p.iter() {
         print!("{item:?} ");
     }
     println!("\nusing Point<i32>.into_iter");
-    let iter = p.clone().into_iter(); // consumes clone
+    let iter = p.clone().into_iter();
     for item in iter {
         print!("{item} ");
     }
@@ -291,20 +285,9 @@ fn main() {
     println!("using Point<i32>.into_iter iter() with auto deref");
     let pc = p.clone();
     for item in pc {  // auto deref of pc into pc.iter()
-        print!("{item} " ) // consumes pc
-    }
-    println!();
-    println!("using Point<i32>.iter()");
-    for item in p.iter() { // does not consume p
         print!("{item} " )
     }
-    println!();
-    println!("using Point<i32>.iter_mut()");
-    for item in p.iter_mut() { // does not consume p
-        *item *= 2;
-        print!("{item} " )
-    }
-    println!("\n{p:?}");
+    println!("\n");
     
     /*-- whiler -------------------------------*/
     println!("\nwhiler displays Vec<T>");
@@ -335,8 +318,8 @@ fn main() {
     simple_looper(&v);
     println!("simple_looper displays point");
     let mut point = Point::<i32>::new(5);
-    point[1] = 2;
-    point[3] = -3;
+    point[1] = 1;
+    point[3] = -1;
     let ps = &point[0..];  // take slice
     simple_looper(ps);
     println!();
