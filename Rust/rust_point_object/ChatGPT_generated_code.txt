@@ -1,0 +1,30 @@
+struct Point<T> {
+    items: Vec<T>,
+}
+
+impl<T> IntoIterator for Point<T> {
+    type Item = T;
+    type IntoIter = std::vec::IntoIter<Self::Item>;
+
+    fn into_iter(self) -> Self::IntoIter {
+        self.items.into_iter()
+    }
+}
+
+impl<T> Iterator for Point<T> {
+    type Item = T;
+
+    fn next(&mut self) -> Option<Self::Item> {
+        self.items.pop()
+    }
+}
+
+let point = Point { items: vec![1, 2, 3] };
+
+for item in point {
+    println!("{}", item);
+}
+// Output:
+// 3
+// 2
+// 1

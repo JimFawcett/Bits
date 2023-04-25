@@ -10,6 +10,7 @@
 -----------------------------------------------*/
 
 #![allow(dead_code)]
+#![allow(unused_variables)]
 
 use std::fmt::*;
 use std::cmp::*;
@@ -185,6 +186,21 @@ fn ranger<T>(iter: &mut T)
     }
     println!();
 }
+/*-----------------------------------------------
+  Iterator adapters:
+    demo_adapters iterates over collection T,
+    removes non-positive items, and collects
+    into vector.
+*/
+fn demo_adapters<T, I>(t:T) -> Vec<I>
+  where T: IntoIterator<Item = I> + Debug + Clone,
+        T::Item: PartialOrd + Default 
+{
+    let def = &<T::Item>::default();
+    let v:Vec<_> = t.into_iter()
+    .filter(|item| item.gt(def)).collect();
+    v
+}
 /*-- Point<T> -----------------------------------
   Point<T> implements a point class holding a
   Vec<T>.
@@ -195,9 +211,16 @@ fn ranger<T>(iter: &mut T)
   - trait IntoIterator for Point<T>
   - trait IntoIterator for &Point<T>
   - immutable and mutable indexing
+  Note:
+  ---------------------------------------------
+  This is a nice example of building a custom
+  collection type. It implements all methods
+  and traits necessary to make a collection
+  behave like standard library collections.
+  ---------------------------------------------
 */
 #[derive(Debug, Clone)]
-struct Point<T> 
+pub struct Point<T> 
     where T:Debug + Default + Clone
 {
     items: Vec<T>
@@ -205,19 +228,15 @@ struct Point<T>
 impl<T> Point<T> 
     where T:Debug + Default + Clone
 {
-    fn new(n:usize) -> Point<T> {
+    pub fn new(n:usize) -> Point<T> {
         Point::<T> { 
             items: vec![T::default(); n],
         }
     }
-    #[allow(dead_code)]
-    fn items(&self) -> &Vec<T> {
-        &self.items
-    }
-    fn iter(&self) -> impl Iterator<Item = &T> {
+    pub fn iter(&self) -> impl Iterator<Item = &T> {
         self.items.iter()
     }
-    fn iter_mut(&mut self) -> impl Iterator<Item = &mut T> {
+    pub fn iter_mut(&mut self) -> impl Iterator<Item = &mut T> {
         self.items.iter_mut()
     }
 }
@@ -374,6 +393,7 @@ fn main() {
       https://stackoverflow.com/questions/49962611/why-does-str-not-implement-intoiterator
     */
 
+    /*-- ranger -------------------------------*/
     println!("ranger displays string:");
     let str = "a literal string".to_string();
     ranger(&mut str.chars());
@@ -385,6 +405,27 @@ fn main() {
     ranger(&mut vecdeq.iter());
     println!("ranger accepts Point<T> iterator");
     ranger(&mut point.iter());
+    println!();
+
+    /*-- demo_adapters ------------------------*/
+    println!("demo_adapters<T, I>(coll) accepts array:");
+    let a = [1, -1, 0, 2, 3, 4];
+    println!("{:?} ", &a);
+    let vo = demo_adapters(a);
+    println!("{:?} ", &vo);
+
+    println!("demo_adapters<T, I>(coll) accepts Point<f64>:");
+    let mut pad = Point::<f64>::new(5);
+    pad[0] = 1.5;
+    pad[1] = -2.0;
+    pad[2] = 0.0;
+    pad[3] = 1.1;
+    pad[4] = 2.2;
+    // this assignment works only in local module
+    // pad.items = vec![1.5, -2.0, 0.0, 1.1, 2.2];
+    println!("{:?} ", &pad);
+    let vo = demo_adapters(&pad);
+    println!("{:?} ", &vo);
 
     println!("\nThat's all folks!\n");
 }
