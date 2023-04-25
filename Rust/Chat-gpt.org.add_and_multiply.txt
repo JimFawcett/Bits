@@ -1,0 +1,52 @@
+fn add<T: std::ops::Add>(a: T, b: T) -> T::Output {
+    a + b
+}
+let sum = add(1, 2);
+assert_eq!(sum, 3);
+
+let sum = add(1.5, 2.5);
+assert_eq!(sum, 4.0);
+
+#[derive(Debug)]
+struct MyType(u32);
+
+impl std::ops::Add for MyType {
+    type Output = MyType;
+
+    fn add(self, other: MyType) -> MyType {
+        MyType(self.0 + other.0)
+    }
+}
+
+let a = MyType(1);
+let b = MyType(2);
+let sum = add(a, b);
+assert_eq!(sum, MyType(3));
+
+----------------------------------------------------
+fn add_and_multiply<T: std::ops::Add<Output=T> + std::ops::Mul<Output=T>>(a: T, b: T) -> T {
+    let sum = a + b;
+    let product = a * b;
+    sum + product
+}
+
+let result = add_and_multiply(2, 3);
+assert_eq!(result, 11);
+
+let result = add_and_multiply(2.5, 3.0);
+assert_eq!(result, 12.5);
+
+----------------------------------------------------
+fn adapters<S, I>(s: S, i: I) -> Vec<I>
+where
+    S: IntoIterator<Item = I> + Debug + Clone,
+    I: std::ops::Add<Output = I> + std::ops::Mul<Output = I>
+        + std::cmp::PartialOrd + Debug + Default + Copy + PartialEq,
+{
+    let def = &<I>::default();
+    s.into_iter()
+        .filter(|item| *item > *def)
+        .map(|item| item + i)
+        .collect()
+}
+

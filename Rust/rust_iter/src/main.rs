@@ -188,19 +188,26 @@ fn ranger<T>(iter: &mut T)
 }
 /*-----------------------------------------------
   Iterator adapters:
-    demo_adapters iterates over collection T,
-    removes non-positive items, and collects
-    into vector.
+  - demo_adapters iterates over collection C,
+    removes non-positive items, adds second 
+    argument i and collects into vector.
+  - adapters filter and map return revised 
+    iterator.  Adapter collect runs iterator
+    and collects into Vec<I>.
 */
-fn demo_adapters<T, I>(t:T) -> Vec<I>
-  where T: IntoIterator<Item = I> + Debug + Clone,
-        T::Item: PartialOrd + Default 
+fn demo_adapters<C, I>(c: C, i: I) -> Vec<I>
+where
+    C: IntoIterator<Item = I> + Debug + Clone,
+    I: std::ops::Add<Output = I> + std::ops::Mul<Output = I>
+        + PartialOrd + PartialEq + Debug + Default + Copy,
 {
-    let def = &<T::Item>::default();
-    let v:Vec<_> = t.into_iter()
-    .filter(|item| item.gt(def)).collect();
-    v
+    let def = I::default();  // expect value is zero
+    c.into_iter()
+        .filter(|item| item > &def)
+        .map(|item| item + i)
+        .collect()
 }
+
 /*-- Point<T> -----------------------------------
   Point<T> implements a point class holding a
   Vec<T>.
@@ -379,8 +386,8 @@ fn main() {
     println!("for_looper displays slice:");
     for_looper(s);
     println!("for_looper displays vector:");
-    let t = s.to_vec();
-    for_looper(&t);
+    let vec = s.to_vec();
+    for_looper(&vec);
     println!("for_looper displays VecDeque");
     for_looper(&vecdeq);
     println!("for_looper displays Point<T>");
@@ -400,7 +407,7 @@ fn main() {
     println!("ranger displays values in range");
     ranger(&mut (0..10));
     println!("ranger accepts Vector iterator");
-    ranger(&mut t.iter());
+    ranger(&mut vec.iter());
     println!("ranger accepts VecDeque iterator");
     ranger(&mut vecdeq.iter());
     println!("ranger accepts Point<T> iterator");
@@ -408,13 +415,13 @@ fn main() {
     println!();
 
     /*-- demo_adapters ------------------------*/
-    println!("demo_adapters<T, I>(coll) accepts array:");
+    println!("demo_adapters<T, i32>(coll, 2) accepts array:");
     let a = [1, -1, 0, 2, 3, 4];
     println!("{:?} ", &a);
-    let vo = demo_adapters(a);
+    let vo = demo_adapters(a, 2);
     println!("{:?} ", &vo);
 
-    println!("demo_adapters<T, I>(coll) accepts Point<f64>:");
+    println!("demo_adapters<T, f64>(coll, 1.5) accepts Point<f64>:");
     let mut pad = Point::<f64>::new(5);
     pad[0] = 1.5;
     pad[1] = -2.0;
@@ -424,7 +431,7 @@ fn main() {
     // this assignment works only in local module
     // pad.items = vec![1.5, -2.0, 0.0, 1.1, 2.2];
     println!("{:?} ", &pad);
-    let vo = demo_adapters(&pad);
+    let vo = demo_adapters(&pad, 1.5);
     println!("{:?} ", &vo);
 
     println!("\nThat's all folks!\n");
