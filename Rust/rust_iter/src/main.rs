@@ -191,9 +191,14 @@ fn ranger<T>(iter: &mut T)
   - demo_adapters iterates over collection C,
     removes non-positive items, adds second 
     argument i and collects into vector.
-  - adapters filter and map return revised 
-    iterator.  Adapter collect runs iterator
-    and collects into Vec<I>.
+  - adapters accept an iterator and return a
+    revised iterator, as discussed below.
+  - adapter filter builds iterator over elements
+    that satisfy a predicate defined by closure
+  - map builds iterator that modifies elements
+    according to a closure.
+  - Adapter collect runs iterator and collects 
+    into Vec<I>.
 */
 fn demo_adapters<C, I>(c: C, i: I) -> Vec<I>
 where
@@ -209,11 +214,10 @@ where
 }
 
 /*-- Point<T> -----------------------------------
-  Point<T> implements a point class holding a
-  Vec<T>.
+  Point<T> declares a point type holding a
+  Vec<T> of coordinate values.
   It implements:
   - new(n)  constructor
-  - items() returns ref to its internal vec
   - iter()  returns iterator over items
   - trait IntoIterator for Point<T>
   - trait IntoIterator for &Point<T>
