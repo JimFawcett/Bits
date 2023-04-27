@@ -244,6 +244,18 @@ impl<T> Point<T>
             items: vec![T::default(); n],
         }
     }
+    pub fn is_empty(&self) -> bool {
+      self.items.is_empty()
+    }
+    pub fn len(&self) -> usize {
+      self.items.len()
+    }
+    pub fn push(&mut self, item:T) {
+      self.items.push(item);
+    }
+    pub fn pop(&mut self) -> Option<T> {
+      self.items.pop()
+    }
     pub fn iter(&self) -> impl Iterator<Item = &T> {
         self.items.iter()
     }
