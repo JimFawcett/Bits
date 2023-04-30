@@ -13,8 +13,8 @@
 #include "Points.h"     // Two Point class declarations
 /*
   This demo uses the std::string and std::vector<T> classes
-  and a user defined class, Point4D, to illustrate how objects 
-  are defined and instantiated.
+  and two user defined classes, Point1 and Point2<T>, to 
+  illustrate how objects are defined and instantiated.
 
   Operations:
     All the classes discussed here provide operations for:
@@ -47,8 +47,6 @@
 template<typename T>
 using pU = std::unique_ptr<T>;
 
-void testFormats();
-
 /*-------------------------------------------------------------------
   Demonstration starts here 
 */
@@ -79,16 +77,22 @@ int main() {
     showOp("showType(vec, \"vec\");");
     showType(vec, "vec", nl);
 
+    #pragma region
     showOp("vec[2] = -2.5;");
+    #pragma endregion
     vec[2] = -2.5;
     std::cout << "\n  vec:" << vec;
 
+    #pragma region
     showOp("auto vec2 = vec : copy construction");
+    #pragma endregion
     /* copy construction */
     auto vec2 = vec;
     std::cout << "\n  vec2:" << vec2;
     
+    #pragma region
     showOp("vec2[0] = 42;");
+    #pragma endregion
     vec2[0] = 42;
     std::cout << "\n  vec2: " << vec2;
     std::cout << "\n  vec: " << vec;
@@ -99,11 +103,11 @@ int main() {
       "has no affect on source vec.", nl
     );
 
-    showNote("user-defined type Point4D");
-    Point4D p1;
+    showNote("user-defined types Point1 and Point2<T>");
+    Point1 p1;
     p1.show();
     p1.xCoor() = 42;
-    p1.zCoor() = -3.5;
+    p1.zCoor() = -3;
     p1.show();
     print();
     
@@ -112,30 +116,55 @@ int main() {
     std::cout << "  p1.xCoor() returns value " 
               << p1.xCoor() << "\n";
 
+    Point2<double> p2(5);
+    p2.show();
+
+    #pragma region
+    showNote(
+      "p2.coords() = std::vector<double>\n    "
+      "{ 1.0, -2.0, 3.0, 4.5, -42.0 }"
+    );
+    #pragma endregion
+    p2.coords() = std::vector<double>{1.0, -2.0, 3.0, 4.5, -42.0 };
+    p2.show();
+    #pragma region
+    showOp("showType(p2, \"p2\", nl);");
+    #pragma endregion
+    showType(p2, "p2", nl);
+    std::cout << "  p2.coords()[2] = " << p2.coords()[2] << "\n";
+    
     showNote("heap-based string instance");
   
     /* standard library type std::string */
     /* uses alias pU for std::unique_ptr, defined above */
+    #pragma region
     showOp(
       "pU<std::string> "
       "pStr(new std::string(\"\\\"Road Runner\\\"\")"
     );
+    #pragma endregion
     pU<std::string> pStr(new std::string("\"Road Runner\""));
     std::cout << "\n  pStr contents = " << *pStr << "\n";
     
+    #pragma region
     showOp("showType(*pStr, \"*pStr\")");
+    #pragma endregion
     showType(*pStr, "*pStr", nl);
 
     /* std::unique_ptr<T> cannot be copied but can be moved */
+    #pragma region
     showOp("showType(move(pStr), \"pStr\")");
+    #pragma endregion
     showType(move(pStr), "pStr", nl);
 
     /* standard library type std::vector<T> */
     showNote("heap-based vector instance");
+    #pragma region
     showOp(
       "pU<std::vector<double>>\n "
       "     pVec(new std::vector<double>{ 1.5, 2.5, 3.5 });"
     );
+    #pragma endregion
     pU<std::vector<double>> pVec(
       new std::vector<double>{ 1.5, 2.5, 3.5 }
     );
@@ -145,37 +174,93 @@ int main() {
     showType(move(pVec), "move(pVec)", nl);
 
     /* custom point types */
-    showNote("heap-based Point4D instance");
-    showOp("pU<Point4D> pPoint4D(new Point4D())");
-    pU<Point4D> pPoint4D(new Point4D());
-    pPoint4D->show();
-    pPoint4D->xCoor() = 1;
-    pPoint4D->yCoor() = 2;
-    pPoint4D->zCoor() = -3;
-    pPoint4D->updateTime();
-    pPoint4D->show();
+    showNote("heap-based Point1 instance");
+    #pragma region
+    showOp("pU<Point1> pPoint1(new Point1())");
+    #pragma endregion
+    pU<Point1> pPoint1(new Point1());
+    pPoint1->show();
+    pPoint1->xCoor() = 1;
+    pPoint1->yCoor() = 2;
+    pPoint1->zCoor() = -3;
+    pPoint1->show();
 
-    std::cout << "\n  pPoint4D->zCoor() = " << pPoint4D->zCoor();
-    showOp("showType(*pPoint4D, \"*pPoint4D\");");
-    showType(*pPoint4D, "*pPoint4D");
-    showOp("showType(std::move(pPoint4D), \"pPoint4D\");");
-    showType(std::move(pPoint4D), "pPoint4D", nl);
-    /* pPoint4D moved, so now invalid */
+    std::cout << "\n  pPoint1->zCoor() = " << pPoint1->zCoor();
+    #pragma region
+    showOp("showType(*pPoint1, \"*pPoint1\");");
+    #pragma endregion
+    showType(*pPoint1, "*pPoint1");
+    #pragma region
+    showOp("showType(std::move(pPoint1), \"pPoint1\");");
+    #pragma endregion
+    showType(std::move(pPoint1), "pPoint1", nl);
+    /* pPoint1 moved, so now invalid */
 
-//#define TEST
-#ifdef TEST
-    testFormats();
-#endif
-    print("\n  That's all Folks!\n\n");
-}
-
-void testFormats() {
+    showNote("heap-based Point2<T> instance");
+    
+    #pragma region
+    showOp("pU<Point2<double>> pPoint2(new Point2<double>(4))");
+    #pragma endregion
+    pU<Point2<double>> pPoint2(new Point2<double>(4));
+    pPoint2->show();
+    
+    #pragma region
+    showOp(
+      "pPoint2->coords() = \n"
+      "      std::vector<double>{ 1.0, 3.5, -2.0, 42.0 };"
+    );
+    #pragma endregion
+    pPoint2->coords() = std::vector<double>{ 1.0, 3.5, -2.0, 42.0 };
+    pPoint2->show();
+    std::cout << "\n  value of pPoint2->coords()[1] is " 
+              << pPoint2->coords()[1];
+    
+    #pragma region
+    showOp("showType(*pPoint2, \"*pPoint2\");");
+    #pragma endregion
+    showType(*pPoint2, "*pPoint2");
+    
+    #pragma region
+    showOp("showType(std::move(pPoint2), \"pPoint2\");");
+    #pragma endregion
+    showType(std::move(pPoint2), "pPoint2");
+    /* pPoint2 moved, so now invalid */
+    print();
 
     showNote("Test and demonstrate formatting functions");
     
+    #pragma region
+    showOp("demonstrate Point2 show()");
+    #pragma endregion
+    print("default indent = 4 and width = 7:");
+    Point2<int> p2a(15);
+    p2a.show();
+    size_t saveLeft = p2a.left();
+    size_t saveWidth = p2a.width();
+    print("\n  indent = 6, width = 12:");
+    p2a.left() = 6;
+    p2a.width() = 12;
+    p2a.show();
+
+    #pragma region
+    showOp(
+      "demonstrate operator<< overload for Point2 ---"
+    );
+    #pragma endregion
+    p2a.left() = saveLeft;
+    p2a.width() = saveWidth;
+    print("default indent = 4 and width = 7:");
+    std::cout << p2a;
+    print("\n  indent = 6, width = 12:");
+    p2a.left() = 6;
+    p2a.width() = 12;
+    std::cout << p2a;
+
+    #pragma region
     showOp(
       "demonstrate operator<< overload for vector"
     );
+    #pragma endregion
     auto vtest = std::vector<int>{1, 2, 3, 4, 5, 6, 7, 8, 9 };
     print("default indent = 4 and width = 7:");
     std::cout << vtest;
@@ -189,18 +274,18 @@ void testFormats() {
     std::cout << formatColl(vtest, "vtest", nl, 2, 9);
     std::cout << formatColl(vtest, "vtest: vector<int>", nl, 2, 10);
 
-    std::array<double, 5> array = { 1, 2, 3, 4.5, -3.14159 };
-    std::cout << formatColl(array, "array", nl, 2, 4);
+    std::array<double, 5> arrtest = { 1, 2, 3, 4.5, -3.14159 };
+    std::cout << formatColl(arrtest, "arrtest", nl, 2, 4);
 
-    std::map<int, std::string> map {
+    std::map<int, std::string> amap {
        {1, "one"}, {2, "two"}, {3, "three"} 
     };
-    std::cout << formatColl(map, "map", nl, 2, 4);
+    std::cout << formatColl(amap, "amap", nl, 2, 4);
 
-    std::set<std::string> set { 
+    std::set<std::string> aset { 
       "one", "two", "three", "four", "five" 
     };
-    std::cout << formatColl(set, "set", nl, 2, 4);
+    std::cout << formatColl(aset, "aset", nl, 2, 4);
 
     std::string astring = "this is a string";
     std::cout << formatString(astring, "astring", nl, 2);
@@ -212,7 +297,9 @@ void testFormats() {
     
     std::cout << format(adouble, "adouble", nl);
     std::cout << format(astring, "astring", nl);
-    std::vector<double> vect{ 1, 2, 3, 4.5, -3.14159 };
-    std::cout << format(vect, "vect", nl);
-    std::cout << format(map, "map", nl);
+    std::vector<double> avec{ 1, 2, 3, 4.5, -3.14159 };
+    std::cout << format(avec, "avec", nl);
+    std::cout << format(amap, "amap", nl);
+
+    print("\n  That's all Folks!\n\n");
 }

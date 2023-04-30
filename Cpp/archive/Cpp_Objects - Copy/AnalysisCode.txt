@@ -1,11 +1,8 @@
 /*-------------------------------------------------------------------
   Analysis.h
-  - Provides functions that analyze types, display results
+  - provides functions that analyze types, display results
     and other program defined information.
-  - Some of this code requires complex template operations.
-    Those will be discussed in the generics bit.
-  - You can skip analyzing this file until then, without
-    loss of understanding.
+  - some of this code requires complex template operations
 */
 
 #include <typeinfo>     // typeid
@@ -20,6 +17,7 @@
   definitions below may be placed in any order. That's
   needed because C++ requires declaration before use.
 */
+#pragma region
 template<typename T>
 void showType(T t, const std::string &nm, const std::string& suffix = "");
 void showNote(const std::string& txt, const std::string& suffix = "");
@@ -50,6 +48,7 @@ std::string format(
   const T& t, const std::string& nm, const std::string& suffix = "",
   size_t left = 2, size_t width = 7
 );
+#pragma endregion
 /*-------------------------------------------------------------------
   Display and Analysis function and globals definitions
 ---------------------------------------------------------------------
@@ -259,3 +258,4 @@ inline void print(const std::string& txt) {
 inline void println(const std::string& txt) {
   std::cout << "\n  " << txt << "\n";
 }
+

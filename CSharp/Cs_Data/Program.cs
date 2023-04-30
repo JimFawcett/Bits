@@ -54,53 +54,43 @@ namespace HelloData
   class Program
   {
     /*-- demonstration begins here --*/
+  
     const string nl = "\n";
 
     static void Main(string[] args)
     {
       print(" Demonstrate C# types");
+  
       showNote("int - value type");
       
-      #region 
       showOp("int t1 = 42");
-      #endregion
       int t1 = 42;
       showType(t1, "t1", nl);
       
-      #region
       showOp("interate over val type members using reflection");
-      #endregion
       iterate(t1);
       print();
 
-      #region
       showOp("int t1a = t1 : copy of value type");
-      #endregion
       int t1a = t1;
       isSameObj(t1a, "t1a", t1, "t1", nl);
 
       // reference behavior - copy on write
       showNote("string - reference type");
 
-      #region
       showOp("string t2 = \"a string\"");
-      #endregion
       string t2 = "a string";
       showType(t2, "t2");
 
       showNote("string has many methods - uncomment next line to see them", "", 60);
       //iterate(t2);
 
-      #region 
       showOp("string t3 = t2 : copy handle of ref type");
-      #endregion
       string t3 = t2;
       showType(t3, "t3");
       isSameObj(t3,"t3",t2,"t2");
 
-      #region 
       showOp("t3 += \" is here\" : copy on write");
-      #endregion
       t3 += " is here";
       showType(t2, "t2");
       showType(t3, "t3");
@@ -109,29 +99,21 @@ namespace HelloData
       
       showNote("Object - base reference type");
 
-      #region 
       showOp("Object obj1 - new Object()");
-      #endregion
       Object obj1 = new Object();
       showType(obj1, "obj");
 
-      #region 
       showOp("interate over ref type members using reflection");
-      #endregion
       iterate(obj1);
       print();
 
-      #region 
       showOp("Object obj2 = obj1");
-      #endregion
       Object obj2 = obj1;
       isSameObj(obj2, "obj2", obj1, "obj1", nl);
 
       showNote("Svt Struct value type");
 
-      #region 
       showOp("Svt t4 = new Svt()");
-      #endregion
       Svt t4 = new Svt();
       t4.I = 3;
       t4.D = 3.1415927;
@@ -141,25 +123,19 @@ namespace HelloData
       showNote("value type: size of object in stackframe", nl, 45);
 
       /* iterate over val type members using reflection */
-      #region 
       showOp("iterate over val type members using reflection");
-      #endregion
       iterate(t4);
       print();
 
       /* copy of value type */
-      #region 
       showOp("Svt t4a = t4 : copy of val type");
-      #endregion
       Svt t4a = t4;
       t4a.printSelf("t4a");
       t4.printSelf("t4");
       isSameObj(t4a,"t4a",t4,"t4");
       showType(t4a, "t4a");
 
-      #region 
       showOp("t4a.C = 'q'");
-      #endregion
       t4a.C = 'q';
       t4a.printSelf("t4a");
       t4.printSelf("t4");
@@ -167,9 +143,7 @@ namespace HelloData
 
       showNote("Crt - ref type with ref member");
 
-      #region 
       showOp("Crt t5 = new Crt()");
-      #endregion
       Crt t5 = new Crt();
       t5.S = "SomeString";
       t5.printSelf("t5");
@@ -177,18 +151,14 @@ namespace HelloData
       showNote("ref type: size of handle to object in heap", nl, 45);
 
       /* copy handle of reference type */
-      #region 
       showOp("Crt t5a = t5 : copy handle of ref type");
-      #endregion
       Crt t5a = t5;
       t5a.printSelf("t5a");
       isSameObj(t5a, "t5a", t5, "t5");
       isSameObj(t5a.S, "t5a.S", t5.S, "t5.S");
 
       /* literal strings are not immutable */
-      #region 
       showOp("t5a.S = \"new literal string\" : no copy on write");
-      #endregion
       t5a.S = "new string";
       t5a.printSelf("t5a");
       t5a.printSelf("t5");

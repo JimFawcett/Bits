@@ -39,48 +39,71 @@ void showLabel(const std::string& text, size_t n = 50);
 void print(const std::string& txt = "");
 void println(const std::string& txt = "");
 
-void nl();
+void nl() {
+  std::cout << std::endl;
+}
 
 int main() {
     showLabel(" Demonstrate C++ types");
     nl();
 
-    /*-- values live in stack frame --*/
+    /*-- objects live in stack frame, may have values in heap --*/
+    
     showOp("initialize from literals");
-    int t1 = int{3}; 
+    
+    int t1{3}; 
     showType(t1, "t1");
+    
     long long int t1a = 3;
     showType(t1a, "t1a");
 
+    double d{3.1415927};
+    showType(d, "d");
+
+    std::string s{"a literal string"};  // char values in heap
+    showType(s, "s");
+
     println("-- copy construct --");
+    
     auto t1b = t1a;
     showType(t1b, "t1b");
     // double t1 = 3.1415927; // not allowed to redefine type of t1
     
     /*-- values live in heap when using new --*/
+    
     println("-- store in heap --");
-    double* t2 = new double{3.14159};
-    showType(t2, "t2");
-    showType(*t2, "*t2");
-    delete(t2);  // see unique_ptr, below
+    
+    double* dptr = new double{3.14159};
+    showType(dptr, "dptr");
+    showType(*dptr, "*dptr");
+    delete(dptr);  // see unique_ptr, below
     
     /*-- control block lives in stack, char data live in heap --*/
+    
     println("-- string: control block in stack, data in heap --");
-    auto t3 = std::string("Hello Data");  // move ctor - rhs is temp
-    showType(t3, "t3");
+    
+    auto s2 = std::string("Hello Data");  // move ctor - rhs is temp
+    showType(s2, "s2");
+    
     println("-- C++ reference --");
-    auto& t4 = t3;      // create reference, no copy or move
-    showType(t4, "t4");
+    auto& rs2 = s2;      // create reference, no copy or move
+    showType(rs2, "rs2");
     
     /*-- unique_ptr may not be copied but move allowed --*/
+    
     println("-- unique_ptr owns data --");
-    auto t5 = std::unique_ptr<int>(new int{-3});
-    showType(std::move(t5), "t5");  // unique_ptr can't be copied so move
-    t5 = std::unique_ptr<int>(new int{-3});
-    showType(*t5, "*t5"); // contents can be copied
+    
+    auto ptr = std::unique_ptr<int>(new int{-3});
+    *ptr += 1;
+    showType(std::move(ptr), "ptr");  // unique_ptr can't be copied so move
+    
+    /*-- original heap value deleted when ptr assigned --*/
+
+    ptr = std::unique_ptr<int>(new int{-4});
+    showType(*ptr, "*ptr"); // contents can be copied
     nl();
 
-    showOp("t5 deleted when unique_ptr leaves scope");
+    showOp("heap data deleted when unique_ptr leaves scope");
 
     println("\n  That's all Folks!\n\n");
 }
@@ -128,7 +151,4 @@ void print(const std::string& txt) {
 }
 void println(const std::string& txt) {
   std::cout << "\n  " << txt << "\n";
-}
-void nl() {
-  std::cout << std::endl;
 }
