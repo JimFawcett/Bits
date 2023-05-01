@@ -4,8 +4,8 @@
     and other program defined information.
   - Some of this code requires complex template operations.
     Those will be discussed in the generics bit.
-  - You can skip analyzing this file until then, without
-    loss of understanding.
+  - You can skip the hard parts until then, without loss
+    of understanding.
 */
 
 #include <typeinfo>     // typeid

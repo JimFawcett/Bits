@@ -1,6 +1,6 @@
 /*-------------------------------------------------------------------
   Cpp_Objects.cpp
-  - depends on Points.h to provide two user-defined point classes
+  - depends on Points.h to provide user-defined point class
   - depends on Analysis.h for several display and analysis functions
 */
 #include <iostream>     // std::cout
@@ -10,7 +10,7 @@
 #include <map>          // map<K,V> class
 #include <set>          // set<T> class
 #include "Analysis.h"   // Analysis functions for this demo
-#include "Points.h"     // Two Point class declarations
+#include "Points.h"     // Point4D class declaration
 /*
   This demo uses the std::string and std::vector<T> classes
   and a user defined class, Point4D, to illustrate how objects 
@@ -47,7 +47,7 @@
 template<typename T>
 using pU = std::unique_ptr<T>;
 
-void testFormats();
+void testFormats();  // declare function for testing formats (see below)
 
 /*-------------------------------------------------------------------
   Demonstration starts here 
@@ -66,6 +66,7 @@ int main() {
     showType(d, "ld", nl);
 
     showNote("std library types string and vector<T>");
+
     /* create and display std::string object */
     auto str = std::string("\"Wile E. Coyote\"");
     auto out = std::string("contents of str = ") + str;
@@ -104,6 +105,7 @@ int main() {
     p1.show();
     p1.xCoor() = 42;
     p1.zCoor() = -3.5;
+    /*- t contains time of construction -*/
     p1.show();
     print();
     
