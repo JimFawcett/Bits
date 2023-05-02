@@ -1,6 +1,6 @@
 /*-------------------------------------------------------------------
-  Cpp_Objects.cpp
-  - depends on Points.h to provide two user-defined point classes
+  Cpp_Generics.cpp
+  - depends on Points.h to provide user-defined point class
   - depends on Analysis.h for several display and analysis functions
 */
 #include <iostream>     // std::cout
@@ -12,8 +12,8 @@
 #include "Analysis.h"   // Analysis functions for this demo
 #include "Points.h"     // Two Point class declarations
 /*
-  This demo uses the std::string and std::vector<T> classes
-  and two user defined classes, Point1 and Point2<T>, to 
+  This demo uses std::basic_string<char> and std::vector<T>
+  classes and user defined class, PointN<T>, to 
   illustrate how objects are defined and instantiated.
 
   Operations:
@@ -40,33 +40,30 @@
 #pragma warning(disable: 4984)  // warns about C++17 extension
 
 /*-----------------------------------------------
-  alias type name 
+  alias type names
   - pU<T> is the same type as std::unique_ptr<T> 
   - this just provides a shorter name
 */
 template<typename T>
 using pU = std::unique_ptr<T>;
-
+/*
+  The std library uses aliases:
+  using string = basic_string<char>;
+  using wstring = basic_string<wchar_t>;
+*/
 /*-------------------------------------------------------------------
   Demonstration starts here 
 */
+void testFormats();
+
 int main() {
 
-    print("Demonstrate C++ Objects\n");
-
-    showNote("primitive C++ types size_t and double");
-    size_t st = 42;
-    std::cout << "\n  size_t st = " << st;
-    showType(st, "st", nl);
-
-    double d = 3.1415927;
-    std::cout << "\n  double d = " << d;
-    showType(d, "ld", nl);
+    print("Demonstrate C++ Generic Objects\n");
 
     showNote("std library types string and vector<T>");
-    /* create and display std::string object */
-    auto str = std::string("\"Wile E. Coyote\"");
-    auto out = std::string("contents of str = ") + str;
+    /* create and display std::basic_string<char> object */
+    auto str = std::basic_string<char>("\"Wile E. Coyote\"");
+    auto out = std::basic_string<char>("contents of str = ") + str;
     print(out);
     print("--- showType(str, \"str\"); ---");
     showType(str, "str", nl);
@@ -77,22 +74,16 @@ int main() {
     showOp("showType(vec, \"vec\");");
     showType(vec, "vec", nl);
 
-    #pragma region
     showOp("vec[2] = -2.5;");
-    #pragma endregion
     vec[2] = -2.5;
     std::cout << "\n  vec:" << vec;
 
-    #pragma region
     showOp("auto vec2 = vec : copy construction");
-    #pragma endregion
     /* copy construction */
     auto vec2 = vec;
     std::cout << "\n  vec2:" << vec2;
     
-    #pragma region
     showOp("vec2[0] = 42;");
-    #pragma endregion
     vec2[0] = 42;
     std::cout << "\n  vec2: " << vec2;
     std::cout << "\n  vec: " << vec;
@@ -103,68 +94,45 @@ int main() {
       "has no affect on source vec.", nl
     );
 
-    showNote("user-defined types Point1 and Point2<T>");
-    Point1 p1;
-    p1.show();
-    p1.xCoor() = 42;
-    p1.zCoor() = -3;
-    p1.show();
-    print();
-    
-    print("--- showType(p1, \"p1\", nl) ---");
-    showType(p1, "p1", nl);
-    std::cout << "  p1.xCoor() returns value " 
-              << p1.xCoor() << "\n";
+    showNote("user-defined type PointN<T>");
 
-    Point2<double> p2(5);
+    PointN<double> p2(5);
     p2.show();
 
-    #pragma region
     showNote(
       "p2.coords() = std::vector<double>\n    "
       "{ 1.0, -2.0, 3.0, 4.5, -42.0 }"
     );
-    #pragma endregion
     p2.coords() = std::vector<double>{1.0, -2.0, 3.0, 4.5, -42.0 };
     p2.show();
-    #pragma region
     showOp("showType(p2, \"p2\", nl);");
-    #pragma endregion
     showType(p2, "p2", nl);
     std::cout << "  p2.coords()[2] = " << p2.coords()[2] << "\n";
     
     showNote("heap-based string instance");
   
-    /* standard library type std::string */
+    /* standard library type std::basic_string<char> */
     /* uses alias pU for std::unique_ptr, defined above */
-    #pragma region
     showOp(
-      "pU<std::string> "
-      "pStr(new std::string(\"\\\"Road Runner\\\"\")"
+      "pU<std::basic_string<char>> "
+      "pStr(new std::basic_string<char>(\"\\\"Road Runner\\\"\")"
     );
-    #pragma endregion
-    pU<std::string> pStr(new std::string("\"Road Runner\""));
+    pU<std::basic_string<char>> pStr(new std::basic_string<char>("\"Road Runner\""));
     std::cout << "\n  pStr contents = " << *pStr << "\n";
     
-    #pragma region
     showOp("showType(*pStr, \"*pStr\")");
-    #pragma endregion
     showType(*pStr, "*pStr", nl);
 
     /* std::unique_ptr<T> cannot be copied but can be moved */
-    #pragma region
     showOp("showType(move(pStr), \"pStr\")");
-    #pragma endregion
     showType(move(pStr), "pStr", nl);
 
     /* standard library type std::vector<T> */
     showNote("heap-based vector instance");
-    #pragma region
     showOp(
       "pU<std::vector<double>>\n "
       "     pVec(new std::vector<double>{ 1.5, 2.5, 3.5 });"
     );
-    #pragma endregion
     pU<std::vector<double>> pVec(
       new std::vector<double>{ 1.5, 2.5, 3.5 }
     );
@@ -173,67 +141,47 @@ int main() {
     std::cout << "\n  pVec = " << pVec;
     showType(move(pVec), "move(pVec)", nl);
 
-    /* custom point types */
-    showNote("heap-based Point1 instance");
-    #pragma region
-    showOp("pU<Point1> pPoint1(new Point1())");
-    #pragma endregion
-    pU<Point1> pPoint1(new Point1());
-    pPoint1->show();
-    pPoint1->xCoor() = 1;
-    pPoint1->yCoor() = 2;
-    pPoint1->zCoor() = -3;
-    pPoint1->show();
+    /* custom point type */
 
-    std::cout << "\n  pPoint1->zCoor() = " << pPoint1->zCoor();
-    #pragma region
-    showOp("showType(*pPoint1, \"*pPoint1\");");
-    #pragma endregion
-    showType(*pPoint1, "*pPoint1");
-    #pragma region
-    showOp("showType(std::move(pPoint1), \"pPoint1\");");
-    #pragma endregion
-    showType(std::move(pPoint1), "pPoint1", nl);
-    /* pPoint1 moved, so now invalid */
-
-    showNote("heap-based Point2<T> instance");
+    showNote("heap-based PointN<T> instance");
     
-    #pragma region
-    showOp("pU<Point2<double>> pPoint2(new Point2<double>(4))");
-    #pragma endregion
-    pU<Point2<double>> pPoint2(new Point2<double>(4));
-    pPoint2->show();
+    showOp("pU<PointN<double>> pPointN(new PointN<double>(4))");
+    pU<PointN<double>> pPointN(new PointN<double>(4));
+    pPointN->show();
     
-    #pragma region
     showOp(
-      "pPoint2->coords() = \n"
+      "pPointN->coords() = \n"
       "      std::vector<double>{ 1.0, 3.5, -2.0, 42.0 };"
     );
-    #pragma endregion
-    pPoint2->coords() = std::vector<double>{ 1.0, 3.5, -2.0, 42.0 };
-    pPoint2->show();
-    std::cout << "\n  value of pPoint2->coords()[1] is " 
-              << pPoint2->coords()[1];
+    pPointN->coords() = std::vector<double>{ 1.0, 3.5, -2.0, 42.0 };
+    pPointN->show();
+    std::cout << "\n  value of pPointN->coords()[1] is " 
+              << pPointN->coords()[1];
     
-    #pragma region
-    showOp("showType(*pPoint2, \"*pPoint2\");");
-    #pragma endregion
-    showType(*pPoint2, "*pPoint2");
+    showOp("showType(*pPointN, \"*pPointN\");");
+    showType(*pPointN, "*pPointN");
     
-    #pragma region
-    showOp("showType(std::move(pPoint2), \"pPoint2\");");
-    #pragma endregion
-    showType(std::move(pPoint2), "pPoint2");
-    /* pPoint2 moved, so now invalid */
+    showOp("showType(std::move(pPointN), \"pPointN\");");
+    showType(std::move(pPointN), "pPointN");
+    /* pPointN moved, so now invalid */
     print();
+
+    //#define TEST
+    #ifdef TEST
+      testFormats();
+    #endif
+
+
+    print("\n  That's all Folks!\n\n");
+}
+
+void testFormats() {
 
     showNote("Test and demonstrate formatting functions");
     
-    #pragma region
-    showOp("demonstrate Point2 show()");
-    #pragma endregion
+    showOp("demonstrate PointN show()");
     print("default indent = 4 and width = 7:");
-    Point2<int> p2a(15);
+    PointN<int> p2a(15);
     p2a.show();
     size_t saveLeft = p2a.left();
     size_t saveWidth = p2a.width();
@@ -242,11 +190,9 @@ int main() {
     p2a.width() = 12;
     p2a.show();
 
-    #pragma region
     showOp(
-      "demonstrate operator<< overload for Point2 ---"
+      "demonstrate operator<< overload for PointN ---"
     );
-    #pragma endregion
     p2a.left() = saveLeft;
     p2a.width() = saveWidth;
     print("default indent = 4 and width = 7:");
@@ -256,11 +202,9 @@ int main() {
     p2a.width() = 12;
     std::cout << p2a;
 
-    #pragma region
     showOp(
       "demonstrate operator<< overload for vector"
     );
-    #pragma endregion
     auto vtest = std::vector<int>{1, 2, 3, 4, 5, 6, 7, 8, 9 };
     print("default indent = 4 and width = 7:");
     std::cout << vtest;
@@ -277,17 +221,17 @@ int main() {
     std::array<double, 5> arrtest = { 1, 2, 3, 4.5, -3.14159 };
     std::cout << formatColl(arrtest, "arrtest", nl, 2, 4);
 
-    std::map<int, std::string> amap {
+    std::map<int, std::basic_string<char>> amap {
        {1, "one"}, {2, "two"}, {3, "three"} 
     };
     std::cout << formatColl(amap, "amap", nl, 2, 4);
 
-    std::set<std::string> aset { 
+    std::set<std::basic_string<char>> aset { 
       "one", "two", "three", "four", "five" 
     };
     std::cout << formatColl(aset, "aset", nl, 2, 4);
 
-    std::string astring = "this is a string";
+    std::basic_string<char> astring = "this is a string";
     std::cout << formatString(astring, "astring", nl, 2);
 
     double adouble { 3.1415927 };
@@ -300,6 +244,4 @@ int main() {
     std::vector<double> avec{ 1, 2, 3, 4.5, -3.14159 };
     std::cout << format(avec, "avec", nl);
     std::cout << format(amap, "amap", nl);
-
-    print("\n  That's all Folks!\n\n");
 }
