@@ -96,19 +96,30 @@ int main() {
 
     showNote("user-defined type PointN<T>");
 
-    PointN<double> p2(5);
-    p2.show();
+    PointN<double> p1(5);
+    p1.show("p1");
 
     showNote(
-      "p2.coords() = std::vector<double>\n    "
+      "p1.coords() = std::vector<double>\n    "
       "{ 1.0, -2.0, 3.0, 4.5, -42.0 }"
     );
-    p2.coords() = std::vector<double>{1.0, -2.0, 3.0, 4.5, -42.0 };
-    p2.show();
-    showOp("showType(p2, \"p2\", nl);");
-    showType(p2, "p2", nl);
-    std::cout << "  p2.coords()[2] = " << p2.coords()[2] << "\n";
+    p1.coords() = std::vector<double>{1.0, -2.0, 3.0, 4.5, -42.0 };
+    p1.show("p1");
+    showOp("showType(p1, \"p1\", nl);");
+    showType(p1, "p1", nl);
+    std::cout << "  p1.coords()[2] = " << p1.coords()[2] << "\n";
     
+    /*-- copy construction --*/
+
+    auto p2 = p1;
+    showOp("auto p2 = p1");
+    p2.show("p2");
+    showOp("p2[1] = 5.5");
+    p2[1] = 5.5;
+    p2.show("p2");
+    p1.show("p1");
+    print();
+
     showNote("heap-based string instance");
   
     /* standard library type std::basic_string<char> */
@@ -147,14 +158,14 @@ int main() {
     
     showOp("pU<PointN<double>> pPointN(new PointN<double>(4))");
     pU<PointN<double>> pPointN(new PointN<double>(4));
-    pPointN->show();
+    pPointN->show("*pPointN");
     
     showOp(
       "pPointN->coords() = \n"
       "      std::vector<double>{ 1.0, 3.5, -2.0, 42.0 };"
     );
     pPointN->coords() = std::vector<double>{ 1.0, 3.5, -2.0, 42.0 };
-    pPointN->show();
+    pPointN->show("*pPointN");
     std::cout << "\n  value of pPointN->coords()[1] is " 
               << pPointN->coords()[1];
     
@@ -171,7 +182,6 @@ int main() {
       testFormats();
     #endif
 
-
     print("\n  That's all Folks!\n\n");
 }
 
@@ -181,26 +191,26 @@ void testFormats() {
     
     showOp("demonstrate PointN show()");
     print("default indent = 4 and width = 7:");
-    PointN<int> p2a(15);
-    p2a.show();
-    size_t saveLeft = p2a.left();
-    size_t saveWidth = p2a.width();
+    PointN<int> p1a(15);
+    p1a.show("p1a");
+    size_t saveLeft = p1a.left();
+    size_t saveWidth = p1a.width();
     print("\n  indent = 6, width = 12:");
-    p2a.left() = 6;
-    p2a.width() = 12;
-    p2a.show();
+    p1a.left() = 6;
+    p1a.width() = 12;
+    p1a.show("p1a");
 
     showOp(
       "demonstrate operator<< overload for PointN ---"
     );
-    p2a.left() = saveLeft;
-    p2a.width() = saveWidth;
+    p1a.left() = saveLeft;
+    p1a.width() = saveWidth;
     print("default indent = 4 and width = 7:");
-    std::cout << p2a;
+    std::cout << p1a;
     print("\n  indent = 6, width = 12:");
-    p2a.left() = 6;
-    p2a.width() = 12;
-    std::cout << p2a;
+    p1a.left() = 6;
+    p1a.width() = 12;
+    std::cout << p1a;
 
     showOp(
       "demonstrate operator<< overload for vector"

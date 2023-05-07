@@ -232,6 +232,7 @@ constexpr bool is_iterable_v = is_iterable<T>::value;
   Displays almost everything.
   - strings work better with formatString(...)
   https://www.cppstories.com/2018/03/ifconstexpr/
+  Iteration is discussed in the next Bit Cpp_iter
 */
 template<typename T>
 std::string format(

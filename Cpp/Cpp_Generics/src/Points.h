@@ -8,7 +8,7 @@
 /*-------------------------------------------------------------------
   PointN<T> class represents a point in an n-Dimensional hyperspace.
   It uses a template parameter to support a variety of coordinate 
-  types, and by using a vector to hold any finite number of 
+  types, and uses a vector to hold any finite number of 
   coordinates.
 
   Its default constructor PointN() is declared delete so it won't
@@ -27,12 +27,12 @@ public:
   PointN& operator=(const PointN& pt) = default;  // copy assignment
   PointN& operator=(PointN&& pt) = default;       // move assignemnt
   ~PointN() = default;                            // dtor
-  size_t len();
+  size_t size();
   T& operator[](size_t index);
   T operator[](size_t index) const;
   void push_back(T r);
   T pop_back();
-  void show();
+  void show(const std::string& name);
   std::vector<T>& coords() { return coord; }
   size_t& left() { return _left; }
   size_t& width() { return _width; }
@@ -51,11 +51,15 @@ PointN<T>::PointN(size_t N) {
   }
 }
 template<typename T>
+size_t PointN<T>::size() {
+  return coord.size();
+}
+template<typename T>
 T& PointN<T>::operator[](size_t index) {
-  if (index < 0 || coord.len() <= index) {
+  if (index < 0 || coord.size() <= index) {
     throw "indexing error";
   }
-  return &coord[index];
+  return coord[index];
 }
 template<typename T>
 T PointN<T>::operator[](size_t index) const {
@@ -76,8 +80,8 @@ T PointN<T>::pop_back() {
   PointtN<T> display function 
 */
 template<typename T>
-void PointN<T>::show() {
-  std::cout << "\n" << indent(_left) << "PointN<T>";
+void PointN<T>::show(const std::string& name) {
+  std::cout << "\n" << indent(_left) << name << ": " << "PointN<T>";
   std::cout << " {\n";
   std::cout << fold(coord, _left + 2, _width);
   std::cout << indent(_left) << "}";
