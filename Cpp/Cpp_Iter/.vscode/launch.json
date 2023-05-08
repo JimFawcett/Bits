@@ -8,7 +8,7 @@
             "type": "lldb",
             "request": "launch",
             "name": "Debug",
-            "program": "${workspaceFolder}/build/Debug/Cpp_Objects.exe",
+            "program": "${workspaceFolder}/build/Debug/Cpp_iter.exe",
             "args": [],
             "cwd": "${workspaceFolder}"
         }

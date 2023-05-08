@@ -105,21 +105,24 @@ void whiler(const C& c) {
   - If non-iterable input is detected, 
     will display error msg.
   - decision is made at compile time.
+  - is_iterable_v is defined in Analysis.h
+  - max is the maximum number of items 
+    to show on one line
 */
 template<typename C>
-void whiler_guarded(const C& c, size_t max = 20) {
-  if constexpr(!is_iterable_v<C>) {
+void whiler_guarded(const C& c, size_t max = 5) {
+  if constexpr(!is_iterable_v<C>) {  // decision at compile-time
     std::cout << "\n  whiler input type is not iterable\n";
     return;
   }
   else {
     auto itr = c.begin();
-    size_t step = 0;
+    int step = 0;
     std::cout << "\n    " << *itr++;
     while (itr != c.end()) {
       std::cout << ", " << *itr++;
       if(step++ > max) {
-        step = 0;
+        step = -1;
         std::cout << "\n    ";
       }
     }
