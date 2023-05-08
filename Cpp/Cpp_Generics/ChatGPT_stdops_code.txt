@@ -1,0 +1,22 @@
+use std::ops::Add;
+
+// Define a trait for types that support addition and division operations
+trait SummableAndDividable<A = Self>: Add<Output=A> + std::ops::Div<usize, Output=A> + Default {}
+impl<T: Add<Output=T> + std::ops::Div<usize, Output=T> + Default> SummableAndDividable<T> for T {}
+
+// Define a generic function that computes the average of a collection of values
+fn avg<T: SummableAndDividable>(values: &[T]) -> T {
+    let sum: T = values.iter().sum();
+    let n = values.len();
+    if n == 0 {
+        T::default()
+    } else {
+        sum / n
+    }
+}
+
+fn main() {
+    let nums = vec![1, 2, 3, 4, 5];
+    let avg_num = avg(&nums);
+    println!("Avg = {}", avg_num);
+}

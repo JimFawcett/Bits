@@ -4,7 +4,7 @@
 #---------------------------------------------------
 
 #---------------------------------------------------
-project(ObjectsCMake)
+project(IterCMake)
 #---------------------------------------------------
 #   Cpp_Objects dir
 #   -- CMakeLists.txt (this file)
@@ -25,7 +25,7 @@ set(CMake_CXX_STANDARD 23)
 #---------------------------------------------------
 # build HelloCMake.obj in folder build/Cpp_Hello.dir/debug
 #---------------------------------------------------
-add_executable(Cpp_Objects src/Bits_Objects.cpp)
+add_executable(Cpp_Iter src/Bits_Iter.cpp)
 
 #---------------------------------------------------
 # build HelloCMakeLib.lib in folder build/debug

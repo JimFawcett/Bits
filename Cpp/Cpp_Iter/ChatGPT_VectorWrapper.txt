@@ -1,0 +1,33 @@
+#include <vector>
+#include <iostream>
+template <typename T>
+class VectorWrapper {
+private:
+    std::vector<T> vec;
+public:
+    // constructor
+    VectorWrapper(std::initializer_list<T> list) : vec(list) {}
+    
+    // range-based for loop support for const object
+    typename std::vector<T>::const_iterator begin() const {
+        return vec.begin();
+    }
+    
+    typename std::vector<T>::const_iterator end() const {
+        return vec.end();
+    }
+};
+
+// example usage
+int main() {
+    VectorWrapper<int> vec = {1, 2, 3, 4, 5};
+    
+    // range-based for loop over const object
+    for (const auto& elem : vec) {
+        std::cout << elem << " ";
+    }
+    std::cout << std::endl;
+    
+    return 0;
+}
+
