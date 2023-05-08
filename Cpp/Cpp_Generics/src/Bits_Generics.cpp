@@ -10,7 +10,7 @@
 #include <map>          // map<K,V> class
 #include <set>          // set<T> class
 #include "Analysis.h"   // Analysis functions for this demo
-#include "Points.h"     // Two Point class declarations
+#include "PointsGen.h"  // PointN<T> class declaration
 /*
   This demo uses std::basic_string<char> and std::vector<T>
   classes and user defined class, PointN<T>, to 

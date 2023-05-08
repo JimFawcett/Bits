@@ -1,8 +1,11 @@
 /*-------------------------------------------------------------------
   Analysis.h
-  - provides functions that analyze types, display results
+  - Provides functions that analyze types, display results
     and other program defined information.
-  - some of this code requires complex template operations
+  - Some of this code requires complex template operations.
+    Those will be discussed in the generics bit.
+  - You can skip the hard parts until then, without loss
+    of understanding.
 */
 
 #include <typeinfo>     // typeid
@@ -17,7 +20,6 @@
   definitions below may be placed in any order. That's
   needed because C++ requires declaration before use.
 */
-#pragma region
 template<typename T>
 void showType(T t, const std::string &nm, const std::string& suffix = "");
 void showNote(const std::string& txt, const std::string& suffix = "");
@@ -48,7 +50,6 @@ std::string format(
   const T& t, const std::string& nm, const std::string& suffix = "",
   size_t left = 2, size_t width = 7
 );
-#pragma endregion
 /*-------------------------------------------------------------------
   Display and Analysis function and globals definitions
 ---------------------------------------------------------------------
@@ -232,6 +233,7 @@ constexpr bool is_iterable_v = is_iterable<T>::value;
   Displays almost everything.
   - strings work better with formatString(...)
   https://www.cppstories.com/2018/03/ifconstexpr/
+  Iteration is discussed in Bit Cpp_iter
 */
 template<typename T>
 std::string format(

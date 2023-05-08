@@ -10,7 +10,7 @@
 #include <map>          // map<K,V> class
 #include <set>          // set<T> class
 #include "Analysis.h"   // Analysis functions for this demo
-#include "Points.h"     // Point4D class declaration
+#include "PointsObj.h"     // Point4D class declaration
 /*
   This demo uses the std::string and std::vector<T> classes
   and a user defined class, Point4D, to illustrate how objects 

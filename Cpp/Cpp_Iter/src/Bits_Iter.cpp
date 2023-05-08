@@ -11,7 +11,7 @@
 #include <map>          // map<K,V> class
 #include <set>          // set<T> class
 #include "Analysis.h"   // Analysis functions for this demo
-#include "Points.h"     // Two Point class declarations
+#include "PointsIter.h" // PointN<T> class declaration
 /*
   This demo uses the std::string and std::vector<T> classes
   and two user defined classes, Point1 and PointN<T>, to 
@@ -103,29 +103,24 @@ void whiler(const C& c) {
   any container
   - if C is iterable will use iterator on C.
   - If non-iterable input is detected, 
-    will display error msg.
+    will display error msg and return.
   - decision is made at compile time.
   - is_iterable_v is defined in Analysis.h
   - max is the maximum number of items 
     to show on one line
 */
 template<typename C>
-void whiler_guarded(const C& c, size_t max = 5) {
+void whiler_guarded(const C& c, const std::string& name, size_t indent = 2, size_t max = 8) {
   if constexpr(!is_iterable_v<C>) {  // decision at compile-time
     std::cout << "\n  whiler input type is not iterable\n";
     return;
   }
   else {
-    auto itr = c.begin();
-    int step = 0;
-    std::cout << "\n    " << *itr++;
-    while (itr != c.end()) {
-      std::cout << ", " << *itr++;
-      if(step++ > max) {
-        step = -1;
-        std::cout << "\n    ";
-      }
-    }
+    std::cout << formatColl(c, name, "", indent, max);
+    /*
+      Analysis::formatColl uses range-based for loop to iterate 
+      over collection.
+    */
   }
 }
 /*-------------------------------------------------------------------
@@ -146,7 +141,7 @@ int main() {
     showType(str, "str", nl);
 
     showNote("Iterate over string");
-    whiler_guarded(out);
+    whiler_guarded(out, "out");
     print();
 
     /* create and display std::vector<double> */
@@ -208,11 +203,11 @@ int main() {
     showOp("function using iterator taking Point");
     whilerPoint(p1);
     showOp("function using iterator taking iterable container");
-    whiler_guarded(p1);
+    whiler_guarded(p1, "p1");
     showOp("same function attempting to take non-iterable");
     struct S { int i; };
     auto s = S{3};
-    whiler_guarded(s);
+    whiler_guarded(s, "s");
     print();
 
     showNote("heap-based string instance");
@@ -244,7 +239,7 @@ int main() {
     );
     print();
     showOp("iterating over *pVec");
-    whiler_guarded(*pVec);
+    whiler_guarded(*pVec, "*pVec");
     print();
     std::cout << "\n  *pVec = " << *pVec;
     showType(*pVec, "*pVec", nl);
@@ -253,7 +248,7 @@ int main() {
 
     /* custom point type */
 
-    showNote("heap-based PointN<T> instance");
+    showNote("heap-based PointN instance");
     
     showOp("pU<PointN<double>> pPointN(new PointN<double>(4))");
     pU<PointN<double>> pPointN(new PointN<double>(4));
@@ -273,7 +268,7 @@ int main() {
     print();
 
     showOp("iterating over *pPointN");
-    whiler_guarded(*pPointN);
+    whiler_guarded(*pPointN, "*pPointN");
     print();
 
     showOp("showType(std::move(pPointN), \"pPointN\");");
