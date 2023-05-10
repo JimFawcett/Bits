@@ -1,5 +1,5 @@
 /*-------------------------------------------------------------------
-  Points.h defines point classe PointN<T>
+  PointsGen.h defines point classe PointN<T>
   - PointN<T> represents points with many coordinates of
     unspecified type T
 */

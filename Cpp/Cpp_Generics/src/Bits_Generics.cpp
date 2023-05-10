@@ -1,6 +1,6 @@
 /*-------------------------------------------------------------------
   Cpp_Generics.cpp
-  - depends on Points.h to provide user-defined point class
+  - depends on PointsGen.h to provide user-defined point class
   - depends on Analysis.h for several display and analysis functions
 */
 #include <iostream>     // std::cout

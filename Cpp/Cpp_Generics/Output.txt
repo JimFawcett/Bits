@@ -1,18 +1,4 @@
-C:\github\JimFawcett\Bits\Cpp\Cpp_Objects\build
-> ./Debug/Cpp_Objects.exe
-
-  Demonstrate C++ Objects
-
-  --------------------------------------------------
-    primitive C++ types size_t and double
-  --------------------------------------------------
-  size_t st = 42
-  st type: unsigned __int64
-  size:  8
-
-  double d = 3.14159
-  ld type: double
-  size:  8
+  Demonstrate C++ Generic Objects
 
   --------------------------------------------------
     std library types string and vector<T>
@@ -55,193 +41,87 @@ C:\github\JimFawcett\Bits\Cpp\Cpp_Objects\build
   --------------------------------------------------
 
   --------------------------------------------------
-    user-defined types Point1 and Point2<T>
+    user-defined type PointN<T>
   --------------------------------------------------
-  Point1 { 0, 0, 0 }
-  Point1 { 42, 0, -3 }
-
-  --- showType(p1, "p1", nl) ---
-  p1 type: class Point1
-  size:  12
-  p1.xCoor() returns value 42
-
-  Point2<T> {
+  p1: PointN<T> {
     0, 0, 0, 0, 0
   }
   --------------------------------------------------
-    p2.coords() = std::vector<double>
+    p1.coords() = std::vector<double>
     { 1.0, -2.0, 3.0, 4.5, -42.0 }
   --------------------------------------------------
-  Point2<T> {
+  p1: PointN<T> {
     1, -2, 3, 4.5, -42
   }
-  --- showType(p2, "p2", nl); ---
-  p2 type: class Point2<double>
+  --- showType(p1, "p1", nl); ---
+  p1 type: class PointN<double>
   size:  48
-  p2.coords()[2] = 3
+  p1.coords()[2] = 3
+
+  --- auto p2 = p1 ---
+  p2: PointN<T> {
+    1, -2, 3, 4.5, -42
+  }
+  --- p2[1] = 5.5 ---
+  p2: PointN<T> {
+    1, 5.5, 3, 4.5, -42
+  }
+  p1: PointN<T> {
+    1, -2, 3, 4.5, -42
+  }
 
   --------------------------------------------------
     heap-based string instance
   --------------------------------------------------
-  --- pU<std::string> pStr(new std::string("\"Road Runner\"") ---
+  --- pU<std::basic_string<char>> pStr(new std::basic_string<char>("\"Road Runner\"") ---
   pStr contents = "Road Runner"
 
   --- showType(*pStr, "*pStr") ---
-  *pStr type: class std::basic_string<char,struct std:...     
+  *pStr type: class std::basic_string<char,struct std:...
   size:  40
 
   --- showType(move(pStr), "pStr") ---
-  pStr type: class std::unique_ptr<class std::basic_s...      
+  pStr type: class std::unique_ptr<class std::basic_s...
   size:  8
 
   --------------------------------------------------
     heap-based vector instance
   --------------------------------------------------
   --- pU<std::vector<double>>
-      pVec(new std::vector<double>{ 1.5, 2.5, 3.5 }); ---     
+      pVec(new std::vector<double>{ 1.5, 2.5, 3.5 }); ---
   *pVec =
   vector<T>: {
     1.5, 2.5, 3.5
   }
-  *pVec type: class std::vector<double,class std::allo...     
+  *pVec type: class std::vector<double,class std::allo...
   size:  32
 
-  pVec = 0000025AD31F20A0
+  pVec = 00000204DD0E2230
   move(pVec) type: class std::unique_ptr<class std::vector<...
   size:  8
 
   --------------------------------------------------
-    heap-based Point1 instance
+    heap-based PointN<T> instance
   --------------------------------------------------
-  --- pU<Point1> pPoint1(new Point1()) ---
-  Point1 { 0, 0, 0 }
-  Point1 { 1, 2, -3 }
-  pPoint1->zCoor() = -3
-  --- showType(*pPoint1, "*pPoint1"); ---
-  *pPoint1 type: class Point1
-  size:  12
-  --- showType(std::move(pPoint1), "pPoint1"); ---
-  pPoint1 type: class std::unique_ptr<class Point1,struc...   
-  size:  8
-
-  --------------------------------------------------
-    heap-based Point2<T> instance
-  --------------------------------------------------
-  --- pU<Point2<double>> pPoint2(new Point2<double>(4)) ---   
-  Point2<T> {
+  --- pU<PointN<double>> pPointN(new PointN<double>(4)) ---
+  *pPointN: PointN<T> {
     0, 0, 0, 0
   }
-  --- pPoint2->coords() =
-      std::vector<double>{ 1.0, 3.5, -2.0, 42.0 }; ---        
-  Point2<T> {
+  --- pPointN->coords() =
+      std::vector<double>{ 1.0, 3.5, -2.0, 42.0 }; ---
+  *pPointN: PointN<T> {
     1, 3.5, -2, 42
   }
-  value of pPoint2->coords()[1] is 3.5
-  --- showType(*pPoint2, "*pPoint2"); ---
-  *pPoint2 type: class Point2<double>
+  value of pPointN->coords()[1] is 3.5
+  --- showType(*pPointN, "*pPointN"); ---
+  *pPointN type: class PointN<double>
   size:  48
-  --- showType(std::move(pPoint2), "pPoint2"); ---
-  pPoint2 type: class std::unique_ptr<class Point2<doubl...   
+  --- showType(std::move(pPointN), "pPointN"); ---
+  pPointN type: class std::unique_ptr<class PointN<doubl...
   size:  8
-
-  --------------------------------------------------
-    Test and demonstrate formatting functions
-  --------------------------------------------------
-  --- demonstrate Point2 show() ---
-  default indent = 4 and width = 7:
-  Point2<T> {
-    0, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 0,
-    0
-  }
-
-  indent = 6, width = 12:
-      Point2<T> {
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 0
-      }
-  --- demonstrate operator<< overload for Point2 --- ---      
-  default indent = 4 and width = 7:
-  Point2<T> {
-    0, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 0,
-    0
-  }
-
-  indent = 6, width = 12:
-      Point2<T> {
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 0
-      }
-  --- demonstrate operator<< overload for vector ---
-  default indent = 4 and width = 7:
-  vector<T>: {
-    1, 2, 3, 4, 5, 6, 7,
-    8, 9
-  }
-  indent = 2, width = 5:
-  vector<T>: {
-    1, 2, 3, 4, 5,
-    6, 7, 8, 9
-  }
-  vtest: {
-    1, 2, 3, 4, 5,
-    6, 7, 8, 9
-  }
-
-    vtest: {
-      1, 2, 3, 4, 5, 6, 7,
-      8, 9
-    }
-
-  vtest: {
-    1, 2, 3, 4, 5, 6, 7, 8, 9
-  }
-
-  vtest: vector<int>: {
-    1, 2, 3, 4, 5, 6, 7, 8, 9
-  }
-
-  arrtest: {
-    1, 2, 3, 4.5,
-    -3.14159
-  }
-
-  amap: {
-    {1, one}, {2, two}, {3, three}
-  }
-
-  aset: {
-    five, four, one, three,
-    two
-  }
-
-  astring: "this is a string"
-
-  adouble: 3.14159
-
-  --------------------------------------------------
-    Using consolidated format function
-  --------------------------------------------------
-
-  adouble: 3.14159
-
-  astring: {
-    t, h, i, s,  , i, s,
-     , a,  , s, t, r, i,
-    n, g
-  }
-
-  avec: {
-    1, 2, 3, 4.5, -3.14159
-  }
-
-  amap: {
-    {1, one}, {2, two}, {3, three}
-  }
 
 
   That's all Folks!
 
-C:\github\JimFawcett\Bits\Cpp\Cpp_Objects\build
+C:\github\JimFawcett\Bits\Cpp\Cpp_Generics\build
 >
