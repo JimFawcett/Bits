@@ -1,4 +1,33 @@
+C:\github\JimFawcett\Bits\Cpp\Cpp_Generics\build
+> debug/cpp_generics
+
   Demonstrate C++ Generic Objects
+
+  --------------------------------------------------
+    statistics for integer types
+  --------------------------------------------------
+  s1 {
+    1, 2, 3, 4, 5, 6
+  }
+
+  s1.size() = 6
+  s1.max() = 6
+  s1.min() = 1
+  s1.sum() = 21
+  s1.avg() = 3.5
+
+  --------------------------------------------------
+    statistics for float types
+  --------------------------------------------------
+  s2 {
+    1, 2.1, 3.2, 4.3, 5.4, 6.5
+  }
+
+  s2.size() = 6
+  s2.max() = 6.5
+  s2.min() = 1
+  s2.sum() = 22.5
+  s2.avg() = 3.75
 
   --------------------------------------------------
     std library types string and vector<T>
@@ -96,14 +125,14 @@
   *pVec type: class std::vector<double,class std::allo...
   size:  32
 
-  pVec = 00000204DD0E2230
-  move(pVec) type: class std::unique_ptr<class std::vector<...
+  pVec = 00000206A32724E0
+  move(pVec) type: class std::unique_ptr<class std::vector<...    
   size:  8
 
   --------------------------------------------------
     heap-based PointN<T> instance
   --------------------------------------------------
-  --- pU<PointN<double>> pPointN(new PointN<double>(4)) ---
+  --- pU<PointN<double>> pPointN(new PointN<double>(4)) ---       
   *pPointN: PointN<T> {
     0, 0, 0, 0
   }
@@ -117,7 +146,7 @@
   *pPointN type: class PointN<double>
   size:  48
   --- showType(std::move(pPointN), "pPointN"); ---
-  pPointN type: class std::unique_ptr<class PointN<doubl...
+  pPointN type: class std::unique_ptr<class PointN<doubl...       
   size:  8
 
 

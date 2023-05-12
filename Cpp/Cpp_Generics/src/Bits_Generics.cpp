@@ -11,9 +11,10 @@
 #include <set>          // set<T> class
 #include "Analysis.h"   // Analysis functions for this demo
 #include "PointsGen.h"  // PointN<T> class declaration
+#include "Stats.h"      // Stats class declaration
 /*
   This demo uses std::basic_string<char> and std::vector<T>
-  classes and user defined class, PointN<T>, to 
+  classes and user defined classes, Stats<T> and PointN<T>, to 
   illustrate how objects are defined and instantiated.
 
   Operations:
@@ -59,6 +60,28 @@ void testFormats();
 int main() {
 
     print("Demonstrate C++ Generic Objects\n");
+
+    showNote("statistics for integer types");
+    auto v1 = std::vector<int>{1, 2, 3, 4, 5, 6};
+    auto s1 = Stats<int>(v1);
+    s1.show("s1");
+    std::cout << "\n  s1.size() = " << s1.size();
+    std::cout << "\n  s1.max() = " << s1.max();
+    std::cout << "\n  s1.min() = " << s1.min();
+    std::cout << "\n  s1.sum() = " << s1.sum();
+    std::cout << "\n  s1.avg() = " << s1.avg();
+    print();
+
+    showNote("statistics for float types");
+    auto v2 = std::vector<double>{1.0, 2.1, 3.2, 4.3, 5.4, 6.5};
+    auto s2 = Stats<double>(v2);
+    s2.show("s2");
+    std::cout << "\n  s2.size() = " << s2.size();
+    std::cout << "\n  s2.max() = " << s2.max();
+    std::cout << "\n  s2.min() = " << s2.min();
+    std::cout << "\n  s2.sum() = " << s2.sum();
+    std::cout << "\n  s2.avg() = " << s2.avg();
+    print();
 
     showNote("std library types string and vector<T>");
     /* create and display std::basic_string<char> object */
