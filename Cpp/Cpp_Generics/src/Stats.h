@@ -1,7 +1,7 @@
 /*-------------------------------------------------------------------
   Stats.h defines Stats<T> class
   - Stats<T> holds a std::vector<T> and provides methods for
-    computing max, min, average, std-deviation of this collection
+    computing max, min, average of this collection
     of unspecified type T
 */
 #include <iostream>
