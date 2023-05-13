@@ -57,6 +57,13 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "e496a50fda8aacccc86d7529e2c1e0892dbd0f898a6b5645b5561b89c3210efa"
 
 [[package]]
+name = "date_time"
+version = "0.1.0"
+dependencies = [
+ "chrono",
+]
+
+[[package]]
 name = "iana-time-zone"
 version = "0.1.56"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -144,13 +151,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "8f4f29d145265ec1c483c7c654450edde0bfe043d3938d6972630663356d9500"
 dependencies = [
  "proc-macro2",
-]
-
-[[package]]
-name = "rust_hello_objects"
-version = "0.1.0"
-dependencies = [
- "chrono",
 ]
 
 [[package]]

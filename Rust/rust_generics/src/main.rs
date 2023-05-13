@@ -57,9 +57,9 @@ fn main() {
     nl();
 
     /* #region */
-    show_op("let mut p1 = Point4D::new()");
+    show_op("let mut p1 = Point1::new()");
     /* #endregion */
-    let mut p1 = Point4D::new();
+    let mut p1 = Point1::new();
     p1.show("p1");
     p1.set_x(42);
     p1.set_y(-3);

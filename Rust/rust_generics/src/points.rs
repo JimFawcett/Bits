@@ -1,30 +1,28 @@
 /*-------------------------------------------------------------------
   points.rs
-  - defines type Point4D
+  - defines types PointN<T>
 -------------------------------------------------------------------*/
 
 use std::default::*;
 use std::fmt::*;
-use chrono::{DateTime, Local};
 
 use crate::analysis;    // identify source code
 use analysis::*;        // import public functions and types
 
 /*---------------------------------------------------------
-  - Declare Point4D struct, like a C++ class
+  - Declare Point1 struct, like a C++ class
   - Request compiler implement traits Debug & Clone
 */
 #[derive(Debug, Clone)]
-pub struct Point4D {
+pub struct Point1 {
     x: i32,
     y: i32,
     z: i32,
-    t: DateTime<Local>,
 }
 /*-- implement function new --*/
-impl Point4D {
-    pub fn new() -> Point4D {
-        Point4D { x: 0, y: 0, z: 0, t: Local::now() }
+impl Point1 {
+    pub fn new() -> Point1 {
+        Point1 { x: 0, y: 0, z: 0 }
     }
     /*
       For simple types like this it would be reasonable to
@@ -50,12 +48,10 @@ impl Point4D {
         self.z = z
     }
     pub fn show(&self, nm:&str) {
-        print!("{nm}: Point4D {{\n  ");
+        print!("{nm:?}: Point1 {{ ");
         print!("{0}, ", self.x);
         print!("{0}, ", self.y);
-        println!("{0},", self.z);
-        println!("  {}", Local::now().format("%a %b %e %Y, %T"));
-        println!("}}");
+        println!("{0} }}", self.z);
     }
 }
 

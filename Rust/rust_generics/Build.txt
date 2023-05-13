@@ -1,0 +1,8 @@
+C:\github\JimFawcett\Bits\Rust\rust_hello_objects
+> cargo build
+   Compiling rust_hello_objects v0.1.0 (C:\github\JimFawcett\Bits\Rust\rust_hello_objects)
+    Finished dev [unoptimized + debuginfo] target(s) in 0.42s
+C:\github\JimFawcett\Bits\Rust\rust_hello_objects
+> 
+
+

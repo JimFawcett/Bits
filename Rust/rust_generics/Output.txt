@@ -1,0 +1,108 @@
+C:\github\JimFawcett\Bits\Rust\rust_hello_objects
+> cargo run
+   Compiling rust_hello_objects v0.1.0 (C:\github\JimFawcett\Bits\Rust\rust_hello_objects)
+    Finished dev [unoptimized + debuginfo] target(s) in 0.42s  
+     Running `target\debug\rust_hello_objects.exe`
+
+--------------------------------------------------
+  demonstrate object creation
+--------------------------------------------------
+
+----------------------------------------------
+  std::library objects, string and vector<T>
+----------------------------------------------
+
+--- let mut s1 = "a string".to_string() ---
+--- show_type_scalar(&s1, "&s1") ---
+call name: "&s1", type: "alloc::string::String"
+value: "a string", size: 24
+
+--- s1.push_str(" and more"); ---
+call name: "&s1", type: "alloc::string::String"
+value: "a string and more", size: 24
+
+--- let mut v:Vec<i32> = vec![1, 2, 3, 2, 1]; ---
+call name: "&v", type: "alloc::vec::Vec<i32>"
+value: [1, 2, 3, 2, 1], size: 24
+
+--- v.push(42); ---
+call name: "&v", type: "alloc::vec::Vec<i32>"
+value: [1, 2, 3, 2, 1, 42], size: 24
+
+-----------------------------------
+  instances of user-defined types
+-----------------------------------
+
+--- let mut p1 = Point1::new() ---
+"p1": Point1 { 0, 0, 0 }
+"p1": Point1 { 42, -3, 2 }
+call name: "p1", type: "rust_hello_objects::points::Point1"     
+value: Point1 { x: 42, y: -3, z: 2 }, size: 12
+
+--- let p1a = p1.clone() ---
+"p1a.clone()": Point1 { 42, -3, 2 }
+
+"p2": Point2<T> {
+  0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+  0.0, 0.0, 0.0
+}
+--- show_type(p2, "p2") ---
+call name: "p2", type: "rust_hello_objects::points::Point2<f64>"
+--- show_value_enum(p2.coors(), "p2", 2, 7) ---
+"p2.coors()" {
+  0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+  0.0, 0.0, 0.0
+}
+size: 24
+
+--- p2.coors()[2] = 3.1415 ---
+--- show_value_enum(p2.coors(), "p2.coors()", 2, 7) ---
+"p2.coors()" {
+  0.0, 0.0, 3.1415, 0.0, 0.0, 0.0, 0.0,
+  0.0, 0.0, 0.0
+}
+size: 24
+
+"p2a": Point2<T> {
+  0, 1, 2, 3, 4, 4, 3,
+  2, 1, 0
+}
+
+"
+value: Point2 { coor: [0, 1, 2, 3, 4, 4, 3, 2, 1, 0] }, size: 24p2a.len() = 10
+
+--- p2a.show("p2a", 2, 7) ---
+"p2a": Point2<T> {
+  0, 1, 2, 3, 4, 4, 3,
+  2, 1, 0
+}
+
+-----------------------------------
+  Testing formats for collections
+-----------------------------------
+
+--- show_type_scalar(&v, "&v") ---
+call name: "&v", type: "alloc::vec::Vec<i32>"
+value: [0, -1, 2, -3, 4, -5, 6, -7, 8, -9, 10, -11, 12, -13, 14], size: 24
+
+--- show_fold(&v, 2, 5) ---
+  0, -1, 2, -3, 4,
+  -5, 6, -7, 8, -9,
+  10, -11, 12, -13, 14
+
+--- let v = vec![0i32, ... ]; ---
+--- fold(&v, 2, 12) ---
+  0, -1, 2, -3, 4, -5, 6, -7, 8, -9, 10, -11,
+  12, -13, 14
+
+--- let a = &[f64; 8]; ---
+--- show_fold(a, 4, 5) ---
+    1.0, 2.5, -3.1, 4.3, 5.0,
+    6.0, 7.0, -8.0
+
+
+  That's all Folks!
+
+C:\github\JimFawcett\Bits\Rust\rust_hello_objects
+>
+
