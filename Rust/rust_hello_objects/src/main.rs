@@ -10,12 +10,31 @@ mod analysis;     // identify module source file
 use analysis::*;  // import public functions and types
 mod points;       // identify module source file
 use points::*;    // import public functions and types
+mod stats;
+use stats::*;
 
 /*---------------------------------------------------------
   Demo object instances in action
 */
 fn main() {
     show_label("demonstrate object creation", 50);
+
+    let v = vec![1.0, 2.5, -3.5, 4.0, 5.5];
+    let s = Stats::<f64>::new(v);
+    println!("s: {s:?}");
+    println!("s.max() = {:?}", s.max());
+    println!("s.min() = {:?}", s.min());
+    println!("s.sum() = {:?}", s.sum());
+    println!("s.avg() = {:?}", s.avg());
+    println!();
+    
+    let v: Vec<i32> = vec![1, -2, 3, -4, 5];
+    let s: Stats<i32> = Stats::<i32>::new(v);
+    println!("s: {s:?}");
+    println!("s.max() = {:?}", s.max());
+    println!("s.min() = {:?}", s.min());
+    println!("s.sum() = {:?}", s.sum());
+    println!("s.avg() = {:?}", s.avg());
 
     show_label(
       "std::library objects, string and vector<T>", 46
