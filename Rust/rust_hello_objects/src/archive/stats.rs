@@ -7,22 +7,12 @@
 //use std::ops::{Add, Sub, Mul, Div, Neg, AddAsign, };
 use std::ops::*;
 use std::cmp::*;
-// use num_traits::cast::AsPrimitive;
+use std::convert::{Into};
 use std::fmt::Debug;
-use std::convert::TryInto;
-// enum Number {
-//     Integral(i32),
-//     Float(f64),
-// }
-// impl AsPrimitive<f64> for f64 {}
-// impl AsPrimitive<i32> for i32 {}
-
 
 pub trait Arithmetic<T = Self>: Add<Output=T> + Sub<Output=T> 
     + Mul<Output=T> + Div<Output=T> + PartialEq + PartialOrd
-    + Default + Copy + Debug + std::convert::Into<f64> + std::convert::TryInto<f64>
-    {}
-    // + AsPrimitive<T>: 'static + Copy {}
+    + Default + Copy + Debug + Into<f64> {}
 
 impl Arithmetic<f64> for f64 {}
 impl Arithmetic<i32> for i32 {}
@@ -70,11 +60,10 @@ impl<T: Arithmetic> Stats<T>
         for item in &self.items {
             sum = sum + *item;
         }
-        /*- will panic if value of len() is too large -*/
-        let den = self.items.len() as f64;
-        // let test = self.items.len().try_into();
-        // let den:f64 = test.unwrap();
-        let num = sum.into();
+        /*-- cast usize to f64 --*/
+        let den:f64 = self.items.len() as f64;
+        /*-- can't cast non-primitive to primitive --*/
+        let num:f64 = sum.into();
         num/den
     }
 }

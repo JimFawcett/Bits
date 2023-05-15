@@ -1,14 +1,14 @@
 /*-------------------------------------------------------------------
   points.rs
-  - defines type Point4D
+  - defines type Point4D representing points in space-time
 -------------------------------------------------------------------*/
 
-use std::default::*;
+// use std::default::*;
 use std::fmt::*;
 use chrono::{DateTime, Local};
 
-use crate::analysis;    // identify source code
-use analysis::*;        // import public functions and types
+// use crate::analysis;    // identify source code
+// use analysis::*;        // import public functions and types
 
 /*---------------------------------------------------------
   - Declare Point4D struct, like a C++ class
@@ -56,47 +56,5 @@ impl Point4D {
         println!("{0},", self.z);
         println!("  {}", Local::now().format("%a %b %e %Y, %T"));
         println!("}}");
-    }
-}
-
-/*---------------------------------------------------------
-  - Declare Point2<T> struct, like a C++ template class
-  - Request compiler implement traits Debug & Clone
-*/
-#[derive(Debug, Clone)]
-pub struct Point2<T>
-where
-    T: Debug,
-    T: Default,
-    T: Clone,
-{
-    coor: Vec<T>,
-}
-impl<T> Point2<T>
-where
-    T: Debug,
-    T: Default,
-    T: Clone,
-{
-    pub fn new(n: usize) -> Point2<T> {
-        Point2::<T> {
-            coor: vec![T::default(); n],
-        }
-    }
-    pub fn init(mut self, coord: Vec<T>) -> Point2<T> {
-        self.coor = coord;
-        self
-    }
-    pub fn len(&self) -> usize {
-        self.coor.len()
-    }
-    /* acts as both get_coor() and set_coor(vec![1, 2, 3]) */
-    pub fn coors(&mut self) -> &mut Vec<T> {
-        &mut self.coor
-    }
-    pub fn show(&self, nm:&str, left: usize, width:usize) {
-        println!("{nm:?}: Point2<T> {{");
-        show_fold(&self.coor, left, width);
-        println!("}}")
     }
 }
