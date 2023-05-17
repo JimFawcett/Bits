@@ -110,7 +110,10 @@ void whiler(const C& c) {
     to show on one line
 */
 template<typename C>
-void whiler_guarded(const C& c, const std::string& name, size_t indent = 2, size_t max = 8) {
+void whiler_guarded(
+  const C& c, const std::string& name, 
+  size_t indent = 2, size_t max = 8
+  ) {
   if constexpr(!is_iterable_v<C>) {  // decision at compile-time
     std::cout << "\n  whiler input type is not iterable\n";
     return;

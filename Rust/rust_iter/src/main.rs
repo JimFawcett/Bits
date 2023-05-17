@@ -6,7 +6,7 @@
     IntoIterator which consumes the collection
     to generate an iterator.
   - Demonstrates iteration over arrays, slices,
-    Vecs, VecDeques, and custom Point<T> type. 
+    Vecs, VecDeques, and custom PointN<T> type. 
 -----------------------------------------------*/
 
 #![allow(dead_code)]
@@ -15,7 +15,8 @@
 use std::fmt::*;
 use std::cmp::*;
 use std::collections::*;
-use std::convert::*;
+mod points_iter;
+use points_iter::*;
 
 /*-----------------------------------------------
   Test functions with increasing functionality 
@@ -99,7 +100,7 @@ fn sub_range_indexer<T:Debug>(
   Iterates over slice s without indexing
   - Works with any collection with contiguous
     fixed size elements,
-    e.g., array, Vector, Point, ...
+    e.g., array, Vector, PointN, ...
 */
 fn simple_looper<T:Debug>(s:&[T]) {
     let mut iter = s.iter();
@@ -213,99 +214,6 @@ where
         .collect()
 }
 
-/*-- Point<T> -----------------------------------
-  Point<T> declares a point type holding a
-  Vec<T> of coordinate values.
-  It implements:
-  - new(n)  constructor
-  - iter()  returns iterator over items
-  - trait IntoIterator for Point<T>
-  - trait IntoIterator for &Point<T>
-  - immutable and mutable indexing
-  Note:
-  ---------------------------------------------
-  This is a nice example of building a custom
-  collection type. It implements all methods
-  and traits necessary to make a collection
-  behave like standard library collections.
-  ---------------------------------------------
-*/
-#[derive(Debug, Clone)]
-pub struct Point<T> 
-    where T:Debug + Default + Clone
-{
-    items: Vec<T>
-}
-impl<T> Point<T> 
-    where T:Debug + Default + Clone
-{
-    pub fn new(n:usize) -> Point<T> {
-        Point::<T> { 
-            items: vec![T::default(); n],
-        }
-    }
-    pub fn is_empty(&self) -> bool {
-      self.items.is_empty()
-    }
-    pub fn len(&self) -> usize {
-      self.items.len()
-    }
-    pub fn push(&mut self, item:T) {
-      self.items.push(item);
-    }
-    pub fn pop(&mut self) -> Option<T> {
-      self.items.pop()
-    }
-    pub fn iter(&self) -> impl Iterator<Item = &T> {
-        self.items.iter()
-    }
-    pub fn iter_mut(&mut self) -> impl Iterator<Item = &mut T> {
-        self.items.iter_mut()
-    }
-}
-/*-- implements const indexer -----------------*/
-impl<T:Debug, Idx> std::ops::Index<Idx> for Point<T> 
-    where
-        T:Debug + Default + Clone, 
-        Idx: std::slice::SliceIndex<[T]>
-{
-    type Output = Idx::Output;
-
-    fn index(&self, index:Idx) -> &Self::Output {
-        &self.items[index]
-    }
-}
-/*-- implements mutable indexer ---------------*/
-impl<T, Idx> std::ops::IndexMut<Idx> for Point<T> 
-    where
-        T:Debug + Default + Clone, 
-        Idx: std::slice::SliceIndex<[T]>
-{
-    fn index_mut(&mut self, index:Idx) -> &mut Self::Output {
-        &mut self.items[index]
-    }
-}
-/*-- IntoIterator trait for &Point<T> ---------*/
-impl<'a, T> IntoIterator for &'a Point<T>
-    where T:Debug + Default + Clone
-{
-    type Item = T;
-    type IntoIter = std::vec::IntoIter<Self::Item>;
-    fn into_iter(self) -> Self::IntoIter {
-        let ccln = self.items.clone();
-        ccln.into_iter()
-    }
-}
-/*-- IntoIterator trait for Point<T> ----------*/
-impl<T> IntoIterator for Point<T>
-    where T:Debug + Default + Clone
-{
-    type Item = T;
-    type IntoIter = std::vec::IntoIter<Self::Item>;
-    fn into_iter(self) -> Self::IntoIter {
-        self.items.into_iter()
-    }
-}
 /*-- Begin demonstrations ---------------------*/
 fn main() {
     println!("------------------------------------");
@@ -315,33 +223,33 @@ fn main() {
     println!("slice s = {s:?}");
     println!("s[2] = {:?}", s[2usize]);
     
-    /*-- Point<T>.into_iter() -----------------*/
-    let mut p = Point::<i32>::new(5);
+    /*-- PointN<T>.into_iter() -----------------*/
+    let mut p = PointN::<i32>::new(5);
     p[1] = 1;
     p[3] = -1;
     println!("\n{p:?}");
-    println!("using Point<i32>.iter");
+    println!("using PointN<i32>.iter");
     for item in p.iter() {
         print!("{item:?} ");
     }
-    println!("\nusing Point<i32>.into_iter");
+    println!("\nusing PointN<i32>.into_iter");
     let iter = p.clone().into_iter(); // consumes clone
     for item in iter {
         print!("{item} ");
     }
     println!();
-    println!("using Point<i32>.into_iter iter() with auto deref");
+    println!("using PointN<i32>.into_iter iter() with auto deref");
     let pc = p.clone();
     for item in pc {  // auto deref of pc into pc.iter()
         print!("{item} " ) // consumes pc
     }
     println!();
-    println!("using Point<i32>.iter()");
+    println!("using PointN<i32>.iter()");
     for item in p.iter() { // does not consume p
         print!("{item} " )
     }
     println!();
-    println!("using Point<i32>.iter_mut()");
+    println!("using PointN<i32>.iter_mut()");
     for item in p.iter_mut() { // does not consume p
         *item *= 2;
         print!("{item} " )
@@ -375,8 +283,8 @@ fn main() {
     simple_looper(s);
     println!("simple_looper displays vector");
     simple_looper(&v);
-    println!("simple_looper displays point");
-    let mut point = Point::<i32>::new(5);
+    println!("simple_looper displays PointN");
+    let mut point = PointN::<i32>::new(5);
     point[1] = 2;
     point[3] = -3;
     let ps = &point[0..];  // take slice
@@ -392,7 +300,7 @@ fn main() {
     println!("looper displays VecDeque");
     let vecdeq = VecDeque::from([4, 3, 2, 0, -1]);
     looper(&vecdeq);
-    println!("looper displays point");
+    println!("looper displays PointN");
     let pc = point.clone();
     looper(&pc);
     println!("{pc:?}");
@@ -406,7 +314,7 @@ fn main() {
     for_looper(&vec);
     println!("for_looper displays VecDeque");
     for_looper(&vecdeq);
-    println!("for_looper displays Point<T>");
+    println!("for_looper displays PointN<T>");
     let pc = point.clone();
     for_looper(&pc);
     println!();
@@ -426,7 +334,7 @@ fn main() {
     ranger(&mut vec.iter());
     println!("ranger accepts VecDeque iterator");
     ranger(&mut vecdeq.iter());
-    println!("ranger accepts Point<T> iterator");
+    println!("ranger accepts PointN<T> iterator");
     ranger(&mut point.iter());
     println!();
 
@@ -437,8 +345,8 @@ fn main() {
     let vo = demo_adapters(a, 2);
     println!("{:?} ", &vo);
 
-    println!("demo_adapters<T, f64>(coll, 1.5) accepts Point<f64>:");
-    let mut pad = Point::<f64>::new(5);
+    println!("demo_adapters<T, f64>(coll, 1.5) accepts PointN<f64>:");
+    let mut pad = PointN::<f64>::new(5);
     pad[0] = 1.5;
     pad[1] = -2.0;
     pad[2] = 0.0;
