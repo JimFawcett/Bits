@@ -1,0 +1,164 @@
+C:\github\JimFawcett\Bits\CSharp\Cs_Objects
+> dotnet run
+
+--------------------------------------------------
+ Demonstrate C# objects
+--------------------------------------------------
+
+--------------------------------------------------     
+Examples of creation and display of Primitive Types    
+--------------------------------------------------     
+s: Int16, size: 2, value type
+value: "123"
+
+l: Int64, size: 8, value type
+value: "12345"
+
+f: Single, size: 4, value type
+value: "3.1415927"
+
+d: Double, size: 8, value type
+value: "3.1415927"
+
+arr: Int32[], size: 8, reference type
+value:
+  arr {
+    4, 3, 2, 1, 0, -1
+  }
+
+--------------------------------------------------     
+Examples of creation and display of Library Types      
+- size is the size of reference, not instance
+--------------------------------------------------     
+aString: String, size: 8, reference type
+value: "a string"
+
+another: String, size: 8, reference type
+value: "another string"
+
+aList: List<T>, size: 8, reference type
+value:
+  aList {
+    1, 1.5, 2, 2.5, 3,
+    3.5, 4
+  }
+
+d1: Dictionary<T>, size: 8, reference type
+value:
+  d1 {
+    [0, zero], [1, one], [2, two]
+  }
+
+--------------------------------------------------     
+Examples of user-defined types:
+- Point1, a point with x,y,z coordinates
+- Point2, a point with N generic coordinates
+--------------------------------------------------     
+--- ShowTypeShowable(p1, "p1") ---
+p1: Point1, size: 8, reference type
+value:
+  p1  { x:3, y:-42, z:1 }
+
+--------------------------------------------------     
+Point2<T> is both Enumerable and Showable. That is,    
+it implements both IEnumerable<T> and IShow.
+- so both ShowTypeEnum and ShowTypeShowable work       
+--------------------------------------------------     
+--- ShowTypeShowable(p2, "p2") ---
+p2: Point2<T>, size: 8, reference type
+value:
+  p2 {
+    1.5, 2, 3.5, 4, 5.5, 6,
+    7.5
+  }
+
+--- ShowTypeEnum(p2, "p2") ---
+p2: Point2<T>, size: 8, reference type
+value:
+  p2 {
+    1.5, 2, 3.5, 4, 5.5, 6,
+    7.5
+  }
+
+--- ShowTypeShowable(p3, "p3") ---
+--- set left(4) and width(7) ---
+p3: Point2<T>, size: 8, reference type
+value:
+    p3 {
+      1, 2, 3, 4, 5, 6, 7
+    }
+
+
+--------------------------------------------------     
+Differences between value and reference types
+--------------------------------------------------     
+
+--------------------------------------------------     
+Assignment of reference types assigns their references,
+creating two references to the same instance in managed
+heap, so variables are coupled through single instance.
+--------------------------------------------------     
+--- Point1 val1 = new Point1(), then initialize ---    
+val1  val1  { x:1, y:2, z:3 }
+--- Point1 val2 = val1 ---
+val2  val2  { x:1, y:2, z:3 }
+val2 is same object as val1
+--- val2.z = 42; ---
+val2 is same object as val1
+val2  val2  { x:1, y:2, z:42 }
+val1  val1  { x:1, y:2, z:42 }
+--------------------------------------------------     
+Note! Source of assignment, val1, changed when val2 changed.
+Point1 is ref type, so assignment just assigns references.
+--------------------------------------------------     
+
+--------------------------------------------------     
+Value types can be independently assigned and copied.  
+--------------------------------------------------     
+--- var s1 = new St(1, -0.5, 'z'); ---
+--- var s2 = s1 ---
+s2 is not same object as s1
+  s2 { a:1, b:-0.5, c:z }
+  s1 { a:1, b:-0.5, c:z }
+--- s2.c = 'q' ---
+  s2 { a:1, b:-0.5, c:q }
+  s1 { a:1, b:-0.5, c:z }
+--------------------------------------------------     
+Change in destination, s2, did not alter source, s1.   
+Assignment of value types creates independent objects. 
+--------------------------------------------------     
+
+--------------------------------------------------     
+Instances of string are reference types, but simulate  
+some value behaviors.  String objects are immutable.   
+To modify an instance, a new string is created with    
+copies of the source string characters inclucing any   
+modifications.  This is called copy on write.
+--------------------------------------------------     
+
+str2 is same object as str1
+str1: An immutable string
+str2: An immutable string
+str2 is not same object as str1
+str1: An immutable string
+str2: immutable string
+--------------------------------------------------     
+There is no way for change in str2 to affect str1.     
+--------------------------------------------------     
+
+--------------------------------------------------     
+Test formatting for Enumerable types
+--------------------------------------------------     
+
+testarr: Int32[], size: 8, reference type
+value:
+  testarr {
+    0, 1, 2, 3, 4,
+    5, 6, 7, 8, 9
+  }
+
+
+That's all Folks!
+
+C:\github\JimFawcett\Bits\CSharp\Cs_Objects
+>

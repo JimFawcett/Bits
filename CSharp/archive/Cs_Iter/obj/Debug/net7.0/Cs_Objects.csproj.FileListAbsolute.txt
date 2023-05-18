@@ -1,0 +1,15 @@
+C:\github\JimFawcett\Bits\CSharp\Cs_Iter\bin\Debug\net7.0\Cs_Objects.exe
+C:\github\JimFawcett\Bits\CSharp\Cs_Iter\bin\Debug\net7.0\Cs_Objects.deps.json
+C:\github\JimFawcett\Bits\CSharp\Cs_Iter\bin\Debug\net7.0\Cs_Objects.runtimeconfig.json
+C:\github\JimFawcett\Bits\CSharp\Cs_Iter\bin\Debug\net7.0\Cs_Objects.dll
+C:\github\JimFawcett\Bits\CSharp\Cs_Iter\bin\Debug\net7.0\Cs_Objects.pdb
+C:\github\JimFawcett\Bits\CSharp\Cs_Iter\obj\Debug\net7.0\Cs_Objects.csproj.AssemblyReference.cache
+C:\github\JimFawcett\Bits\CSharp\Cs_Iter\obj\Debug\net7.0\Cs_Objects.GeneratedMSBuildEditorConfig.editorconfig
+C:\github\JimFawcett\Bits\CSharp\Cs_Iter\obj\Debug\net7.0\Cs_Objects.AssemblyInfoInputs.cache
+C:\github\JimFawcett\Bits\CSharp\Cs_Iter\obj\Debug\net7.0\Cs_Objects.AssemblyInfo.cs
+C:\github\JimFawcett\Bits\CSharp\Cs_Iter\obj\Debug\net7.0\Cs_Objects.csproj.CoreCompileInputs.cache
+C:\github\JimFawcett\Bits\CSharp\Cs_Iter\obj\Debug\net7.0\Cs_Objects.dll
+C:\github\JimFawcett\Bits\CSharp\Cs_Iter\obj\Debug\net7.0\refint\Cs_Objects.dll
+C:\github\JimFawcett\Bits\CSharp\Cs_Iter\obj\Debug\net7.0\Cs_Objects.pdb
+C:\github\JimFawcett\Bits\CSharp\Cs_Iter\obj\Debug\net7.0\Cs_Objects.genruntimeconfig.cache
+C:\github\JimFawcett\Bits\CSharp\Cs_Iter\obj\Debug\net7.0\ref\Cs_Objects.dll

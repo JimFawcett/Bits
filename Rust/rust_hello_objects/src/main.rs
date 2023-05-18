@@ -49,9 +49,9 @@ fn main() {
     show_op("let mut p1 = Point4D::new()");
     let mut p1 = Point4D::new();
     p1.show("p1");
-    p1.set_x(42);
-    p1.set_y(-3);
-    p1.set_z(2);
+    p1.set_x(42.0);
+    p1.set_y(-3.0);
+    p1.set_z(2.0);
     p1.show("p1");
     show_type_scalar(&p1, "p1");
     nl();

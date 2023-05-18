@@ -16,37 +16,37 @@ use chrono::{DateTime, Local};
 */
 #[derive(Debug, Clone)]
 pub struct Point4D {
-    x: i32,
-    y: i32,
-    z: i32,
+    x: f64,
+    y: f64,
+    z: f64,
     t: DateTime<Local>,
 }
 /*-- implement function new --*/
 impl Point4D {
     pub fn new() -> Point4D {
-        Point4D { x: 0, y: 0, z: 0, t: Local::now() }
+        Point4D { x: 0.0, y: 0.0, z: 0.0, t: Local::now() }
     }
     /*
       For simple types like this it would be reasonable to
       make x, y, z public and remove the getter and setter
       functions.
     */
-    pub fn get_x(&self) -> &i32 {
+    pub fn get_x(&self) -> &f64 {
         &self.x
     }
-    pub fn get_y(&self) -> &i32 {
+    pub fn get_y(&self) -> &f64 {
         &self.y
     }
-    pub fn get_z(&self) -> &i32 {
+    pub fn get_z(&self) -> &f64 {
         &self.z
     }
-    pub fn set_x(&mut self, x: i32) {
+    pub fn set_x(&mut self, x: f64) {
         self.x = x
     }
-    pub fn set_y(&mut self, y: i32) {
+    pub fn set_y(&mut self, y: f64) {
         self.y = y
     }
-    pub fn set_z(&mut self, z: i32) {
+    pub fn set_z(&mut self, z: f64) {
         self.z = z
     }
     pub fn show(&self, nm:&str) {

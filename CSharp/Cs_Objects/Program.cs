@@ -96,48 +96,16 @@ namespace CSharpObjects
       Display.ShowTypeEnum(d1, "d1", 5, nl);
   
       Display.ShowNote(
-        "Examples of user-defined types:\n" + 
-        "- Point1, a point with x,y,z coordinates\n" +
-        "- Point2, a point with N generic coordinates"
+        "Examples of user-defined type:\n" + 
+        "- Point4D, a point with x,y,z,t coordinates\n"
       );
-      Point1 p1 = new Point1();
+      Point4D p1 = new Point4D();
       p1.x = 3;
       p1.y = -42;
       p1.z = 1;
+      p1.Show("p1");
       Display.ShowOp("ShowTypeShowable(p1, \"p1\")");
-      Display.ShowTypeShowable(p1, "p1", nl);
-
-      Display.ShowNote(
-        "Point2<T> is both Enumerable and Showable. That is,\n" +
-        "it implements both IEnumerable<T> and IShow.\n" +
-        "- so both ShowTypeEnum and ShowTypeShowable work"
-      );
-      Point2<double> p2 = new Point2<double>(7);
-      p2.coor = new List<double> {
-        1.5, 2.0, 3.5, 4.0, 5.5, 6.0, 7.5
-      };
-      #region
-      Display.ShowOp("ShowTypeShowable(p2, \"p2\")");
-      #endregion
-      p2.Width = 6;
-      Display.ShowTypeShowable(p2, "p2", nl);
-
-      #region
-      Display.ShowOp("ShowTypeEnum(p2, \"p2\")");
-      #endregion
-      Display.ShowTypeEnum<double>(p2, "p2", p2.Width, nl);
-
-      #region
-      Display.ShowOp("ShowTypeShowable(p3, \"p3\")");
-      #endregion
-      Point2<int> p3 = new Point2<int>(7);
-      p3.left(4).width(7);
-
-      #region
-      Display.ShowOp("set left(4) and width(7)");
-      #endregion
-      p3.coor = new List<int>{1, 2, 3, 4, 5, 6, 7};
-      Display.ShowTypeShowable(p3, "p3", nl);
+      Display.ShowTypeShowable(p1, "p1");
 
       Display.ShowLabel(
         "Differences between value and reference types"
@@ -148,32 +116,28 @@ namespace CSharpObjects
         "heap, so variables are coupled through single instance."
       );
 
-      #region
-      Display.ShowOp("Point1 val1 = new Point1(), then initialize");
-      #endregion
-      Point1 val1 = new Point1();
+      Display.ShowOp("Point4D val1 = new Point4D(), then initialize", "\n");
+      Point4D val1 = new Point4D();
       val1.x = 1;
       val1.y = 2;
       val1.z = 3;
       Display.ShowLabeledObject(val1, "val1");
 
-      #region 
-      Display.ShowOp("Point1 val2 = val1");
-      #endregion
-      Point1 val2 = val1;
+      Display.ShowOp("Point4D val2 = val1");
+      Point4D val2 = val1;
       Display.ShowLabeledObject(val2, "val2");
       Display.IsSameObj(val2, "val2", val1, "val1");
       
-      #region 
+      Display.println();
       Display.ShowOp("val2.z = 42;");
-      #endregion
+      Display.println();
       val2.z = 42;
       Display.IsSameObj(val2, "val2", val1, "val1");
       Display.ShowLabeledObject(val2, "val2");
       Display.ShowLabeledObject(val1, "val1");
       Display.ShowNote(
         "Note! Source of assignment, val1, changed when val2 changed.\n" +
-        "Point1 is ref type, so assignment just assigns references."
+        "Point4D is ref type, so assignment just assigns references."
       );
       Display.println();
 
@@ -181,22 +145,16 @@ namespace CSharpObjects
         "Value types can be independently assigned and copied."
       );
 
-      #region
       Display.ShowOp("var s1 = new St(1, -0.5, 'z');");
-      #endregion
       var s1 = new St(1, -0.5, 'z');
 
-      #region
       Display.ShowOp("var s2 = s1");
-      #endregion
       var s2 = s1;
       Display.IsSameObj(s2, "s2", s1, "s1");
       s2.Show("s2");
       s1.Show("s1");
 
-      #region 
       Display.ShowOp("s2.c = 'q'");
-      #endregion
       s2.c = 'q';
       s2.Show("s2");
       s1.Show("s1");
