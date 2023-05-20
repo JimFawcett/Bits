@@ -8,6 +8,14 @@ using System.Collections.Generic;   // IEnumerable<T>, List<T>
 using Analysis;
 
 namespace Points {
+  /*-----------------------------------------------------------------------
+    Point4D is a basic point class with three integer coordinates and one
+    time coordinate.
+    - It is a reference type because it's instances are created
+      from a class
+    - That affects the way assignments work - see demo near the
+      end of main.
+  */
   /*----------------------------------------------------------------------
     PointN<T> is a generalization of Point4D 
      - holds any finite number of generic coordinates

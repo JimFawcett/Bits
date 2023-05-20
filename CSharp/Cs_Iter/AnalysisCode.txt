@@ -17,9 +17,9 @@ using System.Text;
     The functions below are used for analysis and display. They
     have varying complexities. It is not essential to understand 
     them in order to follow the demonstrations in this demo.  
-    We will look at them in some detail in Bits_Generic and
-    Bits_Iter. 
+    We will look at them in some detail in Bits_Functions. 
 */
+
 namespace Analysis {
     /*----------------------------------------------------------------------
         IShow allows analysis functions to operate on instances of any class 
@@ -30,7 +30,6 @@ namespace Analysis {
         int Length { get; }       // total number of elements
         int Width { get; set; }   // number of elements per row
         int Left { get; set; }    // offset from terminal Left
-        int Indent {get; set; }   // element indent
     }
         
     public class Display {
@@ -38,9 +37,6 @@ namespace Analysis {
           Show static type with some formatting adjustments
           and name at callsite.
         */
-        public static String Spaces(int i) {
-            return new String(' ', i);
-        }
         public static void ShowType<T>(T t, string nm) {
             Type tt = t!.GetType();
             string tnm = tt.Name;
@@ -93,7 +89,7 @@ namespace Analysis {
         public static void ShowLabeledObject<T>(
             T t, string nm
         ) where T:IShow {
-            // Console.Write(nm);
+            Console.Write(nm);
             t.Show(nm);
         }
         /*-------------------------------------------------
@@ -308,4 +304,5 @@ namespace Analysis {
         }
     }
 }
+
 

@@ -1,7 +1,6 @@
 ﻿/*-------------------------------------------------------------------
-  Cs_Generic::Program.cs
-  - Demonstrates creation and assignment of objects from classes with
-    generic type parameter(s).
+  Cs_Iter::Program.cs
+  - Demonstrates IEnumerable interface and iteration
 */
 using System;
 using System.Collections;
@@ -26,31 +25,28 @@ using Analysis;                     // defined in Analysis.cs
       strings are immutable, so any change requires copy on write.
       That simulates value behavior.
 */
-namespace CSharpGenerics
+namespace CSharpIter
 {
-  /*-- Generic demonstration begins here --*/
+  /*-- Iter demonstration begins here --*/
 
   class Program
   {
     const string nl = "\n";
     static void Main(string[] args)
     {
-      Display.ShowLabel(" Demonstrate C# generics");
+      Display.ShowLabel(" Demonstrate C# iteration");
 
       Display.ShowNote(
-        "Examples of creation and display of Library Types\n" + 
-        "- size is the size of reference, not instance\n" +
-        "- String is not generic, but ShowTypeScalar(...),\n" +
-        "  used below to display String, is generic\n" +
-        "- Generic function ShowTypeEnum(...) is used, below,\n" +
-        "  for both List<T> and Dictionary<K,V>"
+        "Display string as a scalar value"
       );
-      /*-- ShowTypeScalar is a generic function --*/
       string aString = "a string";  // hides construction
       Display.ShowTypeScalar(aString, "aString", nl);
 
+      Display.ShowNote(
+        "Iterate over string characters"
+      );
       string another = new string("another string");
-      Display.ShowTypeScalar(another, "another", nl);
+      Display.ShowTypeEnum(another, "another", 10, nl);
 
       List<double> aList = 
         new List<double>{ 1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0 };
@@ -68,39 +64,37 @@ namespace CSharpGenerics
         "- PointN<T>, a point with N generic coordinates"
       );
 
-      PointN<double> p1 = new PointN<double>(7);
-      p1.coor = new List<double> {
-        1.5, 2.0, 3.5, 4.0, 5.5, 6.0, 7.5
-      };
-      p1.Show("p1");
-
       Display.ShowNote(
         "PointN<T> is both Enumerable and Showable. That is,\n" +
         "it implements both IEnumerable<T> and IShow.\n" +
         "- so both ShowTypeEnum and ShowTypeShowable work"
       );
-      Display.ShowOp("ShowTypeShowable(p1, \"p1\")");
-      p1.Width = 6;
-      Display.ShowTypeShowable(p1, "p1", nl);
+      PointN<double> p2 = new PointN<double>(7);
+      p2.coor = new List<double> {
+        1.5, 2.0, 3.5, 4.0, 5.5, 6.0, 7.5
+      };
+      Display.ShowOp("ShowTypeShowable(p2, \"p2\")");
+      p2.Width = 6;
+      Display.ShowTypeShowable(p2, "p2", nl);
 
-      Display.ShowOp("ShowTypeEnum(p1, \"p1\")");
-      Display.ShowTypeEnum<double>(p1, "p1", p1.Width, nl);
+      Display.ShowOp("ShowTypeEnum(p2, \"p2\")");
+      Display.ShowTypeEnum<double>(p2, "p2", p2.Width, nl);
 
       Display.ShowOp("set left(2) and width(7)");
-      PointN<int> p2 = new PointN<int>(7);
-      p2.coor = new List<int>{1, 2, 3, 4, 5, 6, 7};
-      Display.ShowOp("p2.Show(\"p2\")");
-      p2.left(2).width(7);
-      p2.Show("p2");
+      PointN<int> p3 = new PointN<int>(7);
+      p3.coor = new List<int>{1, 2, 3, 4, 5, 6, 7};
+      Display.ShowOp("p3.Show(\"p3\")");
+      p3.left(2).width(7);
+      p3.Show("p3");
       Console.WriteLine();
 
-      Display.ShowTypeShowable(p2, "p2", nl);
+      Display.ShowTypeShowable(p3, "p3", nl);
 
       Display.ShowNote(
         "Test formatting for Enumerable types", nl
       );
 
-      int[] testarr = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+      int[] testarr = { 0,1, 2, 3, 4, 5, 6, 7, 8, 9 };
       Display.ShowTypeEnum(testarr, "testarr", 5, nl);
 
       /*
