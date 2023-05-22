@@ -72,7 +72,8 @@ namespace CSharpObjects
       double d = 3.1415927;
       Display.ShowTypeScalar(d, "d", nl);
       int[] arr = new int[]{ 4, 3, 2, 1, 0, -1};
-      Display.ShowTypeEnum(arr, "arr", 10, nl);
+      Display.ShowTypeScalar(arr, "arr");
+      Display.ShowIntArray(arr, nl);
 
       Display.ShowNote(
         "Examples of creation and display of Library Types\n" + 
@@ -87,13 +88,17 @@ namespace CSharpObjects
       List<double> aList = 
         new List<double>{ 1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0 };
     
-      Display.ShowTypeEnum(aList, "aList", 5, nl);
+      Display.ShowTypeScalar(aList, "aList");
+      Display.ShowDoubleList(aList, nl);
+      // Display.ShowTypeEnum(aList, "aList", 5, nl);
 
       var d1 = new Dictionary<int, string>
       {
         { 0, "zero"}, {1, "one"}, {2, "two"}
       };
-      Display.ShowTypeEnum(d1, "d1", 5, nl);
+      Display.ShowTypeScalar(d1, "d1");
+      Display.ShowDictionary(d1, nl);
+      // Display.ShowTypeEnum(d1, "d1", 5, nl);
   
       Display.ShowNote(
         "Examples of user-defined type:\n" + 
@@ -184,37 +189,8 @@ namespace CSharpObjects
       Display.ShowNote(
         "There is no way for change in str2 to affect str1."
       );
-      Display.println();
+      // Display.println();
       
-      Display.ShowNote(
-        "Test formatting for Enumerable types", nl
-      );
-
-      int[] testarr = { 0,1, 2, 3, 4, 5, 6, 7, 8, 9 };
-      Display.ShowTypeEnum(testarr, "testarr", 5, nl);
-
-      /*
-        Commented function calls below left to let viewers
-        uncomment and walk through with debugger.
-      */
-      #region 
-      // ShowLabel("Test code for functions used above");
-      // print("--- double[] to folded CSV ---");
-      // int[] arr2 = { 0,1,2,3,4,5,6,7,8 };
-      // string tmp = FoldArray(arr2, 3, 2);
-      // Console.WriteLine("\n{0}",tmp);
-
-      // ShowLabel("Alternate function for generating CSVs");
-      // print("--- coor to folded CSV ---");
-      // double[] arr3 = p2.coor.ToArray();
-      // tmp = FoldArray(arr3, 4, 2);
-      // Console.WriteLine("\n{0}",tmp);
-
-      // string tmp1 = ToCSV<double>(p2.coor);
-      // string tmp2 = ToCSV(p2.coor);  // demo that type inference works here
-      // ShowTypeScalar(tmp2, "tmp2");
-      #endregion
-
       Console.WriteLine("\nThat's all Folks!\n");
     }
   }

@@ -20,27 +20,6 @@ pub fn show_type<T:Debug>(_t: &T, nm: &str) {
     println!("call name: {nm:?}, type: {typename:?}");
 }
 /*---------------------------------------------------------
-  Show enumerable input's values
-  - 'a is an annotation saying that T's lifetime
-    is as long as the function's lifetime.
-  - I is the type of T's elements, that is coll:T<I>.
-  - T can be any iterable type and both T and I must 
-    satisfy Debug trait.
-  - Does not consume input t since passed by reference.
-*/
-pub fn show_value_enum<T:Debug, I:Debug>(
-    t: &T, nm: &str, left:usize, width:usize
-) 
-  where for<'a> &'a T: IntoIterator<Item = &'a I>
-{
-  println!("{nm:?} {{");
-  // print!("{nm:?} {{\n");
-  //show_fold(&t, left, width);
-  show_fold(t, left, width);
-  print!("}}");
-  println!("\nsize: {}", std::mem::size_of::<T>());
-}
-/*---------------------------------------------------------
   Show facts about a type's elements, e.g., name, type,
   value, and size.
   - show_type is generic function with Debug bound.
@@ -54,18 +33,6 @@ pub fn show_type_scalar<T:Debug>(t: &T, nm: &str) {
     println!(
         "value: {t:?}, size: {}", std::mem::size_of::<T>()
     );
-}
-/*---------------------------------------------------------
-Show facts about an enumerable type's elements, e.g., 
-name, type, values, and size.
-- show_type is generic function with Debug bound.
-  Using format "{:?} requires Debug."
-*/
-pub fn show_type_enum<T:Debug, I:Debug>(t: &T, nm: &str, left:usize, width:usize) 
-  where for<'a> &'a T: IntoIterator<Item = &'a I>
-{
-    show_type(t, nm);
-    show_value_enum(t, nm, left, width);
 }
 /*--------------------------------------------------------- 
   build indent string with "left" spaces 
@@ -83,6 +50,7 @@ pub fn offset(left: usize) -> String {
   https://stackoverflow.com/questions/50101842/how-to-find-the-last-occurrence-of-a-char-in-a-string
 */
 fn find_last_utf8(s: &str, chr: char) -> Option<usize> {
+  /*-- commented lines are equivalent to below --*/
     // if let Some(rev_pos) = 
     //   s.chars().rev().position(|c| c == chr) {
     //     Some(s.chars().count() - rev_pos - 1)
@@ -91,53 +59,6 @@ fn find_last_utf8(s: &str, chr: char) -> Option<usize> {
     // }
     s.chars().rev().position(|c| c== chr)
      .map(|rev_pos| s.chars().count() - rev_pos - 1)
-}
-/*---------------------------------------------------------
-  fold an enumerable's elements into rows of w elements
-  - indent by left spaces
-  - does not consume t since passed as reference
-  - returns string
-  https://users.rust-lang.org/t/generic-code-over-iterators/10907/3
-*/
-pub fn fold<T, I:Debug>(
-    t: &T, left: usize, width: usize
-) -> String
-    where for<'a> &'a T: IntoIterator<Item = &'a I>, T:Debug
-{
-  let mut accum = String::new();
-  accum += &offset(left);
-  //let mut i = 0usize;
-  // for item in t {
-  //   accum += &format!("{item:?}, ");
-  //   if ((i + 1) % width) == 0 && i != 0 {
-  //       accum += "\n";
-  //       accum += &offset(left);
-  //   }
-  //   i += 1;
-  // }
-  //let i = 0usize;
-  for (i, item) in t.into_iter().enumerate() {
-    accum += &format!("{item:?}, ");
-    if ((i + 1) % width) == 0 && i != 0 {
-        accum += "\n";
-        accum += &offset(left);
-    }
-  }
-  let opt = find_last_utf8(&accum, ',');
-  if let Some(index) = opt {
-    accum.truncate(index);
-  }
-  accum
-}
-/*---------------------------------------------------------
-  show enumerables's elements as folded rows
-  - width is number of elements in each row
-  - left is indent from terminal left
-*/
-pub fn show_fold<T:Debug, I:Debug>(t:&T, left:usize, width:usize) 
-  where for<'a> &'a T: IntoIterator<Item = &'a I>
-{
-  println!("{}",fold(t, left, width));
 }
 /*---------------------------------------------------------
   show string wrapped with long dotted lines above and below 

@@ -87,13 +87,46 @@ namespace Analysis {
             Console.Write(suffix);
         }
         /*-------------------------------------------------
+          In Cs_Generic we will show how to implement a
+          show function for the enumerable types below.
+        */
+        public static void ShowIntArray(int[] arr, string suffix="")
+        {
+            Console.Write("[ {0}", arr[0]);
+            for (int i = 1; i < arr.Length; i++)
+            {
+                Console.Write(", " + arr[i] + " ");
+            }
+            Console.Write("]\n" + suffix);
+        }
+        public static void ShowDoubleList(List<double> list, string suffix="")
+        {
+            Console.Write("[ {0}", list[0]);
+            for (int i = 1; i < list.Count; i++)
+            {
+                Console.Write(", " + list[i] + " ");
+            }
+            Console.Write("]\n" + suffix);
+        }
+        public static void ShowDictionary(
+            Dictionary<int, string> dict, string suffix=""
+        )
+        {
+            Dictionary<int, string>.KeyCollection keyColl = dict.Keys;
+            Console.Write("[ ");
+            foreach(KeyValuePair<int, string> entry in dict)
+            {
+                Console.Write("{{{0},{1}}} ", entry.Key, entry.Value);
+            }
+            Console.Write("]\n" + suffix);
+        }
+        /*-------------------------------------------------
         Provides name of caller, nm, as label for IShow() information.
         - works for all Showable instances
         */
         public static void ShowLabeledObject<T>(
             T t, string nm
         ) where T:IShow {
-            // Console.Write(nm);
             t.Show(nm);
         }
         /*-------------------------------------------------
@@ -102,65 +135,6 @@ namespace Analysis {
         */
         public static void DisplayLabeledObject<T>(T t, string nm) {
             Console.WriteLine("{0}: {1}", nm, t!.ToString());
-        }
-        /*-------------------------------------------------
-        Show type information for any type that implements 
-        IEnumerable<T> interface.
-        */
-        public static void ShowTypeEnum<T> (
-        IEnumerable<T> t, string nm, int w = 5, string suffix = ""
-        )
-        {
-            ShowType(t, nm);
-            Console.WriteLine("value:\n{0}{1} {{", "  ", nm);
-            /* 
-                beautify value list into rows of w elements 
-                indented by 4 spaces
-            */
-            string tmp = FoldArray(t.ToArray(), w, 4);
-            Console.Write(tmp);
-            Console.WriteLine("\n  }");
-            Console.Write(suffix);
-        }
-        /*-------------------------------------------------
-        create string of count spaces, used to offset output 
-        */
-        public static string Indent(int count) {
-            StringBuilder sb = new StringBuilder();
-            sb.Append(' ', count);
-            return sb.ToString();
-        }
-        /*-------------------------------------------------
-        Truncate string to length of N, but only if
-        its length is greater than N
-        */
-        string truncate(int N, string bigStr) {
-            if(bigStr.Length <= N) {
-                return bigStr;
-            }
-            StringBuilder sb =  new StringBuilder();
-            sb.Append(bigStr);
-            sb.Length = N;  // move back pointer to desired length
-            return sb.ToString();
-        }
-        /*------------------------------------------------- 
-        fold array elements into rows of w elements 
-        */
-        public static string FoldArray<T>(T[] arr, int w, int Left) {
-            StringBuilder tmp = new StringBuilder();
-            tmp.Append(Indent(Left));
-            for(int i=0; i< arr.Length; ++i) {
-                tmp.Append(arr[i]!.ToString());
-                tmp.Append(", ");
-                if((i+1) % w == 0 && i != arr.Length - 1) {
-                    tmp.Append("\n");
-                    tmp.Append(Indent(Left));
-                }
-            }
-            if(tmp.Length > 1) {
-                tmp.Length -= 2;  // don't return last comma and space
-            }
-            return tmp.ToString();
         }
         /*-------------------------------------------------
         do t1 and t2 share the same address?
@@ -250,36 +224,6 @@ namespace Analysis {
                 "  {0}", method.Name
                 );
             }
-        }
-        /*-------------------------------------------------
-        Build string of comma separated values from 
-        Enumerable collection
-        - no longer used here, but will be useful so kept
-        */
-        // https://stackoverflow.com/questions/330493/join-collection-of-objects-into-comma-separated-string
-        public static string ToCSV<T>(IEnumerable<T> coll) {
-            StringBuilder sb = new StringBuilder();
-            foreach(T elem in coll) {
-                sb.Append(elem!.ToString()).Append(", ");
-            }
-            return sb.ToString(0, sb.Length - 2);
-        }
-        /*-------------------------------------------------
-        Returns value of T for IEnumerable<T> at runtime.  
-        Needed for some functions that operate on generic 
-        collections.
-        - at this time, not used in this demo
-        */
-        // https://www.codeproject.com/Tips/5267157/How-To-Get-A-Collection-Element-Type-Using-Reflect
-        public static Type? GetTypeOfCollection(Object coll) {
-            Type type = (coll).GetType();
-            var etype = typeof(IEnumerable<>);
-            foreach (var bt in type.GetInterfaces()) {
-                if (bt.IsGenericType && bt.GetGenericTypeDefinition() == etype) {
-                    return (bt.GetGenericArguments()[0]);
-                }
-            }
-            return null;
         }
         /*----------------------------------------------------------------
             Utils uses advanced relection 

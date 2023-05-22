@@ -47,7 +47,7 @@
 template<typename T>
 using pU = std::unique_ptr<T>;
 
-void testFormats();  // declare function for testing formats (see below)
+// void testFormats();  // declare function for testing formats (see below)
 
 /*-------------------------------------------------------------------
   Demonstration starts here 
@@ -76,9 +76,9 @@ int main() {
 
     /* create and display std::vector<double> */
     auto vec = std::vector<double>{ 3.5, 3, 2.5, 2 };
-    std::cout << vec;
     showOp("showType(vec, \"vec\");");
-    showType(vec, "vec", nl);
+    showType(vec, "vec");
+    std::cout << "\n  vec:" << vec;
 
     showOp("vec[2] = -2.5;");
     vec[2] = -2.5;
@@ -164,57 +164,5 @@ int main() {
     showType(std::move(pPoint4D), "pPoint4D", nl);
     /* pPoint4D moved, so now invalid */
 
-//#define TEST
-#ifdef TEST
-    testFormats();
-#endif
     print("\n  That's all Folks!\n\n");
-}
-
-void testFormats() {
-
-    showNote("Test and demonstrate formatting functions");
-    
-    showOp(
-      "demonstrate operator<< overload for vector"
-    );
-    auto vtest = std::vector<int>{1, 2, 3, 4, 5, 6, 7, 8, 9 };
-    print("default indent = 4 and width = 7:");
-    std::cout << vtest;
-    DisplayParams.left = 2;
-    DisplayParams.width = 5;
-    print("indent = 2, width = 5:");
-    std::cout << vtest;
-
-    std::cout << formatColl(vtest, "vtest", nl, 2, 5);
-    std::cout << formatColl(vtest, "vtest", nl, 4, 7);
-    std::cout << formatColl(vtest, "vtest", nl, 2, 9);
-    std::cout << formatColl(vtest, "vtest: vector<int>", nl, 2, 10);
-
-    std::array<double, 5> array = { 1, 2, 3, 4.5, -3.14159 };
-    std::cout << formatColl(array, "array", nl, 2, 4);
-
-    std::map<int, std::string> map {
-       {1, "one"}, {2, "two"}, {3, "three"} 
-    };
-    std::cout << formatColl(map, "map", nl, 2, 4);
-
-    std::set<std::string> set { 
-      "one", "two", "three", "four", "five" 
-    };
-    std::cout << formatColl(set, "set", nl, 2, 4);
-
-    std::string astring = "this is a string";
-    std::cout << formatString(astring, "astring", nl, 2);
-
-    double adouble { 3.1415927 };
-    std::cout << formatScalar(adouble, "adouble", nl);
-
-    showNote("Using consolidated format function", nl);
-    
-    std::cout << format(adouble, "adouble", nl);
-    std::cout << format(astring, "astring", nl);
-    std::vector<double> vect{ 1, 2, 3, 4.5, -3.14159 };
-    std::cout << format(vect, "vect", nl);
-    std::cout << format(map, "map", nl);
 }

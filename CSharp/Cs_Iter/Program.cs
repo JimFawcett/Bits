@@ -64,21 +64,41 @@ namespace CSharpIter
         "- PointN<T>, a point with N generic coordinates"
       );
 
+      PointN<double> p1 = new PointN<double>(7);
+      p1.coor = new List<double> {
+        1.5, 2.0, 3.5, 4.0, 5.5, 6.0, 7.5
+      };
+      Console.WriteLine();
+      Display.ShowOp("Using p1.iter():", nl);
+      IEnumerable<double> iter = p1.iter();
+      Console.Write("  ");
+      foreach(double item in iter) {
+        Console.Write("{0} ", item);
+      }
+      Console.WriteLine("\n");
+
+      Console.WriteLine();
+      Display.ShowOp("Using p1 enumerator():", nl);
+      IEnumerator<double> enumer = p1.GetEnumerator();
+      enumer.Reset();
+      enumer.MoveNext();
+      Console.Write("  {0}", enumer.Current);
+      while(enumer.MoveNext()) {
+        Console.Write(", {0}", enumer.Current);
+      }
+      Console.WriteLine("\n");
+
       Display.ShowNote(
         "PointN<T> is both Enumerable and Showable. That is,\n" +
         "it implements both IEnumerable<T> and IShow.\n" +
-        "- so both ShowTypeEnum and ShowTypeShowable work"
+        "- so both ShowTypeEnum and ShowTypeShowable work", nl
       );
-      PointN<double> p2 = new PointN<double>(7);
-      p2.coor = new List<double> {
-        1.5, 2.0, 3.5, 4.0, 5.5, 6.0, 7.5
-      };
-      Display.ShowOp("ShowTypeShowable(p2, \"p2\")");
-      p2.Width = 6;
-      Display.ShowTypeShowable(p2, "p2", nl);
+      Display.ShowOp("ShowTypeShowable(p1, \"p1\")");
+      p1.Width = 6;
+      Display.ShowTypeShowable(p1, "p1", nl);
 
-      Display.ShowOp("ShowTypeEnum(p2, \"p2\")");
-      Display.ShowTypeEnum<double>(p2, "p2", p2.Width, nl);
+      Display.ShowOp("ShowTypeEnum(p1, \"p1\")");
+      Display.ShowTypeEnum<double>(p1, "p1", p1.Width, nl);
 
       Display.ShowOp("set left(2) and width(7)");
       PointN<int> p3 = new PointN<int>(7);
@@ -110,12 +130,12 @@ namespace CSharpIter
 
       // ShowLabel("Alternate function for generating CSVs");
       // print("--- coor to folded CSV ---");
-      // double[] arr3 = p2.coor.ToArray();
+      // double[] arr3 = p1.coor.ToArray();
       // tmp = FoldArray(arr3, 4, 2);
       // Console.WriteLine("\n{0}",tmp);
 
-      // string tmp1 = ToCSV<double>(p2.coor);
-      // string tmp2 = ToCSV(p2.coor);  // demo that type inference works here
+      // string tmp1 = ToCSV<double>(p1.coor);
+      // string tmp1 = ToCSV(p1.coor);  // demo that type inference works here
       // ShowTypeScalar(tmp2, "tmp2");
       #endregion
 

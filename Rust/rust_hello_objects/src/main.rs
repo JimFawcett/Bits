@@ -59,36 +59,36 @@ fn main() {
     show_op("let p1a = p1.clone()");
     let p1a = p1.clone();
     p1a.show("p1a.clone()");    
-    nl();
+    // nl();
 
-    show_label("Testing formats for collections", 35);
-    nl();
+    // show_label("Testing formats for collections", 35);
+    // nl();
 
-    let v = 
-      vec![
-        0i32, -1, 2, -3, 4, -5, 6, -7, 8, -9, 
-        10, -11, 12, -13, 14
-      ];
+    // let v = 
+    //   vec![
+    //     0i32, -1, 2, -3, 4, -5, 6, -7, 8, -9, 
+    //     10, -11, 12, -13, 14
+    //   ];
 
-    show_op("show_type_scalar(&v, \"&v\")");
-    show_type_scalar(&v, "&v");
-    nl();
+    // show_op("show_type_scalar(&v, \"&v\")");
+    // show_type_scalar(&v, "&v");
+    // nl();
 
-    show_op("show_fold(&v, 2, 5)");
-    show_fold(&v, 2, 5);
-    nl();
+    // show_op("show_fold(&v, 2, 5)");
+    // show_fold(&v, 2, 5);
+    // nl();
 
-    show_op("let v = vec![0i32, ... ];");
-    show_op("fold(&v, 2, 12)");
-    let stmp = fold(&v, 2, 12);
-    println!("{stmp}");
-    nl();
+    // show_op("let v = vec![0i32, ... ];");
+    // show_op("fold(&v, 2, 12)");
+    // let stmp = fold(&v, 2, 12);
+    // println!("{stmp}");
+    // nl();
 
-    show_op("let a = &[f64; 8];");
-    let a = 
-      &[1.0, 2.5, -3.1, 4.3, 5.0, 6.0, 7.0, -8.0];
-    show_op("show_fold(a, 4, 5)");
-    show_fold(a, 4, 5);
+    // show_op("let a = &[f64; 8];");
+    // let a = 
+    //   &[1.0, 2.5, -3.1, 4.3, 5.0, 6.0, 7.0, -8.0];
+    // show_op("show_fold(a, 4, 5)");
+    // show_fold(a, 4, 5);
     
     print!("\n\n  That's all Folks!\n\n");
 }

@@ -29,13 +29,6 @@ void println(const std::string& txt = "");
 std::string truncate(size_t N, const char* pStr);
 std::string indent(size_t n);
 template<typename T>
-std::string fold(std::vector<T>& v, size_t left, size_t width);
-template<typename T>
-std::string formatColl(
-  const T& t, const std::string& nm,
-  const std::string& suffix = "", size_t left = 2, size_t width = 7
-);
-template<typename T>
 std::string formatScalar(
   const T& t, const std::string& nm, 
   const std::string& suffix = "", size_t left = 2
@@ -44,11 +37,6 @@ template<typename T>
 std::string formatString(
   const T& t, const std::string& nm, const std::string& suffix,
   size_t left = 2
-);
-template<typename T>
-std::string format(
-  const T& t, const std::string& nm, const std::string& suffix = "",
-  size_t left = 2, size_t width = 7
 );
 /*-------------------------------------------------------------------
   Display and Analysis function and globals definitions
@@ -71,9 +59,17 @@ struct displayParams {
   showType(std::vector<T> v, const std::vector<T>& nm) 
 */
 template<typename T>
-std::ostream& operator<<(std::ostream& out, std::vector<T>& v) {
-  out << format(v, "vector<T>", "", DisplayParams.left, DisplayParams.width);
-  return out;
+std::ostream& operator<< (std::ostream& out, const std::vector<T>& vec)
+{
+    out << "[";
+    for (auto it = vec.begin(); it != vec.end(); ++it)
+    {
+        out << *it;
+        if (it != vec.end() - 1)
+            out << ", ";
+    }
+    out << "]";
+    return out;
 }
 /*-----------------------------------------------
   Display calling name, static class, and size
@@ -121,68 +117,6 @@ inline std::string indent(size_t n) {
   return std::string(n, ' ');
 }
 /*-----------------------------------------------
-  Helper function for formatting output
-  - folds lines after width elements
-*/
-template<typename T>
-std::string fold(std::vector<T>& v, size_t left, size_t width) {
-  std::stringstream out("\n");
-  out << indent(left);
-  for(int i=0; i<v.size(); ++i) {
-    if((i % width) == 0 && i != 0 && i != width - 1) {
-      out << "\n" << indent(left);
-    }
-    if(i < v.size() - 1) {
-      out << v[i] << ", ";
-    }
-    else {
-      out << v[i] << "\n";
-      break;
-    }
-  }
-  return out.str();
-}
-/*-----------------------------------------------
-  Helper function for formatColl
-  - defines out << std::pair<K,V>
-  - used in formatColl for associative containers
-*/
-template<typename K, typename V>
-std::stringstream& operator<<(
-  std::stringstream& out, const std::pair<K,V>& p
-) {
-  out << "{" << p.first << ", " << p.second << "}";
-  return out;
-}
-/*-----------------------------------------------
-  Format output for Collection types
-  - any type with begin() and end() like
-    all the STL containers.
-*/
-template<typename Coll>
-std::string formatColl(
-  const Coll& c, const std::string& nm, const std::string& suffix,
-  size_t left, size_t width
-) {
-  std::stringstream out;
-  out << "\n" << indent(left) << nm << ": {\n" << indent(left + 2);
-  size_t i = 0;
-  for(const Coll::value_type& elem : c) {
-    if((i % width) == 0 && i != 0 && i != width - 1) {
-      out << "\n" << indent(left + 2);
-    }
-    if(i < c.size() - 1) {
-      out << elem << ", ";
-    }
-    else {
-      out << elem << "\n" << indent(left) << "}" << suffix;
-      break;
-    }
-    ++i;
-  }
-  return out.str();
-}
-/*-----------------------------------------------
   Format output for scalar types like primitives
 */
 template<typename T>
@@ -206,46 +140,6 @@ std::string formatString(
   std::stringstream out;
   out << "\n" << indent(left) << nm << ": \"" << t << "\"" << suffix;
   return out.str();
-}
-/*-----------------------------------------------
-  Defines is_iterable trait
-  - detects STL containers and user-defined types
-    that provide iteration
-https://stackoverflow.com/questions/13830158/check-if-a-variable-type-is-iterable
-*/
-template <typename T, typename = void>
-struct is_iterable : std::false_type {};
-
-// this gets used only when we can call 
-// std::begin() and std::end() on that type
-template <typename T>
-struct is_iterable<
-  T, 
-  std::void_t
-    <decltype(std::begin(std::declval<T>())),
-     decltype(std::end(std::declval<T>()))>
-> : std::true_type {};
-
-template <typename T>
-constexpr bool is_iterable_v = is_iterable<T>::value;
-
-/*-----------------------------------------------
-  Displays almost everything.
-  - strings work better with formatString(...)
-  https://www.cppstories.com/2018/03/ifconstexpr/
-  Iteration is discussed in Bit Cpp_iter
-*/
-template<typename T>
-std::string format(
-  const T& t, const std::string& nm, const std::string& suffix,
-  size_t left, size_t width
-) {
-  if constexpr(is_iterable_v<T>) {  // decision at compile-time
-    return formatColl(t, nm, suffix, left, width);
-  }
-  else {
-    return formatScalar(t, nm, suffix, left);
-  }
 }
 /*-----------------------------------------------
   Display text after newline and indentation
