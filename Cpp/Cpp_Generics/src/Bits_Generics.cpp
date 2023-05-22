@@ -3,15 +3,15 @@
   - depends on PointsGen.h to provide user-defined point class
   - depends on Analysis.h for several display and analysis functions
 */
-#include <iostream>     // std::cout
-#include <memory>       // std::unique_ptr
-#include <vector>       // vector<T> class
-#include <array>        // array<T> class
-#include <map>          // map<K,V> class
-#include <set>          // set<T> class
-#include "Analysis.h"   // Analysis functions for this demo
-#include "PointsGen.h"  // PointN<T> class declaration
-#include "Stats.h"      // Stats class declaration
+#include <iostream>       // std::cout
+#include <memory>         // std::unique_ptr
+#include <vector>         // vector<T> class
+#include <array>          // array<T> class
+#include <map>            // map<K,V> class
+#include <set>            // set<T> class
+#include "AnalysisGen.h"  // Analysis functions
+#include "PointsGen.h"    // PointN<T> class declaration
+#include "Stats.h"        // Stats class declaration
 /*
   This demo uses std::basic_string<char> and std::vector<T>
   classes and user defined classes, Stats<T> and PointN<T>, to 

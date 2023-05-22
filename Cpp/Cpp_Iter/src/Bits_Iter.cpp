@@ -4,14 +4,14 @@
   - depends on Points.h to provide user-defined point class
   - depends on Analysis.h for several display and analysis functions
 */
-#include <iostream>     // std::cout
-#include <memory>       // std::unique_ptr
-#include <vector>       // vector<T> class
-#include <array>        // array<T> class
-#include <map>          // map<K,V> class
-#include <set>          // set<T> class
-#include "Analysis.h"   // Analysis functions for this demo
-#include "PointsIter.h" // PointN<T> class declaration
+#include <iostream>         // std::cout
+#include <memory>           // std::unique_ptr
+#include <vector>           // vector<T> class
+#include <array>            // array<T> class
+#include <map>              // map<K,V> class
+#include <set>              // set<T> class
+#include "AnalysisIter.h"   // Analysis functions
+#include "PointsIter.h"     // PointN<T> class declaration
 /*
   This demo uses the std::string and std::vector<T> classes
   and two user defined classes, Point1 and PointN<T>, to 

@@ -6,8 +6,8 @@
 use std::default::*;
 use std::fmt::*;
 
-use crate::analysis;    // identify source code
-use analysis::*;        // import public functions and types
+use crate::analysis_generic;    // identify source code
+use analysis_generic::*;        // import public functions and types
 
 /*---------------------------------------------------------
   - Declare PointN<T> struct, like a C++ template class

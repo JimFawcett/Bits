@@ -6,10 +6,10 @@
   - Demonstrates creation and use of Rust objects
   - Rust uses struct instead of class to create objects
 */
-mod analysis;     // identify module source file
-use analysis::*;  // import public functions and types
-mod points;       // identify module source file
-use points::*;    // import public functions and types
+mod analysis_objects;     // identify module source file
+use analysis_objects::*;  // import public functions and types
+mod points_objects;       // identify module source file
+use points_objects::*;    // import public functions and types
 
 /*---------------------------------------------------------
   Demo object instances in action

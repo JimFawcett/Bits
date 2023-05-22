@@ -9,7 +9,7 @@
 #include <array>        // array<T> class
 #include <map>          // map<K,V> class
 #include <set>          // set<T> class
-#include "Analysis.h"   // Analysis functions for this demo
+#include "AnalysisObj.h"   // Analysis functions for this demo
 #include "PointsObj.h"     // Point4D class declaration
 /*
   This demo uses the std::string and std::vector<T> classes
