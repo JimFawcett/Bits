@@ -10,9 +10,9 @@
   Note:
   ---------------------------------------------
   This is a nice example of building a custom
-  collection type. It implements all methods
-  and traits necessary to make a collection
-  behave like standard library collections.
+  collection type. It implements methods and
+  traits necessary to make a collection behave
+  like standard library collections.
   ---------------------------------------------
 */
 use std::fmt::*;

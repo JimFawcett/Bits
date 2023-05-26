@@ -1,0 +1,107 @@
+C:\github\JimFawcett\Bits\Python\Py_Objects
+> python Py_Objects.py
+ Demonstrate Python Objects
+----------------------------
+--------------------------------------------------
+  All Python types are reference-based
+  with values in the managed heap. That
+  has consequences we explore in this demo.
+-------------------------------------------------- 
+
+d1 <class 'float'> dynamic
+value:  3.1415927 , size:  24 
+s1 <class 'str'> dynamic
+value:  a string , size:  57 
+--- s2 = s1 ---
+s1 a string 2631891756336 
+s2 a string 2631891756336 
+--- s2 += " and more" ---
+s2 a string and more 2631891768608 
+s1 a string 2631891756336 
+--------------------------------------------------
+Assignment, in Python, assigns references not
+values.  So s1 and s2 share same heap instance
+But strings are immutable. So when a change is
+made to one, that creates a new instance without
+changing the original.
+-------------------------------------------------- 
+
+l1 <class 'list'> dynamic
+value:  ['you', 'me', 'them', 'us'] , size:  88 
+
+l1 =  ['you', 'me', 'them', 'us']
+--- l2 = l1 ---
+--- l2.append("everyone") ---
+l2 =  ['you', 'me', 'them', 'us', 'everyone']
+l1 =  ['you', 'me', 'them', 'us', 'everyone']
+--- l2[1] = "myself" ---
+l2 =  ['you', 'myself', 'them', 'us', 'everyone']
+l1 =  ['you', 'myself', 'them', 'us', 'everyone']
+--------------------------------------------------
+Changes to target of assignment affect source
+except for immutable strings, as we are required
+to create new string instead of modify.
+"caveat emptor"
+--------------------------------------------------
+
+--- p1a = Point1() ---
+--- Analysis.showTypeShowable(p1a, "p1a", nl) ---
+p1a <class 'Points.Point1'> dynamic
+p1a {  x:0, y:0, z:0 }
+p1a {  x:2, y:-3.5, z:-42 }
+--- p1b = p1a ---
+p1b {  x:2, y:-3.5, z:-42 }
+--- p1b.y = 13 ---
+p1b {  x:2, y:13, z:-42 }
+p1a {  x:2, y:13, z:-42 }
+--------------------------------------------------
+Reference assigned, not value.
+So change in P1b changed source p1a.
+--------------------------------------------------
+
+--- p1c = copy.deepcopy(p1b) ---
+p1c {  x:2, y:13, z:-42 }
+p1b {  x:2, y:13, z:-42 }
+--- p1c.z = 12 ---
+p1c {  x:2, y:13, z:12 }
+p1b {  x:2, y:13, z:-42 }
+--------------------------------------------------
+p1c.z reference assigned, not value. But no
+change in p1b since p1c is deep clone of p1b.
+--------------------------------------------------
+
+--- p2.show("p2") ---
+p2 {  coors:[0, 0, 0] }
+p2 {  coors:[0, 1, 2, 3] }
+--- p2.show("p2") ---
+p2 {  coors:[0, 1, 2, 3, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1] }
+--- showTypeEnum(p2, "p2", 2, 7) ---
+  p2 <class 'Points.Point2'> dynamic
+  {
+    0, 1, 2, 3, 10, 9, 8,
+    7, 6, 5, 4, 3, 2, 1
+  }
+  size: 48
+
+--- t5 = (1, 2, 3) ---
+t5 (1, 2, 3) 2631891754304
+--- t6 = [1, t5, "weird"] ---
+t6 [1, (1, 2, 3), 'weird'] 2631891982080
+t6 <class 'list'> dynamic
+value:  [1, (1, 2, 3), 'weird'] , size:  80
+-- t5 = 1 + 1j : new object --
+t5 (1+1j) 2631891132400
+t6 [1, (1, 2, 3), 'weird'] 2631891982080
+--------------------------------------------------
+new object for t5, t6 not affected
+--------------------------------------------------
+
+-- iterate over t6 children --
+elem 1 2631890108656
+elem (1, 2, 3) 2631891754304
+elem weird 2631891760688
+
+That's all folks!
+
+C:\github\JimFawcett\Bits\Python\Py_Objects
+>

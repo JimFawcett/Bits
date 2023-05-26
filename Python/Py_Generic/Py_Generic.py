@@ -1,43 +1,40 @@
-import sys
+#----------------------------------------------------------
+# Py_Generic.py
+#
+# Python type hints and generics
+#   - Demonstrates generic and type hint syntax
+#   - Shows how to build user-defined generic type
+#   - Type hints are ignored by the Python interpreter
+#   - To check for type errors use tool mypy, e.g.:
+#
+#         mypy Py_Generic.py --check-untyped-defs
+#
+#     mypy requires installation using pip
+#----------------------------------------------------------
+
 import copy
 import Analysis
 import Points
 
-# Python/Py_Objects::Py_Objects.py
-# 
-# Python Dynamic Data Types
-#   int, float, complex
-#   bytes, bytearray, memoryview
-#   list, tuple, range
-#   dict, set, frozenset
-#   bool
-#   str
-#   NoneType
-
-# # Python requires definition before use ordering
-# #  - no link phase to find definitions
-# Demonstration starts here
 def execute() : 
-    print(" Demonstrate Python Objects")
-    print("----------------------------")
-    print()
+    print(" Demonstrate Python Generics")
+    print("----------------------------", "\n")
 
     Analysis.showNote(   
-        "  All Python types are reference-based\n"\
-        "  with values in the managed heap. That\n"\
-        "  has consequences we explore in this demo."
+        "  Python introduced generics and type hints\n"\
+        "  to check for type errors using mypy, a static\n"\
+        "  type checking tool."
     )
     print()
-    Analysis.showNote("primitive and library types","\n")
 
-    d1 = 3.1415927
+    d1: float = 3.1415927
     Analysis.showType(d1, "d1")
     
-    s1 = "a string"
+    s1: str = "a string"
     Analysis.showType(s1, "s1")
 
     Analysis.showOp("s2 = s1")
-    s2 = s1
+    s2: str = s1
     Analysis.showIdent(s1, "s1")
     Analysis.showIdent(s2, "s2")
     #print("s2 = {}".format(s2))
@@ -49,6 +46,7 @@ def execute() :
     # print("s2 = {}".format(s2))
     # print("s1 = {}".format(s1))
     print()
+
     Analysis.showNote(   
         "Assignment, in Python, assigns references not\n"\
         "values.  So s1 and s2 share same heap instance\n"\
@@ -58,7 +56,7 @@ def execute() :
     )
     print()
 
-    l1 = ["you", "me", "them", "us"]
+    l1: list[str] = ["you", "me", "them", "us"]
     Analysis.showType(l1, "l1", Analysis.nl)
 
     print("l1 = ", l1)
@@ -75,55 +73,68 @@ def execute() :
     l2[1] = "myself"
     print("l2 = ", l2)
     print("l1 = ", l1)
-    print()
     Analysis.showNote(   
         "Changes to target of assignment affect source\n"\
-        "except for immutable strings.\n"\
+        "except for immutable strings, as we are required\n"\
+        "to create new string instead of modify.\n"\
         "\"caveat emptor\""
     )
     print()
+
     Analysis.showNote("user defined type","\n")
     
-    Analysis.showOp("p1a = Point4D()")
-    p1a = Points.Point4D()
-    
-    Analysis.showOp("Analysis.showTypeShowable(p1a, \"p1a\", nl)")
-    Analysis.showTypeShowable(p1a, "p1a", Analysis.nl)
-    p1a.x = 2
-    p1a.y = -3.5
-    p1a.z = -42
-    p1a.show("p1a")
+    Analysis.showOp("p1 = Points.PointN[float](8)")
+    p1: Points.PointN = Points.PointN[float](10)
+    # p1.append("3")
+    p1[1] = 1.5
+    p1[3] = -2.0
+    index = p1.len() - 1
+    p1[index] = 42
+    Analysis.showTypeEnum(p1, "p1", 0, 5)
 
-    Analysis.showOp("p1b = p1a")
-    p1b = p1a
-    p1b.show("p1b")
+    Analysis.showOp("Analysis.showTypeShowable(p1, \"p1\", nl)")
+    Analysis.showTypeShowable(p1, "p1", Analysis.nl)
+    print("len(p1) = {}".format(len(p1)))
+    print("p1.len() = {}".format(p1.len()))
+    print()
 
-    Analysis.showOp("p1b.y = 13")
-    p1b.y = 13
-    p1b.show("p1b")
-    p1a.show("p1a")
+    p1[0] = 2
+    p1[1] = -3.5
+    p1[2] = -42
+    Analysis.showOp("p1.show('p1')")
+    p1.show("p1")
+    # Analysis.showTypeEnum(p1, "p1", 0, 7)
+
+    Analysis.showOp("p2 = p1")
+    p2 = p1
+    p2.show("p2")
+
+    Analysis.showOp("p2[1] = 13")
+    p2[1] = 13
+    p2.show("p2")
+    p1.show("p1")
     Analysis.showNote(
         "Reference assigned, not value.\nSo change"\
-        " in P1b changed source p1a."
+        " in p2 changed source p1."
     )
     print()
 
-    Analysis.showOp("p1c = copy.deepcopy(p1b)")
-    p1c = copy.deepcopy(p1b)
-    p1c.show("p1c");
-    p1b.show("p1b")
+    Analysis.showOp("p3 = copy.deepcopy(p2)")
+    p3 = copy.deepcopy(p2)
+    p3.show("p3");
+    p2.show("p2")
 
-    Analysis.showOp("p1c.z = 12")
-    p1c.z = 12
-    p1c.show("p1c")
-    p1b.show("p1b")
+    Analysis.showOp("p3[2] = 12")
+    p3[2] = 12
+    p3.show("p3")
+    p2.show("p2")
     Analysis.showNote(
-        "p1c.z reference assigned, not value. But no\n"\
-        "change in p1b since p1c is deep clone of p1b."
+        "p3[2] reference assigned, not value. But no\n"\
+        "change in p2 since p3 is deep clone of p2."
     )
     print()
 
-    # # reference behavior - new child object
+    # reference behavior - new child object
     Analysis.showOp("t5 = (1, 2, 3)")
     t5 = (1, 2, 3)
     Analysis.showIdent(t5, "t5")
@@ -136,7 +147,6 @@ def execute() :
     t5 = 1 + 1j
     Analysis.showIdent(t5, "t5")
     Analysis.showIdent(t6, "t6")
-    print()
     Analysis.showNote(
         "new object for t5, t6 not affected", Analysis.nl
     )

@@ -23,7 +23,8 @@ use std::cmp::*;
 /*-----------------------------------------------
   Simplest case - displays Vector with
   generic Item type.
-  - very close to C++ version
+  - uses naive indexing
+  - works only for Vec's
   - see comments for simple_indexer, below
 */
 pub fn whiler<T: Debug>(v:&Vec<T>) {
@@ -45,6 +46,8 @@ pub fn whiler<T: Debug>(v:&Vec<T>) {
   - It is rare for idomatic Rust code to use
     indexing. 
   - &[T] is slice type
+  - Demo's in main show how to use for various
+    types.
 */
 #[allow(clippy::needless_range_loop)]
 pub fn simple_indexer<T:Debug>(s:&[T]) {
@@ -84,6 +87,7 @@ pub fn sub_range_indexer<T:Debug>(
   - Works with any collection with contiguous
     fixed size elements,
     e.g., array, Vector, PointN, ...
+  - Uses slice iterator.
 */
 pub fn simple_looper<T:Debug>(s:&[T]) {
     let mut iter = s.iter();
@@ -109,6 +113,8 @@ pub fn simple_looper<T:Debug>(s:&[T]) {
   - That's because String provides two iterators,
     chars() to iterate multibyte chars and bytes()
     to iterate over bytes.
+  - Not very efficient - uses three order N operations,
+    clone, collect, and loop.
     https://stackoverflow.com/questions/49962611/why-does-str-not-implement-intoiterator
 */
 pub fn looper<C: Debug, I: Debug>(c:&C) 
@@ -142,7 +148,6 @@ pub fn for_looper<C: Debug, I: Debug>(c:&C)
     /* build string of comma separated values */
     let mut accum = String::new();
     let cc = c.clone();
-
     for item in cc {
         accum += &format!("{item:?}, ");
     }
@@ -161,6 +166,7 @@ pub fn find_last_utf8(s:&str, chr: char) -> Option<usize> {
 /*-----------------------------------------------
   Displays contents of iterator, often passed in
   as a range.
+  - First idiomatic iteration.
 */
 pub fn ranger<T>(iter: &mut T)
     where T: Iterator, T::Item: Debug
