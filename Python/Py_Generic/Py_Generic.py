@@ -27,6 +27,8 @@ def execute() :
     )
     print()
 
+    Analysis.showNote("Type Hints", "\n")
+
     d1: float = 3.1415927
     Analysis.showType(d1, "d1")
     
@@ -55,6 +57,8 @@ def execute() :
         "changing the original."
     )
     print()
+
+    Analysis.showNote("Generics", "\n")
 
     l1: list[str] = ["you", "me", "them", "us"]
     Analysis.showType(l1, "l1", Analysis.nl)
