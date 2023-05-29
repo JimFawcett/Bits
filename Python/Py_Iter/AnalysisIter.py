@@ -4,16 +4,11 @@
 #----------------------------------------------------------
 
 import sys
-# import collections
 from typing import TypeVar
 from collections.abc import Sequence, Mapping
 
 T = TypeVar('T')
-# Coll = Union[Iterable, Sized] = 'Coll'
 
-# Python requires definition before use ordering
-#  - no link phase to find definitions
-import copy
 nl = "\n"
 
 # show name, type, value, and size of a Python instance

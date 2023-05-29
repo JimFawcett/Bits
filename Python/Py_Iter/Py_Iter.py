@@ -44,7 +44,7 @@ def forloopEnum(enum: Sequence, nm:str, left:int, width:int):
 #------------------------------------------------
 def forloopEnumFolded(enum:Sequence, nm:str, left, width):
   print(nm)
-  s = Anal.fold(enum, left, width)
+  s = Anal.fold(enum, left, width)  # uses for loop
   print(s)
 
 # forloopAssocFolded uses fold function implemented for
@@ -52,7 +52,7 @@ def forloopEnumFolded(enum:Sequence, nm:str, left, width):
 #------------------------------------------------
 def forloopAssocFolded(enum:Mapping, nm:str, left, width):
   print(nm)
-  s = Anal.foldAssoc(enum, left, width)
+  s = Anal.foldAssoc(enum, left, width) # uses for loop
   print(s)
 
 # function implementing all demonstrations
