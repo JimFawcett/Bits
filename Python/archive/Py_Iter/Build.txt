@@ -1,0 +1,5 @@
+C:\github\JimFawcett\Bits\Python\Py_Objects
+> python Py_Objects.py
+ Demonstrate Python Objects
+----------------------------
+
