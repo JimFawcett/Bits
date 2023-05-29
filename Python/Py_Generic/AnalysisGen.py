@@ -6,7 +6,6 @@
 import sys
 import collections
 from typing import TypeVar
-# from typing import TypeVar, Generic, Sized, Iterable, Collection, Union, Any
 from collections.abc import Sequence
 
 T = TypeVar('T')
@@ -40,18 +39,6 @@ def fold(enum: Sequence, left:int, width:int) -> str:
     rIndex = tmpStr.rindex(',')
     tmpStr = tmpStr[:rIndex]
     return tmpStr
-
-# # fold indexable into rows of width elements indented by 
-# # left spaces
-# def foldAssoc(enum: Sequence, left:int, width:int) -> str:
-#     tmpStr = indent(left)
-#     for i in range(len(enum)):
-#         tmpStr += str(enum[i]) + ", "
-#         if(((i + 1) % width) == 0 and i != 0):
-#             tmpStr += "\n" + indent(left)
-#     rIndex = tmpStr.rindex(',')
-#     tmpStr = tmpStr[:rIndex]
-#     return tmpStr
 
 # show name, type, value, and size of a Python instance
 def showTypeEnum(enum, nm, left = 2, width = 7, suffix = "") :

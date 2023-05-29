@@ -26,7 +26,8 @@ T = TypeVar('T')
 Anal = AnalysisIter
 Points = PointsIter
 
-# generator 
+# generator doesn't need to load entire collection
+#------------------------------------------------
 def generator(coll: Iterable[T]) -> Generator:
   for item in coll:
     yield item
@@ -64,13 +65,6 @@ def execute() :
 
     Anal.showNote("  basic iteration", "\n")
 
-    # idiomatic iteration over range using for loop
-    Anal.showOp("range(1,6) is iterable")
-    print("  ", end='')
-    for i in range(1,6):
-      print("{} ".format(i), end='')
-    print()
-
     # iteration using iterator directly
     Anal.showOp("extracting iterator from range(0,10)")
     iter = range(0,10).__iter__()
@@ -82,12 +76,14 @@ def execute() :
       pass
     print()
 
-    Anal.showOp("using generator to walk through range(1,5)")
+    # idiomatic iteration over range using for loop
+    Anal.showOp("idiomatic iteration over range(1,6)")
     print("  ", end='')
-    for item in generator(range(1,5)):
-      print("{} ".format(item), end='')
+    for i in range(1,6):
+      print("{} ".format(i), end='')
     print()
 
+    # 
     Anal.showOp("using iterator returned by generator")
     iter = generator(range(1,5))
     print("  ", end='')
@@ -96,6 +92,13 @@ def execute() :
         print("{} ".format(next(iter)), end='')
     except StopIteration:
       pass
+    print()
+
+    # iteration using generator
+    Anal.showOp("idiomatic iteration over range(1,5) using generator")
+    print("  ", end='')
+    for item in generator(range(1,5)):
+      print("{} ".format(item), end='')
     print("\n")
 
     Anal.showNote("  iteration using AnalysisIter functions", "\n")
