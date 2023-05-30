@@ -189,7 +189,6 @@ namespace CSharpObjects
       Display.ShowNote(
         "There is no way for change in str2 to affect str1."
       );
-      // Display.println();
       
       Console.WriteLine("\nThat's all Folks!\n");
     }

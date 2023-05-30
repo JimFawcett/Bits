@@ -43,7 +43,7 @@ namespace CSharpGenerics
         "- String is not generic, but ShowTypeScalar(...),\n" +
         "  used below to display String, is generic\n" +
         "- Generic function ShowTypeEnum(...) is used, below,\n" +
-        "  for both List<T> and Dictionary<K,V>"
+        "  for both List<T> and Dictionary<K,V>", nl
       );
       /*-- ShowTypeScalar is a generic function --*/
       string aString = "a string";  // hides construction
