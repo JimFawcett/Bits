@@ -1,11 +1,11 @@
-C:\github\JimFawcett\Bits\Rust\rust_hello_objects
+C:\github\JimFawcett\Bits\Rust\rust_generics
 > cargo run
-   Compiling rust_hello_objects v0.1.0 (C:\github\JimFawcett\Bits\Rust\rust_hello_objects)
-    Finished dev [unoptimized + debuginfo] target(s) in 0.42s  
+   Compiling rust_hello_objects v0.1.0 (C:\github\JimFawcett\Bits\Rust\rust_generics)
+    Finished dev [unoptimized + debuginfo] target(s) in 0.37s
      Running `target\debug\rust_hello_objects.exe`
 
 --------------------------------------------------
-  demonstrate object creation
+  demonstrate generic functions and types
 --------------------------------------------------
 
 ----------------------------------------------
@@ -33,46 +33,55 @@ value: [1, 2, 3, 2, 1, 42], size: 24
   instances of user-defined types
 -----------------------------------
 
---- let mut p1 = Point1::new() ---
-"p1": Point1 { 0, 0, 0 }
-"p1": Point1 { 42, -3, 2 }
-call name: "p1", type: "rust_hello_objects::points::Point1"     
-value: Point1 { x: 42, y: -3, z: 2 }, size: 12
+s: Stats { items: [1.0, 2.5, -3.5, 4.0, 5.5] }
+s.max() = 5.5
+s.min() = -3.5
+s.sum() = 9.5
+s.avg() = 1.9
 
---- let p1a = p1.clone() ---
-"p1a.clone()": Point1 { 42, -3, 2 }
+s: Stats { items: [1, -2, 3, -4, 5] }
+s.max() = 5
+s.min() = -4
+s.sum() = 3
+s.avg() = 0.6
 
-"p2": Point2<T> {
+"p1": PointN<T> {
   0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
   0.0, 0.0, 0.0
 }
---- show_type(p2, "p2") ---
-call name: "p2", type: "rust_hello_objects::points::Point2<f64>"
---- show_value_enum(p2.coors(), "p2", 2, 7) ---
-"p2.coors()" {
+--- show_type(p1, "p1") ---
+call name: "p1", type: "rust_hello_objects::points_generic::PointN<f64>"
+--- show_value_enum(p1.coors(), "p1", 2, 7) ---
+"p1.coors()" {
   0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
   0.0, 0.0, 0.0
 }
 size: 24
 
---- p2.coors()[2] = 3.1415 ---
---- show_value_enum(p2.coors(), "p2.coors()", 2, 7) ---
-"p2.coors()" {
+--- p1.coors()[2] = 3.1415 ---
+"p1": PointN<T> {
+  0.0, 0.0, 3.1415, 0.0, 0.0, 0.0, 0.0,
+  0.0, 0.0, 0.0
+}
+--- show_value_enum(p1.coors(), "p1.coors()", 2, 7) ---
+"p1.coors()" {
   0.0, 0.0, 3.1415, 0.0, 0.0, 0.0, 0.0,
   0.0, 0.0, 0.0
 }
 size: 24
 
-"p2a": Point2<T> {
+"p2": PointN<T> {
   0, 1, 2, 3, 4, 4, 3,
   2, 1, 0
 }
 
-"
-value: Point2 { coor: [0, 1, 2, 3, 4, 4, 3, 2, 1, 0] }, size: 24p2a.len() = 10
+--- show_type_scalar(p2, "p2") ---
+call name: "p2", type: "rust_hello_objects::points_generic::PointN<i32>"
+value: PointN { coor: [0, 1, 2, 3, 4, 4, 3, 2, 1, 0] }, size: 24
+p2.len() = 10
 
---- p2a.show("p2a", 2, 7) ---
-"p2a": Point2<T> {
+--- p2.show("p2", 2, 7) ---
+"p2": PointN<T> {
   0, 1, 2, 3, 4, 4, 3,
   2, 1, 0
 }
@@ -103,6 +112,5 @@ value: [0, -1, 2, -3, 4, -5, 6, -7, 8, -9, 10, -11, 12, -13, 14], size: 24
 
   That's all Folks!
 
-C:\github\JimFawcett\Bits\Rust\rust_hello_objects
+C:\github\JimFawcett\Bits\Rust\rust_generics
 >
-

@@ -77,7 +77,7 @@ void PointN<T>::push_back(T t) {
 }
 template<typename T>
 T PointN<T>::pop_back() {
-  coord.pop_back(t);
+  return coord.pop_back();
 }
 /*-----------------------------------------------
   PointtN<T> display function 

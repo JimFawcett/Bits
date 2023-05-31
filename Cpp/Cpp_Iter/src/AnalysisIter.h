@@ -50,6 +50,10 @@ std::string format(
   const T& t, const std::string& nm, const std::string& suffix = "",
   size_t left = 2, size_t width = 7
 );
+
+/* end of function declarations 
+-------------------------------------------------------------------*/
+
 /*-------------------------------------------------------------------
   Display and Analysis function and globals definitions
 ---------------------------------------------------------------------

@@ -2,7 +2,7 @@
   PointsIter.h defines point class PointN<T>
   - PointN<T> represents points with many coordinates of
     unspecified type T
-  - Added iterator, begiin(), end()
+  - Added iterator, begin(), end()
 */
 #include <iostream>
 #include <vector>

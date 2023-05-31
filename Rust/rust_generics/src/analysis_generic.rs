@@ -16,8 +16,8 @@ use std::fmt::*;
     Using format "{:?}" requires Debug.
 */
 pub fn show_type<T:Debug>(_t: &T, nm: &str) {
-    let typename = std::any::type_name::<T>();
-    println!("call name: {nm:?}, type: {typename:?}");
+  let typename = std::any::type_name::<T>();
+  println!("call name: {nm:?}, type: {typename:?}");
 }
 /*---------------------------------------------------------
   Show enumerable input's values
@@ -29,7 +29,7 @@ pub fn show_type<T:Debug>(_t: &T, nm: &str) {
   - Does not consume input t since passed by reference.
 */
 pub fn show_value_enum<T:Debug, I:Debug>(
-    t: &T, nm: &str, left:usize, width:usize
+  t: &T, nm: &str, left:usize, width:usize
 ) 
   where for<'a> &'a T: IntoIterator<Item = &'a I>
 {
@@ -50,10 +50,10 @@ pub fn show_value_enum<T:Debug, I:Debug>(
     sequences of elements. Use show_value_enum for that.
 */
 pub fn show_type_scalar<T:Debug>(t: &T, nm: &str) {
-    show_type(t, nm);
-    println!(
-        "value: {t:?}, size: {}", std::mem::size_of::<T>()
-    );
+  show_type(t, nm);
+  println!(
+    "value: {t:?}, size: {}", std::mem::size_of::<T>()
+  );
 }
 /*---------------------------------------------------------
 Show facts about an enumerable type's elements, e.g., 
@@ -64,18 +64,18 @@ name, type, values, and size.
 pub fn show_type_enum<T:Debug, I:Debug>(t: &T, nm: &str, left:usize, width:usize) 
   where for<'a> &'a T: IntoIterator<Item = &'a I>
 {
-    show_type(t, nm);
-    show_value_enum(t, nm, left, width);
+  show_type(t, nm);
+  show_value_enum(t, nm, left, width);
 }
 /*--------------------------------------------------------- 
   build indent string with "left" spaces 
 */
 pub fn offset(left: usize) -> String {
-    let mut accum = String::new();
-    for _i in 0..left {
-        accum += " ";
-    }
-    accum
+  let mut accum = String::new();
+  for _i in 0..left {
+    accum += " ";
+  }
+  accum
 }
 /*---------------------------------------------------------
   find index of last occurance of chr in s
@@ -83,14 +83,15 @@ pub fn offset(left: usize) -> String {
   https://stackoverflow.com/questions/50101842/how-to-find-the-last-occurrence-of-a-char-in-a-string
 */
 fn find_last_utf8(s: &str, chr: char) -> Option<usize> {
-    // if let Some(rev_pos) = 
-    //   s.chars().rev().position(|c| c == chr) {
-    //     Some(s.chars().count() - rev_pos - 1)
-    // } else {
-    //     None
-    // }
-    s.chars().rev().position(|c| c== chr)
-     .map(|rev_pos| s.chars().count() - rev_pos - 1)
+/*-- alternate implementation --*/
+  // if let Some(rev_pos) = 
+  //   s.chars().rev().position(|c| c == chr) {
+  //     Some(s.chars().count() - rev_pos - 1)
+  // } else {
+  //     None
+  // }
+  s.chars().rev().position(|c| c== chr)
+    .map(|rev_pos| s.chars().count() - rev_pos - 1)
 }
 /*---------------------------------------------------------
   fold an enumerable's elements into rows of w elements
@@ -100,12 +101,14 @@ fn find_last_utf8(s: &str, chr: char) -> Option<usize> {
   https://users.rust-lang.org/t/generic-code-over-iterators/10907/3
 */
 pub fn fold<T, I:Debug>(
-    t: &T, left: usize, width: usize
+  t: &T, left: usize, width: usize
 ) -> String
     where for<'a> &'a T: IntoIterator<Item = &'a I>, T:Debug
 {
   let mut accum = String::new();
   accum += &offset(left);
+
+  /*-- Alternate direct implementation --*/
   //let mut i = 0usize;
   // for item in t {
   //   accum += &format!("{item:?}, ");
@@ -115,7 +118,7 @@ pub fn fold<T, I:Debug>(
   //   }
   //   i += 1;
   // }
-  //let i = 0usize;
+  
   for (i, item) in t.into_iter().enumerate() {
     accum += &format!("{item:?}, ");
     if ((i + 1) % width) == 0 && i != 0 {

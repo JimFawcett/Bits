@@ -21,51 +21,51 @@ impl Arithmetic<i32> for i32 {}
 
 #[derive(Debug, Clone)]
 pub struct Stats<T: Arithmetic + Debug> {
-    items: Vec<T>
+  items: Vec<T>
 }
 
 impl<T: Arithmetic> Stats<T> 
     where T: Arithmetic + Debug
 {
-    pub fn new(v:Vec<T>) -> Stats<T> {
-        Stats {
-            items: v,
-        }
+  pub fn new(v:Vec<T>) -> Stats<T> {
+    Stats {
+      items: v,
     }
-    pub fn max(&self) -> T {
-        let mut biggest = self.items[0];
-        for item in &self.items {
-            if biggest < *item {
-                biggest = *item;
-            }
-        }
-        biggest
+  }
+  pub fn max(&self) -> T {
+    let mut biggest = self.items[0];
+    for item in &self.items {
+      if biggest < *item {
+        biggest = *item;
+      }
     }
-    pub fn min(&self) -> T {
-        let mut smallest = self.items[0];
-        for item in &self.items {
-            if smallest > *item {
-                smallest = *item;
-            }
-        }
-        smallest
+    biggest
+  }
+  pub fn min(&self) -> T {
+    let mut smallest = self.items[0];
+    for item in &self.items {
+      if smallest > *item {
+        smallest = *item;
+      }
     }
-    pub fn sum(&self) -> T {
-        let mut sum = T::default();
-        for item in &self.items {
-            sum = sum + *item;
-        }
-        sum
+    smallest
+  }
+  pub fn sum(&self) -> T {
+    let mut sum = T::default();
+    for item in &self.items {
+      sum = sum + *item;
     }
-    pub fn avg(&self) -> f64 {
-        let mut sum = T::default();
-        for item in &self.items {
-            sum = sum + *item;
-        }
-        /*-- cast usize to f64 --*/
-        let den:f64 = self.items.len() as f64;
-        /*-- can't cast non-primitive to primitive --*/
-        let num:f64 = sum.into();
-        num/den
+    sum
+  }
+  pub fn avg(&self) -> f64 {
+    let mut sum = T::default();
+    for item in &self.items {
+      sum = sum + *item;
     }
+    /*-- cast usize to f64 --*/
+    let den:f64 = self.items.len() as f64;
+    /*-- can't cast non-primitive to primitive --*/
+    let num:f64 = sum.into();
+    num/den
+  }
 }
