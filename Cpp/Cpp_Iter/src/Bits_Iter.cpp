@@ -14,8 +14,8 @@
 #include "PointsIter.h"     // PointN<T> class declaration
 /*
   This demo uses the std::string and std::vector<T> classes
-  and two user defined classes, Point1 and PointN<T>, to 
-  illustrate how objects are defined and instantiated.
+  and a user-defined class, PointN<T>, to illustrate how
+  types support indexing and iteration.
 
   Operations:
     All the classes discussed here provide operations for:

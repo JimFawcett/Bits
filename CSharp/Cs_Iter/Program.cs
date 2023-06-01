@@ -48,6 +48,9 @@ namespace CSharpIter
       string another = new string("another string");
       Display.ShowTypeEnum(another, "another", 10, nl);
 
+      Display.ShowNote(
+        "Iterate over List and Dictionary elements"
+      );
       List<double> aList = 
         new List<double>{ 1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0 };
     
