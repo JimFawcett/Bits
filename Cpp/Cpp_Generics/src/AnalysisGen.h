@@ -50,8 +50,9 @@ std::string format(
   const T& t, const std::string& nm, const std::string& suffix = "",
   size_t left = 2, size_t width = 7
 );
+/*-- end of function definitions --*/
 /*-------------------------------------------------------------------
-  Display and Analysis function and globals definitions
+  Display and Analysis functions and global definitions
 ---------------------------------------------------------------------
 */
 const std::string nl = "\n";
@@ -209,6 +210,8 @@ std::string formatString(
 }
 /*-----------------------------------------------
   Defines is_iterable trait
+  - uses template metaprogramming, e.g., user code
+    that runs during compilation
   - detects STL containers and user-defined types
     that provide iteration
 https://stackoverflow.com/questions/13830158/check-if-a-variable-type-is-iterable
