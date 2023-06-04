@@ -1,5 +1,5 @@
 /*-------------------------------------------------------------------
-  analysis.rs
+  analysis_generics.rs
   - provides analysis and display functions for Objects demo.
   - a few of these require advanced generics code.
   - You don't need to know how these work to understand this

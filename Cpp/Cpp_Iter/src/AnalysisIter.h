@@ -215,6 +215,8 @@ std::string formatString(
   Defines is_iterable trait
   - detects STL containers and user-defined types
     that provide iteration
+  - uses template metaprogramming, e.g., user code
+    that runs at compile-time
 https://stackoverflow.com/questions/13830158/check-if-a-variable-type-is-iterable
 */
 template <typename T, typename = void>

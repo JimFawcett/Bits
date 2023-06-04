@@ -1,0 +1,6 @@
+C:\github\JimFawcett\Bits\Rust\rust_iter
+> cargo run
+   Compiling rust_iter v0.1.0 (C:\github\JimFawcett\Bits\Rust\rust_iter)
+    Finished dev [unoptimized + debuginfo] target(s) in 0.50s
+C:\github\JimFawcett\Bits\Rust\rust_iter
+>
