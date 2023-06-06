@@ -27,17 +27,103 @@ using Analysis;                     // defined in Analysis.cs
 */
 namespace CSharpIter
 {
+  using Analysis;
+
   /*-- Iter demonstration begins here --*/
 
+  // interface Indexer<T> {
+  //   // int Count();            // has Count() method
+  //   T this[int key] {get;}  // has indexer
+  // }
   class Program
   {
     const string nl = "\n";
+
+    /*-------------------------------------------
+      void ListIndexer<T>(List<T>)
+      - Display list items with indexing
+    */
+    static void ListIndexer<T>(List<T> lst) {
+      Console.Write("  ");
+      for(int i=0; i < lst.Count; ++i) {
+        Console.Write("{0} ", lst[i]);
+      }
+      Display.Println("");
+    }
+    /*-------------------------------------------
+      void GenericIndexer<T>(List<T>)
+      - Display list items with indexing
+    */
+    static void GenericIndexer<C, T>(C coll) 
+      where C:IEnumerable, ICollection<T>, IList
+    {
+      Console.Write("  ");
+      for(int i=0; i < coll.Count(); ++i) {
+        Console.Write("{0} ", coll[i]);
+      }
+      Display.Println("");
+    }
+    /*-------------------------------------------
+      void GenericEnumerator<T>(IEnumerable<T> enm)
+      - Display list items with enumerator
+    */
+    static void GenericEnumerator<T>(IEnumerable<T> enm) {
+      IEnumerator<T> lenum = enm.GetEnumerator();
+      Console.Write("  ");
+      while(lenum.MoveNext()) {
+        var item = lenum.Current;
+        Console.Write("{0} ", item);
+      }
+      Display.Println("");
+    }
+    /*-------------------------------------------
+      void GenericForEach<T>(IEnumerable<T> enm)
+      - Display list items with foreach
+    */
+    static void GenericForEach<T>(IEnumerable<T> enm) {
+      Display.Print("  ");
+      foreach (T item in enm) {
+        Console.Write("{0} ", item);
+      }
+      Display.Println("");
+    }
     static void Main(string[] args)
     {
       Display.ShowLabel(" Demonstrate C# iteration");
 
+      /*-- create List, an enumerable collection --*/
+      
+      Display.ShowOp("new list");
+      List<int> lst = new List<int> { 1, 2, 3, 4, 3, 2 };
+
+      /*-- display list items using iteration functions --*/
+
+      Display.ShowOp("display List items using ListIndexer");
+      ListIndexer(lst);
+
+      Display.ShowOp("display List items using GenericIndexer");
+      GenericIndexer<List<int>, int>(lst);
+
+      Display.ShowOp("new array");
+      int[] arr = new int[] { 1, 2, 3, 4, 5, 6 };
+      Display.ShowOp("disply array items using GenericIndexer");
+      GenericIndexer<int[], int>(arr);
+
+      Display.ShowOp("display List items using enumerator");
+      GenericEnumerator<int>(lst);
+      
+      Display.ShowOp("display array items using enumerator");
+      GenericEnumerator<int>(arr);
+      
+      Display.ShowOp("display List items using foreach");
+      GenericForEach<int>(lst);
+
+      Display.ShowOp("display array items using foreach");
+      GenericForEach<int>(arr);
+      Display.Println("");
+
       Display.ShowNote(
-        "Display string as a scalar value"
+        "Display string type as a scalar value"
       );
       string aString = "a string";  // hides construction
       Display.ShowTypeScalar(aString, "aString", nl);
@@ -46,21 +132,27 @@ namespace CSharpIter
         "Iterate over string characters"
       );
       string another = new string("another string");
-      Display.ShowTypeEnum(another, "another", 10, nl);
+      GenericForEach<char>(another);
+      Display.Println("");
 
       Display.ShowNote(
         "Iterate over List and Dictionary elements"
       );
+      Display.Println("");
+
+      Display.ShowOp("List elements");
       List<double> aList = 
         new List<double>{ 1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0 };
-    
-      Display.ShowTypeEnum(aList, "aList", 5, nl);
+      // Display.ShowTypeEnum(aList, "aList", 5, nl);
+      Display.ShowEnum(aList, "aList", 5, nl);
 
-      var d1 = new Dictionary<int, string>
+      Display.ShowOp("Dictionary elements");
+      var aDict = new Dictionary<int, string>
       {
         { 0, "zero"}, {1, "one"}, {2, "two"}
       };
-      Display.ShowTypeEnum(d1, "d1", 5, nl);
+      // Display.ShowTypeEnum(d1, "d1", 5, nl);
+      Display.ShowEnum(aDict, "aDict", 5, nl);
   
       Display.ShowNote(
         "Example of user-defined type:\n" + 
@@ -111,6 +203,13 @@ namespace CSharpIter
       p3.Show("p3");
       Console.WriteLine();
 
+      Display.ShowOp("set left(4) and width(5)");
+      Display.ShowOp("p3.Show(\"p3\")");
+      p3.left(4).width(5);
+      p3.Show("p3");
+      Console.WriteLine();
+
+      Display.ShowOp("ShowTypeShowable(p2, 'p3', nl)");
       Display.ShowTypeShowable(p3, "p3", nl);
 
       Display.ShowNote(

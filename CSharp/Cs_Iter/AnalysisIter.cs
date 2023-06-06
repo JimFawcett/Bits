@@ -32,8 +32,11 @@ namespace Analysis {
         public static String Spaces(int i) {
             return new String(' ', i);
         }
-        public void Println(String s) {
+        public static void Println(String s) {
             Console.WriteLine(s);
+        }
+        public static void Print(String s) {
+            Console.Write(s);
         }
         public static void ShowType<T>(T t, string nm) {
             Type tt = t!.GetType();
@@ -107,6 +110,22 @@ namespace Analysis {
         {
             ShowType(t, nm);
             Console.WriteLine("value:\n{0}{1} {{", "  ", nm);
+            /* 
+                beautify value list into rows of w elements 
+                indented by 4 spaces
+            */
+            string tmp = FoldArray(t.ToArray(), w, 4);
+            Console.Write(tmp);
+            Console.WriteLine("\n  }");
+            Console.Write(suffix);
+        }
+        public static void ShowEnum<T> (
+        IEnumerable<T> t, string nm, int w = 5, string suffix = ""
+        )
+        {
+            // ShowType(t, nm);
+            // Console.WriteLine("value:\n{0}{1} {{", "  ", nm);
+            Console.WriteLine("{0}{1} {{", "  ", nm);
             /* 
                 beautify value list into rows of w elements 
                 indented by 4 spaces
