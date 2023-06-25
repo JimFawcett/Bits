@@ -5,6 +5,9 @@
   - Most collections implement the Rust trait
     IntoIterator which consumes the collection
     to generate an iterator.
+  - Many also supply functions iter() and mut_iter()
+    which return iterators without consuming originial
+    collection.
   - Demonstrates iteration over arrays, slices,
     Vecs, VecDeques, and custom PointN<T> type. 
 -----------------------------------------------*/
@@ -12,6 +15,12 @@
 #![allow(dead_code)]
 #![allow(unused_variables)]
 
+/*-----------------------------------------------
+  - Don't need use for analysis_iter as it only 
+    contains functions.
+  - Do need for points_iter as it defines a type
+    to be instantiated.
+*/
 use std::collections::*;
 mod analysis_iter;
 // use analysis_iter::*;
@@ -24,45 +33,73 @@ use points_iter::*;
   builds collections and applies the various functions
   to illustrate how iterators are used.
 
-  It starts with a few quick iteration examples before
-  applying the analysis functions.
+  It starts with a few quick indexing and iteration 
+  examples before applying the analysis functions.
 ---------------------------------------------------------*/
-/*
-- vec_indexer<T:Debug>(v:&Vec<T>)
-- slice_indexer<T:Debug>(s:&[T])
-- sub_range_indexer<T:Debug>(
-    s:&[T], 
-    mut lower:usize, mut upper:usize
-  )
-- slice_looper<T:Debug>(s:&[T])
-- collection_looper<C: Debug, I: Debug>(c:&C)
-    where C: IntoIterator<Item = I> + Clone
-- for_looper<C: Debug, I: Debug>(c:&C) 
-    where C: IntoIterator<Item = I> + Clone
-- ranger<T>(iter: &mut T)
-    where T: Iterator, T::Item: Debug
-*/
+
 use std::fmt::*;
 use std::cmp::*;
 
 /*-----------------------------------------------
-  vec_indexer<T: Debug>(v:&Vec<T>)
+  demo_vec_indexer<T: Debug>(v:&Vec<T>)
 -------------------------------------------------
 Simplest case - displays Vector with generic
 Item type.
-- uses naive indexing
+- uses naive indexing (no iterator here)
 - works only for Vec's
 */
-pub fn vec_indexer<T: Debug>(v:&Vec<T>) {
+fn demo_vec_indexer<T: Debug>(v:&Vec<T>) {
   let mut i = 0;
+  print!("  ");
   while i < v.len() {
     print!("{:?} ", v[i]);
     i += 1;
   }
   println!();
 }
+fn execute_demo_vec_indexer() {
+  println!("execute demo_vec_indexer");
+  let v = vec![1, 2, 3, 2, 1];
+  demo_vec_indexer(&v);
+}
 /*-----------------------------------------------
-  slice_indexer<T:Debug>(s:&[T])
+  Demo for loop that consumes vector
+  - implicit use of into_iterator
+*/
+fn demo_for<T:Debug>(v:Vec<T>) {
+  print!("  ");
+  for item in v {  // for is using into_iterator
+    print!("{:?} ", item);
+  }
+  // next line won't compile - v was moved
+  // println!("{:?}", v);
+  println!();
+}
+fn execute_demo_for() {
+  println!("execute demo_for");
+  let v = vec![1, 2, 3, 2, 1];
+  demo_for(v);
+}
+/*-----------------------------------------------
+  Demo for loop that does not consume vector
+  - uses vector method iter() which returns
+    iterator
+*/
+fn demo_for_ref<T:Debug>(rv:&Vec<T>) {
+  print!("  ");
+  for item in rv.iter() {
+    print!("{:?} ", item);
+  }
+  // next line compiles - rv was not moved
+  println!("{:?}", rv);
+}
+fn execute_demo_for_ref() {
+  println!("execute demo_for_ref");
+  let v = vec![1, 2, 3, 2, 1];
+  demo_for_ref(&v);
+}
+/*-----------------------------------------------
+  demo_slice_indexer<T:Debug>(s:&[T])
 -------------------------------------------------
 Illustrates indexing in slices
 - Not idiomatic, but safe and correct.
@@ -78,7 +115,8 @@ Illustrates indexing in slices
   types.
 */
 #[allow(clippy::needless_range_loop)]
-pub fn slice_indexer<T:Debug>(s:&[T]) {
+fn demo_slice_indexer<T:Debug>(s:&[T]) {
+  print!("\n  ");
   let max = s.len();
   /* 0..max is range iterator */
   for i in 0..max {
@@ -92,6 +130,11 @@ pub fn slice_indexer<T:Debug>(s:&[T]) {
     }
   */
 }
+fn execute_demo_slice_indexer() {
+  print!("execute demo_slice_indexer");
+  let sl = [1, 2, 3, 4, 3, 2, 1];
+  demo_slice_indexer(&sl);
+}
 /*-----------------------------------------------
   sub_range_indexer<T:Debug>(
     s:&[T], mut lower:usize, mut upper:usize
@@ -101,9 +144,10 @@ Iterates over a sub-range of the slice s
   fixed size elements.
 */
 #[allow(clippy::needless_range_loop)]
-pub fn sub_range_indexer<T:Debug>(
+fn demo_sub_range_indexer<T:Debug>(
   s:&[T], mut lower:usize, mut upper:usize
 ) {
+  print!("\n  ");
   lower = max(0, lower);
   upper = min(s.len(), upper);
   if lower <= upper {
@@ -112,6 +156,11 @@ pub fn sub_range_indexer<T:Debug>(
     }
   }
   println!();
+}
+fn execute_demo_sub_range_indexer() {
+  print!("execute demo_sub_range_indexer");
+  let s = [1, 2, 3, 4, 3, 2, 1];
+  demo_sub_range_indexer(&s, 2, 4);
 }
 /*-----------------------------------------------
   slice_looper<T:Debug>(s:&[T])
@@ -122,7 +171,8 @@ Iterates over slice s without indexing
   e.g., array, Vector, PointN, ...
 - Uses slice iterator.
 */
-pub fn slice_looper<T:Debug>(s:&[T]) {
+fn demo_slice_looper<T:Debug>(s:&[T]) {
+  print!("\n  ");
   let mut iter = s.iter();
   loop {
       let item = iter.next();
@@ -132,6 +182,11 @@ pub fn slice_looper<T:Debug>(s:&[T]) {
       }
   }
   println!();
+}
+fn execute_demo_slice_looper() {
+  print!("execute demo_slice_looper");
+  let s = [1, 2, 3, 4, 3, 2, 1];
+  demo_slice_looper(&s);
 }
 /*-----------------------------------------------
   collection_looper<C:Debug, I:Debug>(c:&C)
@@ -152,9 +207,10 @@ pub fn slice_looper<T:Debug>(s:&[T]) {
   clone, collect, and loop.
   https://stackoverflow.com/questions/49962611/why-does-str-not-implement-intoiterator
 */
-pub fn collection_looper<C: Debug, I: Debug>(c:&C) 
+fn demo_collection_looper<C: Debug, I: Debug>(c:&C) 
 where C: IntoIterator<Item = I> + Clone
 {
+  print!("\n  ");
   let cc = c.clone();
   let iter = cc.into_iter();
   /* convert c into Vec to get len() method */
@@ -173,18 +229,37 @@ where C: IntoIterator<Item = I> + Clone
       count += 1;
   }
 }
+fn execute_demo_collection_looper() {
+  print!("execute demo_collection_looper with slice");
+  let s = [1, 2, 3, 4, 3, 2, 1];
+  demo_collection_looper(&s);
+  print!("execute demo_collection_looper with vector");
+  let v = vec![1, 2, 3, 4, 3, 2, 1];
+  demo_collection_looper(&v);
+  print!("execute demo_collection_looper with PointN");
+  let mut p = PointN::<i32>::new(0usize);
+  p.push(1);
+  p.push(2);
+  p.push(3);
+  p.push(4);
+  p.push(3);
+  p.push(2);
+  p.push(1);
+  demo_collection_looper(&p);
+}
 /*----------------------------------------------- 
   for_looper<C: Debug, I: Debug>(c:&C) 
 -------------------------------------------------
 - prints comma separated list of Collection<I>'s 
   items.
-- similar to collection_looper but erases last comma
+- similar to demo_collection_looper but erases last comma
   so no need for collection or clone
 - uses idiomatic forloop with no indexing
 */
-pub fn for_looper<C: Debug, I: Debug>(c:&C) 
+fn demo_for_looper<C: Debug, I: Debug>(c:&C) 
   where C: IntoIterator<Item = I> + Clone
 {
+  print!("\n  ");
   /* build string of comma separated values */
   let mut accum = String::new();
   let cc = c.clone();
@@ -203,6 +278,24 @@ pub fn find_last_utf8(s:&str, chr: char) -> Option<usize> {
   s.chars().rev().position(|c| c == chr)
    .map(|rev_pos| s.chars().count() - rev_pos -1)
 }
+fn execute_demo_for_looper() {
+  print!("execute demo_for_looper with slice");
+  let s = [1, 2, 3, 4, 3, 2, 1];
+  demo_for_looper(&s);
+  print!("execute demo_for_looper with vector");
+  let v = vec![1, 2, 3, 4, 3, 2, 1];
+  demo_for_looper(&v);
+  print!("execute demo_for_looper with PointN");
+  let mut p = PointN::<i32>::new(0usize);
+  p.push(1);
+  p.push(2);
+  p.push(3);
+  p.push(4);
+  p.push(3);
+  p.push(2);
+  p.push(1);
+  demo_for_looper(&p);
+}
 /*-----------------------------------------------
   ranger<T>(iter: &mut T)
 -------------------------------------------------
@@ -210,13 +303,45 @@ pub fn find_last_utf8(s:&str, chr: char) -> Option<usize> {
   as range.
 - another idiomatic iteration.
 */
-pub fn ranger<T>(iter: &mut T)
+fn demo_ranger<T>(iter: &mut T)
   where T: Iterator, T::Item: Debug
 {
+  print!("\n  ");
   for item in iter {
       print!("{item:?} ")
   }
   println!();
+}
+fn execute_demo_ranger() {
+  print!("execute demo_ranger with string iter");
+  let st = "a string";
+  demo_ranger(&mut st.chars());
+  print!("execute demo_ranger with slice iter");
+  let s = [1, 2, 3, 4, 3, 2, 1];
+  demo_ranger(&mut s.iter());
+  print!("execute demo_ranger with vector iter");
+  let v = vec![1, 2, 3, 4, 3, 2, 1];
+  demo_ranger(&mut v.iter());
+  print!("execute demo_ranger with VecDeq iter");
+  let mut vd = VecDeque::<i32>::new();
+  vd.push_back(1);
+  vd.push_back(2);
+  vd.push_back(3);
+  vd.push_back(4);
+  vd.push_back(3);
+  vd.push_back(2);
+  vd.push_back(1);
+  demo_ranger(&mut vd.iter());
+  print!("execute demo_ranger with PointN iter");
+  let mut p = PointN::<i32>::new(0usize);
+  p.push(1);
+  p.push(2);
+  p.push(3);
+  p.push(4);
+  p.push(3);
+  p.push(2);
+  p.push(1);
+  demo_ranger(&mut p.iter());
 }
 /*-----------------------------------------------
   demo_adapters<C, I>(c: C, i: I) -> Vec<I>
@@ -234,7 +359,7 @@ pub fn ranger<T>(iter: &mut T)
 - Adapter collect runs iterator and collects 
   into Vec<I>.
 */
-pub fn demo_adapters<C, I>(c: C, i: I) -> Vec<I>
+fn demo_adapters<C, I>(c: C, i: I) -> Vec<I>
 where
   C: IntoIterator<Item = I> + Debug + Clone,
   I: std::ops::Add<Output = I> + std::ops::Mul<Output = I>
@@ -246,141 +371,14 @@ where
       .map(|item| item + i)
       .collect()
 }
-
-/*-- Begin demonstrations ---------------------*/
-
-fn main() {
-  analysis_iter::show_label("Demonstrate Rust Iteration",30);
-
-  let s = &mut [1usize, 2, 3, 4, 3, 2, 1];
-  println!("slice s = {s:?}");
-  println!("s[2] = {:?}", s[2usize]);
-  
-  /*-- PointN<T>.into_iter() -----------------*/
-  let mut p = PointN::<i32>::new(5);
-  p[1] = 1;
-  p[3] = -1;
-  println!("\n{p:?}");
-  println!("using PointN<i32>.iter");
-  for item in p.iter() {
-      print!("{item:?} ");
-  }
-  println!("\nusing PointN<i32>.into_iter");
-  let iter = p.clone().into_iter(); // consumes clone
-  analysis_iter::show_op("displaying iter type");
-  analysis_iter::show_type(&iter, "iter");
-  for item in iter {
-      print!("{item} ");
-  }
-  println!();
-  println!("using PointN<i32>.into_iter iter() with auto deref");
-  let pc = p.clone();
-  for item in pc {  // auto deref of pc into pc.iter()
-      print!("{item} " ) // consumes pc
-  }
-  println!();
-  println!("using PointN<i32>.iter()");
-  for item in p.iter() { // does not consume p
-      print!("{item} " )
-  }
-  println!();
-  println!("using PointN<i32>.iter_mut()");
-  for item in p.iter_mut() { // does not consume p
-      *item *= 2;
-      print!("{item} " )
-  }
-  println!("\n{p:?}");
-  
-  /*-- vec_indexer -------------------------------*/
-  println!("\nvec_indexer displays Vec<T>");
-  let v = vec![1, 6, 2, 5, 3, 4];
-  vec_indexer(&v);  // can only display vecs
-  println!();
-
-  /*-- slice_indexer -----------------------*/
-  println!("slice_indexer displays slice");
-  slice_indexer(s);
-  println!("slice_indexer displays vector");
-  let v = vec![5, 4, 3, 2, 1, 0];
-  slice_indexer(&v);
-  println!("slice_indexer displays string bytes");
-  let str1:&str = "a string";
-  slice_indexer(str1.as_bytes());
-  println!();
-  
-  /*-- sub_range_indexer --------------------*/
-  println!("sub_range_indexer displays slice");
-  sub_range_indexer(s, 2, 5);
-  println!();
-  
-  /*-- slice_looper ------------------------*/
-  println!("slice_looper displays slice");
-  slice_looper(s);
-  println!("slice_looper displays vector");
-  slice_looper(&v);
-  println!("slice_looper displays PointN");
-  let mut point = PointN::<i32>::new(5);
-  point[1] = 2;
-  point[3] = -3;
-  let ps = &point[0..];  // take slice
-  slice_looper(ps);
-  println!();
-
-  /*-- collection_looper -------------------------------*/
-  println!("collection_looper displays slice:");
-  collection_looper(s);
-  println!("collection_looper displays array");
-  let a = [1, 2, 3];
-  collection_looper(&a);
-  println!("collection_looper displays VecDeque");
-  let vecdeq = VecDeque::from([4, 3, 2, 0, -1]);
-  collection_looper(&vecdeq);
-  println!("collection_looper displays PointN");
-  let pc = point.clone();
-  collection_looper(&pc);
-  println!("{pc:?}");
-  println!();
-
-  /*-- for_looper ---------------------------*/
-  println!("for_looper displays slice:");
-  for_looper(s);
-  println!("for_looper displays vector:");
-  let vec = s.to_vec();
-  for_looper(&vec);
-  println!("for_looper displays VecDeque");
-  for_looper(&vecdeq);
-  println!("for_looper displays PointN<T>");
-  let pc = point.clone();
-  for_looper(&pc);
-  println!();
-  /*------------------------------------------- 
-    for_looper can't accept String or &str
-    because they do not implement IntoIterator
-    https://stackoverflow.com/questions/49962611/why-does-str-not-implement-intoiterator
-  */
-
-  /*-- ranger -------------------------------*/
-  println!("ranger displays string:");
-  let str = "a literal string".to_string();
-  ranger(&mut str.chars());
-  println!("ranger displays values in range");
-  ranger(&mut (0..10));
-  println!("ranger accepts Vector iterator");
-  ranger(&mut vec.iter());
-  println!("ranger accepts VecDeque iterator");
-  ranger(&mut vecdeq.iter());
-  println!("ranger accepts PointN<T> iterator");
-  ranger(&mut point.iter());
-  println!();
-
-  /*-- demo_adapters ------------------------*/
-  println!("demo_adapters<T, i32>(coll, 2) accepts array:");
+fn execute_demo_adapters() {
+  println!("execute demo_adapters<T, i32>(coll, 2) with array:");
   let a = [1, -1, 0, 2, 3, 4];
   println!("{:?} ", &a);
   let vo = demo_adapters(a, 2);
   println!("{:?} ", &vo);
 
-  println!("demo_adapters<T, f64>(coll, 1.5) accepts PointN<f64>:");
+  println!("execute demo_adapters<T, f64>(coll, 1.5) with PointN<f64>:");
   let mut pad = PointN::<f64>::new(5);
   pad[0] = 1.5;
   pad[1] = -2.0;
@@ -392,6 +390,23 @@ fn main() {
   println!("{:?} ", &pad);
   let vo = demo_adapters(&pad, 1.5);
   println!("{:?} ", &vo);
+}
+
+/*-- Begin demonstrations ---------------------*/
+
+fn main() {
+  analysis_iter::show_label("Demonstrate Rust Iteration",30);
+
+  execute_demo_vec_indexer();
+  execute_demo_for();
+  execute_demo_for_ref();
+  execute_demo_slice_indexer();
+  execute_demo_sub_range_indexer();
+  execute_demo_slice_looper();
+  execute_demo_collection_looper();
+  execute_demo_for_looper();
+  execute_demo_ranger();
+  execute_demo_adapters();
 
   println!("\nThat's all folks!\n");
 }

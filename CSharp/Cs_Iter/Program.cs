@@ -50,6 +50,9 @@ namespace CSharpIter
       }
       Display.Println("");
     }
+    static void executeListIndexer<T>(List<T> lst) {
+      List<int> lint = new List<int> { 1, 2, 3, 4, 3, 2 };
+    }
     /*-------------------------------------------
       void GenericIndexer<T>(List<T>)
       - Display list items with indexing
