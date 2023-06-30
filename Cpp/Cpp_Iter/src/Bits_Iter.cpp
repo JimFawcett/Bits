@@ -27,15 +27,8 @@
 #pragma warning(disable: 4984)  // warns about C++17 extension
 
 /*-----------------------------------------------
-  alias type name 
-  - pU<T> is the same type as std::unique_ptr<T> 
-  - this just provides a shorter name
-*/
-template<typename T>
-using pU = std::unique_ptr<T>;
-
-/*-----------------------------------------------
   demoIndexer(const std::vector<T>& v)
+  - accepts std::vector<T>
   - creates comma separated list
   - not using iterator
 */
@@ -54,8 +47,8 @@ void executeDemoIndexerVec() {
   demoIndexerVec(v);
 }
 /*-----------------------------------------------
-  demoForLoopVec accepts std::vector<T> instances
-  by constant reference.
+  demoForLoopVec
+  - accepts std::vector<T> instances
   - uses range-for to display elements
   - that uses iterator implicitly
 */
@@ -178,13 +171,16 @@ void demoWhilerGuarded(
     std::cout << formatColl(c, name, "", indent, max);
     /*
       Analysis::formatColl uses range-based for loop to iterate 
-      over collection.
+      over collection, folding output into rows of max items.
+
+      Could have used the same iteration as in demoWhiler
+      but wanted to show nicer formatting.
     */
   }
 }
 void executeDemoWhilerGuarded() {
   std::cout << "\nexecute demoWhilerGuarded(c) with vector";
-  auto v = std::vector<int> { 1, 2, 3, 2, 1 };
+  auto v = std::vector<int> { 1, 2, 3, 2, 1, 0, -1, -2, -3, -4 };
   demoWhilerGuarded(v, "vector");
   std::cout << "\nexecute demoWhiler(c) with double will fail";
   demoWhilerGuarded(3.5, "double");
