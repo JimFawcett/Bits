@@ -5,6 +5,7 @@
   - depends on Analysis.h for several display and analysis functions
 */
 #include <iostream>         // std::cout
+#include <iomanip>          // std::fixed, std::setprecision
 #include <sstream>          // std::stringstream
 #include <memory>           // std::unique_ptr
 #include <vector>           // vector<T> class
@@ -142,10 +143,10 @@ void executeDemoWhiler() {
   auto s = std::string("a string");
   demoWhiler(s);
   std::cout << "\nexecute demoWhiler(c) with vector";
-  auto v = std::vector<int> { 1, 2, 3, 2, 1 };
+  auto v = std::vector<double> { 1.0, 1.5, -1.5, -1.0, 0 };
   demoWhiler(v);
   std::cout << "\nexecute demoWhiler(c) with Point";
-  auto p = PointN<int>(5);
+  auto p = PointN<double>(5);
   p[0] = 1;
   p[1] = 2;
   p[2] = 3;
@@ -245,6 +246,8 @@ int main() {
     print("Demonstrate C++ Iteration\n");
 
     showOp("collection specific iterations", nl);
+    std::cout << std::fixed;
+    std::cout << std::setprecision(1);
     executeDemoIndexerVec();
     executeDemoForLoopVec();
     executeDemoForLoopPoint();
