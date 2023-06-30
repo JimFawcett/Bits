@@ -1,0 +1,19 @@
+C:\github\JimFawcett\Bits\Cpp\Cpp_Iter
+> cd build
+C:\github\JimFawcett\Bits\Cpp\Cpp_Iter\build
+> cmake ..
+-- Selecting Windows SDK version 10.0.22000.0 to target Windows 10.0.22621.
+-- Configuring done
+-- Generating done
+-- Build files have been written to: C:/github/JimFawcett/Bits/Cpp/Cpp_Iter/build    
+C:\github\JimFawcett\Bits\Cpp\Cpp_Iter\build
+> cmake --build .
+MSBuild version 17.5.1+f6fdcf537 for .NET Framework
+
+  Checking Build System
+  Building Custom Rule C:/github/JimFawcett/Bits/Cpp/Cpp_Iter/CMakeLists.txt
+  Cpp_Iter.vcxproj -> C:\github\JimFawcett\Bits\Cpp\Cpp_Iter\build\Debug\Cpp_Iter.ex
+  e
+  Building Custom Rule C:/github/JimFawcett/Bits/Cpp/Cpp_Iter/CMakeLists.txt
+C:\github\JimFawcett\Bits\Cpp\Cpp_Iter\build
+>

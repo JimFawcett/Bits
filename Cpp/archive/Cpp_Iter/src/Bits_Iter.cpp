@@ -36,7 +36,6 @@ using pU = std::unique_ptr<T>;
 /*-----------------------------------------------
   demoIndexer(const std::vector<T>& v)
   - creates comma separated list
-  - not using iterator
 */
 template<typename T>
 void demoIndexerVec(const std::vector<T>& v) {
@@ -56,7 +55,6 @@ void executeDemoIndexerVec() {
   demoForLoopVec accepts std::vector<T> instances
   by constant reference.
   - uses range-for to display elements
-  - that uses iterator implicitly
 */
 template<typename T>
 void demoForLoopVec(const std::vector<T>& v) {
@@ -102,7 +100,7 @@ void executeDemoForLoopPoint() {
 /*-----------------------------------------------
   whilerPoint accepts PointN<T> instances
   by constant reference.
-  - explicit use of iterator to display PointN coordinates
+  - uses iterator to display PointN coordinates
   - creates comma separated list
 */
 template<typename T>
@@ -138,9 +136,6 @@ void demoWhiler(const C& c) {
   }
 }
 void executeDemoWhiler() {
-  std::cout << "\nexecute demoWhiler(c) with string";
-  auto s = std::string("a string");
-  demoWhiler(s);
   std::cout << "\nexecute demoWhiler(c) with vector";
   auto v = std::vector<int> { 1, 2, 3, 2, 1 };
   demoWhiler(v);
@@ -182,10 +177,10 @@ void demoWhilerGuarded(
   }
 }
 void executeDemoWhilerGuarded() {
-  std::cout << "\nexecute demoWhilerGuarded(c) with vector";
+  std::cout << "\nexecute demoWhiler(c) with vector";
   auto v = std::vector<int> { 1, 2, 3, 2, 1 };
   demoWhilerGuarded(v, "vector");
-  std::cout << "\nexecute demoWhiler(c) with double will fail";
+  std::cout << "\nexecute demoWhiler(c) with double";
   demoWhilerGuarded(3.5, "double");
 }
 /*-----------------------------------------------
@@ -221,8 +216,6 @@ void executeCollectionWithOperation() {
     std::cout << item + 1 << " "; 
   };
   collectionWithOperation(v, plus_one);
-  std::cout << "\nno side effect of plus_one:";
-  demoForLoopVec(v);
   /*------------------------------*/
   std::cout << "\nexecute collectionWithOperation(v, plus_one_mod)";
   std::cout << "\n  ";
@@ -232,7 +225,7 @@ void executeCollectionWithOperation() {
     std::cout << item << " "; 
   };
   collectionWithOperation(v, plus_one_mod);
-  std::cout << "\nside effect of plus_one_mod:";
+  std::cout << "\nside effect of mod:";
   demoForLoopVec(v);
 }
 /*-------------------------------------------------------------------
@@ -244,36 +237,174 @@ int main() {
 
     print("Demonstrate C++ Iteration\n");
 
-    showOp("collection specific iterations", nl);
     executeDemoIndexerVec();
     executeDemoForLoopVec();
     executeDemoForLoopPoint();
     executeDemoWhilerPoint();
-    print();
-
-    showOp("accepts any iterable collection", nl);
     executeDemoWhiler();
-    print();
-
-    showOp("detects non-iterable input at compile-time", nl);
     executeDemoWhilerGuarded();
-    print();
-
-    showOp("using lambda to operate on items", nl);
     executeCollectionWithOperation();
-    std::cout << "\n";
 
-    // #define TEST
-    #ifdef TEST
-    testFormat();
-    #endif
+    // showNote("std library types string and vector<T>");
+    // /* create and display std::string object */
+    // auto str = std::string("\"Wile E. Coyote\"");
+    // auto out = std::string("contents of str = ") + str;
+    // print(out);
+    // print("--- showType(str, \"str\"); ---");
+    // showType(str, "str", nl);
+
+    // showNote("Iterate over string");
+    // demoWhilerGuarded(out, "out");
+    // print();
+
+    // /* create and display std::vector<double> */
+    // auto vec = std::vector<double>{ 3.5, 3, 2.5, 2 };
+    // std::cout << vec;
+    // showOp("showType(vec, \"vec\");");
+    // showType(vec, "vec", nl);
+
+    // showOp("vec[2] = -2.5;");
+    // vec[2] = -2.5;
+    // std::cout << "\n  vec:" << vec;
+
+    // showOp("auto vec2 = vec : copy construction");
+    // /* copy construction */
+    // auto vec2 = vec;
+    // std::cout << "\n  vec2:" << vec2;
+    
+    // showOp("vec2[0] = 42;");
+    // vec2[0] = 42;
+    // std::cout << "\n  vec2: " << vec2;
+    // std::cout << "\n  vec: " << vec;
+
+    // showNote(
+    //   "Copy construction, auto vec2 = vec, creates\n    " 
+    //   "independent instance. So changing target vec2\n    "
+    //   "has no affect on source vec."
+    // );
+
+    // showNote(
+    //   "Iterate over vector"
+    // );
+    // showOp("function using range-for taking vector");
+    // demoForLoopVec(vec);
+    // showOp("function using iterator taking iterable container");
+    // demoWhiler(vec);
+    // print();
+
+    // showNote("user-defined type PointN<T>");
+
+    // PointN<double> p1(5);
+    // p1.show("p1");
+
+    // showNote(
+    //   "p1.coords() = std::vector<double>\n    "
+    //   "{ 1.0, -2.0, 3.0, 4.5, -42.0 }"
+    // );
+    // p1.coords() = std::vector<double>{1.0, -2.0, 3.0, 4.5, -42.0 };
+    // p1.show("p1");
+    // #pragma region
+    // showOp("showType(p1, \"p1\", nl);");
+    // showType(p1, "p1", nl);
+    // std::cout << "  p1.coords()[2] = " << p1.coords()[2] << "\n";
+    
+    // showNote(
+    //   "iterate over PointN<T>"
+    // );
+    // showOp("function using range-for taking Point");
+    // demoForLoopPoint(p1);
+    // showOp("function using iterator taking Point");
+    // demoWhilerPoint(p1);
+    // showOp("function using iterator taking iterable container");
+    // demoWhilerGuarded(p1, "p1");
+    // showOp("same function attempting to take non-iterable");
+    // struct S { int i; };
+    // auto s = S{3};
+    // demoWhilerGuarded(s, "s");
+    // print();
+
+    // showNote("heap-based string instance");
+  
+    // /* standard library type std::string */
+    // /* uses alias pU for std::unique_ptr, defined above */
+    // showOp(
+    //   "pU<std::string> "
+    //   "pStr(new std::string(\"\\\"Road Runner\\\"\")"
+    // );
+    // pU<std::string> pStr(new std::string("\"Road Runner\""));
+    // std::cout << "\n  pStr contents = " << *pStr << "\n";
+    
+    // showOp("showType(*pStr, \"*pStr\")");
+    // showType(*pStr, "*pStr", nl);
+
+    // /* std::unique_ptr<T> cannot be copied but can be moved */
+    // showOp("showType(move(pStr), \"pStr\")");
+    // showType(move(pStr), "pStr", nl);
+
+    // /* standard library type std::vector<T> */
+    // showNote("heap-based vector instance");
+    // showOp(
+    //   "pU<std::vector<double>>\n "
+    //   "     pVec(new std::vector<double>{ 1.5, 2.5, 3.5 });"
+    // );
+    // pU<std::vector<double>> pVec(
+    //   new std::vector<double>{ 1.5, 2.5, 3.5 }
+    // );
+    // print();
+    // showOp("iterating over *pVec");
+    // demoWhilerGuarded(*pVec, "*pVec");
+    // print();
+    // std::cout << "\n  *pVec = " << *pVec;
+    // showType(*pVec, "*pVec", nl);
+    // std::cout << "\n  pVec = " << pVec;
+    // showType(move(pVec), "move(pVec)", nl);
+
+    // /* custom point type */
+
+    // showNote("heap-based PointN instance");
+    
+    // showOp("pU<PointN<double>> pPointN(new PointN<double>(4))");
+    // pU<PointN<double>> pPointN(new PointN<double>(4));
+    // pPointN->show("*pPointN");
+    
+    // showOp(
+    //   "pPointN->coords() = \n"
+    //   "      std::vector<double>{ 1.0, 3.5, -2.0, 42.0 };"
+    // );
+    // pPointN->coords() = std::vector<double>{ 1.0, 3.5, -2.0, 42.0 };
+    // pPointN->show("*pPointN");
+    // std::cout << "\n  value of pPointN->coords()[1] is " 
+    //           << pPointN->coords()[1];
+    
+    // showOp("showType(*pPointN, \"*pPointN\");");
+    // showType(*pPointN, "*pPointN");
+    // print();
+
+    // showOp("iterating over *pPointN");
+    // demoWhilerGuarded(*pPointN, "*pPointN");
+    // print();
+
+    // showOp("showType(std::move(pPointN), \"pPointN\");");
+    // showType(std::move(pPointN), "pPointN");
+    // /* pPointN moved, so now invalid */
+    // print();
+
+    // showNote(
+    //   "Iterate over map, using Analysis::format"
+    // );
+
+    // std::map<std::string, int> map{{"zero", 0}, {"one", 1}};
+    // map.insert({"two", 2});
+    // std::cout << format(map, "map");
+
+    // // #define TEST
+    // #ifdef TEST
+    // testFormat();
+    // #endif
 
     print("\n  That's all Folks!\n\n");
 }
-/*-----------------------------------------------
-  Test Analysis formatting functions
-  - turned off by default
-*/
+
 void testFormat() {
 
   showNote("Test and demonstrate formatting functions");
