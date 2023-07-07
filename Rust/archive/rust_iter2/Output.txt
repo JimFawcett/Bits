@@ -1,0 +1,85 @@
+C:\github\JimFawcett\Bits\Rust\rust_iter
+> cargo run -q
+
+------------------------------
+  Demonstrate Rust Iteration
+------------------------------
+slice s = [1, 2, 3, 4, 3, 2, 1]
+s[2] = 3
+
+PointN { items: [0, 1, 0, -1, 0] }
+using PointN<i32>.iter
+0 1 0 -1 0
+using PointN<i32>.into_iter
+--- displaying iter type ---
+"iter", type: "alloc::vec::into_iter::IntoIter<i32>"
+0 1 0 -1 0
+using PointN<i32>.into_iter iter() with auto deref
+0 1 0 -1 0
+using PointN<i32>.iter()
+0 1 0 -1 0
+using PointN<i32>.iter_mut()
+0 2 0 -2 0
+PointN { items: [0, 2, 0, -2, 0] }
+
+vec_indexer displays Vec<T>
+1 6 2 5 3 4
+
+slice_indexer displays slice
+1 2 3 4 3 2 1
+slice_indexer displays vector
+5 4 3 2 1 0
+slice_indexer displays string bytes
+97 32 115 116 114 105 110 103
+
+sub_range_indexer displays slice
+3 4 3
+
+slice_looper displays slice
+1 2 3 4 3 2 1
+slice_looper displays vector
+5 4 3 2 1 0
+slice_looper displays PointN
+0 2 0 -3 0
+
+collection_looper displays slice:
+1, 2, 3, 4, 3, 2, 1
+collection_looper displays array
+1, 2, 3
+collection_looper displays VecDeque
+4, 3, 2, 0, -1
+collection_looper displays PointN
+0, 2, 0, -3, 0
+PointN { items: [0, 2, 0, -3, 0] }
+
+for_looper displays slice:
+1, 2, 3, 4, 3, 2, 1
+for_looper displays vector:
+1, 2, 3, 4, 3, 2, 1
+for_looper displays VecDeque
+4, 3, 2, 0, -1
+for_looper displays PointN<T>
+0, 2, 0, -3, 0
+
+ranger displays string:
+'a' ' ' 'l' 'i' 't' 'e' 'r' 'a' 'l' ' ' 's' 't' 'r' 'i' 'n' 'g'
+ranger displays values in range
+0 1 2 3 4 5 6 7 8 9
+ranger accepts Vector iterator
+1 2 3 4 3 2 1
+ranger accepts VecDeque iterator
+4 3 2 0 -1
+ranger accepts PointN<T> iterator
+0 2 0 -3 0
+
+demo_adapters<T, i32>(coll, 2) accepts array:
+[1, -1, 0, 2, 3, 4]
+[3, 4, 5, 6]
+demo_adapters<T, f64>(coll, 1.5) accepts PointN<f64>:
+PointN { items: [1.5, -2.0, 0.0, 1.1, 2.2] }
+[3.0, 2.6, 3.7]
+
+That's all folks!
+
+C:\github\JimFawcett\Bits\Rust\rust_iter
+>

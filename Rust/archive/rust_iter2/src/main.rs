@@ -75,6 +75,9 @@ use points_iter::*;
   functions defined below and used in main.  This file 
   builds collections and applies the various functions
   to illustrate how iterators are used.
+
+  It starts with a few quick indexing and iteration 
+  examples before applying the analysis functions.
 ---------------------------------------------------------*/
 
 use std::fmt::*;
@@ -128,40 +131,7 @@ fn execute_demo_vec_into_iterator_for() {
   println!();
 }
 /*---------------------------------------------------------*/
-fn demo_collection_into_iterator<C: Debug, I: Debug>(c:C) 
-  where C: IntoIterator<Item = I> + Clone
-{
-  for item in c {
-    print!("{:?} ", item);
-  }
-}
-fn execute_demo_collection_into_iterator() {
-  /*-- Vec -------------*/
-  print!("execute demo_collection_into_iterator for array");
-  let arr = [1i32, 2, 3, 2, 1];
-  print!("\n  ");
-  demo_collection_into_iterator(arr);
-  println!();
-  /*-- Vec -------------*/
-  print!("execute demo_collection_into_iterator for Vec");
-  let v = vec![1i32, 2, 3, 2, 1];
-  print!("\n  ");
-  demo_collection_into_iterator(v);
-  println!();
-  /*-- PointN ----------*/
-  print!("execute demo_collection_into_iterator for PointN");
-  let mut p = PointN::<f64>::new(5);
-  p[0] = 1.0;
-  p[1] = 1.5;
-  p[2] = 2.0;
-  p[3] = 1.5;
-  p[4] = 1.0;
-  print!("\n  ");
-  demo_collection_into_iterator(p);
-  println!();
-}
-/*---------------------------------------------------------*/
-fn demo_array_iter_for<T:Debug>(arr:&[T; 5]) {
+fn demo_array_iter_for<T:Debug>(arr:[T; 5]) {
   for item in arr.iter() {
     print!("{:?} ", item);
   }
@@ -171,7 +141,8 @@ fn execute_demo_array_iter_for() {
   let arr = [1.0f64, 2.0, 3.0, 4.0, 5.0];
   let iter = arr.iter();
   print!("\n  ");
-  demo_array_iter_for::<f64>(&arr);
+  demo_array_iter_for::<f64>(arr);
+  print!("\n  {:?}", arr); 
   println!();
 }
 /*---------------------------------------------------------*/
@@ -185,60 +156,7 @@ fn execute_demo_vec_iter_for() {
   let v = vec![1.0f64, 2.0, 3.0, 4.0, 5.0];
   print!("\n  ");
   demo_vec_iter_for(&v);
-  println!();
-}
-/*---------------------------------------------------------*/
-fn demo_collection_iter_for<T, F>(c:&mut dyn Iterator<Item = T>, f:F) 
-  where 
-    F: Fn(&T) -> ()
-{
-  for item in c {
-    f(&item);
-  }
-}
-fn execute_demo_collection_iter_for() {
-  
-  print!("execute demo_collection_iter_for with array");
-  let plus_one = |item: &&f64| { print!("{:?} ", item); };
-  let a = [1.0f64, 2.0, 3.0, 4.0, 5.0];
-  print!("\n  ");
-  demo_collection_iter_for(&mut a.iter(), plus_one);
-  println!();
-
-  print!("execute demo_collection_iter_for with slice");
-  let sl = &a[1..3];
-  print!("\n  ");
-  demo_collection_iter_for(&mut sl.iter(), plus_one);
-  println!();
-
-  print!("execute demo_collection_iter_for with Vec");
-  let v = vec![1.0f64, 2.0, 3.0, 4.0, 5.0];
-  print!("\n  ");
-  demo_collection_iter_for(&mut v.iter(), plus_one);
-  println!();
-  
-  print!("execute demo_collection_iter_for with Map");
-  let mut m = HashMap::<String, i32>::new();
-  m.insert("zero".to_owned(), 0);
-  m.insert("one".to_owned(), 1);
-  m.insert("two".to_owned(), 2);
-  m.insert("three".to_owned(), 3);
-  let plus_one2 = |item: &(&String, &mut i32)| { print!("{:?} ", item); };
-  print!("\n  ");
-  demo_collection_iter_for(&mut m.iter_mut(), plus_one2);
-  println!();
-
-  print!("execute demo_collection_iter_mut_for with PointN");
-  let mut p = PointN::<f64>::new(7);
-  p[0] = 1.0;
-  p[1] = 1.5;
-  p[2] = 2.0;
-  p[3] = 2.5;
-  p[4] = 3.0;
-  p[5] = 3.5;
-  p[6] = 4.0;
-  print!("\n  ");
-  demo_collection_iter_for(&mut p.iter(), plus_one);
+  print!("\n  {:?}", v);  // compiles because iter() doesn't move
   println!();
 }
 /*---------------------------------------------------------*/
@@ -277,14 +195,6 @@ fn execute_demo_collection_iter_mut_for() {
   print!("\n  output: {:?}", a);
   println!();
 
-  print!("execute demo_collection_iter_mut_for with slice");
-  let sl = &mut a[1..3];
-  let plus_one_mod = |item: &mut &mut f64| { **item += 1.0; };
-  print!("\n  input:  {:?}", sl);
-  demo_collection_iter_mut_for(&mut sl.iter_mut(), plus_one_mod);
-  print!("\n  output: {:?}", sl);
-  println!();
-
   print!("execute demo_collection_iter_mut_for with Vec");
   let mut v = vec![1.0f64, 2.0, 3.0, 4.0, 5.0];
   print!("\n  input:  {:?}", v);
@@ -298,26 +208,13 @@ fn execute_demo_collection_iter_mut_for() {
   m.insert("one".to_owned(), 1);
   m.insert("two".to_owned(), 2);
   m.insert("three".to_owned(), 3);
-  let plus_one2 = |item: &mut (&String, &mut i32)| { *item.1 += 1; };
+  let plus_one = |item: &mut (&String, &mut i32)| { *item.1 += 1; };
   print!("\n  input:\n    {:?}", m);
-  demo_collection_iter_mut_for(&mut m.iter_mut(), plus_one2);
+  demo_collection_iter_mut_for(&mut m.iter_mut(), plus_one);
   print!("\n  output:\n    {:?}", m);
   println!();
-
-  print!("execute demo_collection_iter_mut_for with PointN");
-  let mut p = PointN::<f64>::new(7);
-  p[0] = 1.0;
-  p[1] = 1.5;
-  p[2] = 2.0;
-  p[3] = 2.5;
-  p[4] = 3.0;
-  p[5] = 3.5;
-  p[6] = 4.0;
-  print!("\n  input:\n    {:?}", p);
-  demo_collection_iter_mut_for(&mut p.iter_mut(), plus_one);
-  print!("\n  output:\n    {:?}", p);
-  println!();
 }
+/*---------------------------------------------------------*/
 /*-----------------------------------------------
   demo_vec_indexer<T: Debug>(v:&Vec<T>)
 -------------------------------------------------
@@ -339,6 +236,43 @@ fn execute_demo_vec_indexer() {
   println!("execute demo_vec_indexer");
   let v = vec![1, 2, 3, 2, 1];
   demo_vec_indexer(&v);
+}
+/*-----------------------------------------------
+  Demo for loop that consumes vector
+  - implicit use of into_iterator
+  - consumes v
+*/
+fn demo_for<T:Debug>(v:Vec<T>) {
+  print!("  ");
+  for item in v {  // for is using into_iterator
+    print!("{:?} ", item);
+  }
+  // next line won't compile - v was moved, e.g., consumed
+  // println!("{:?}", v);
+  println!();
+}
+fn execute_demo_for() {
+  println!("execute demo_for");
+  let v = vec![1, 2, 3, 2, 1];
+  demo_for(v);
+}
+/*-----------------------------------------------
+  Demo for loop that does not consume vector
+  - uses vector method iter() which returns
+    iterator
+*/
+fn demo_for_ref<T:Debug>(rv:&Vec<T>) {
+  print!("  ");
+  for item in rv.iter() {
+    print!("{:?} ", item);
+  }
+  // next line compiles - rv was not moved
+  println!("{:?}", rv);
+}
+fn execute_demo_for_ref() {
+  println!("execute demo_for_ref");
+  let v = vec![1, 2, 3, 2, 1];
+  demo_for_ref(&v);
 }
 /*-----------------------------------------------
   demo_slice_indexer<T:Debug>(s:&[T])
@@ -449,46 +383,46 @@ fn execute_demo_slice_looper() {
   clone, collect, and loop.
   https://stackoverflow.com/questions/49962611/why-does-str-not-implement-intoiterator
 */
-// fn demo_collection_looper<C: Debug, I: Debug>(c:&C) 
-// where C: IntoIterator<Item = I> + Clone
-// {
-//   print!("\n  ");
-//   let cc = c.clone();
-//   let iter = cc.into_iter();
-//   /* convert c into Vec to get len() method */
-//   let v:Vec<_> = iter.collect();
-//   let mut iter = v.iter();  // shadowing
-//   let mut count = 0;
-//   loop {
-//       let item = iter.next();
-//       match item {
-//           Some(val) => print!("{val:?}"),
-//           None => { println!(); break; }
-//       }
-//       if count < v.len() - 1 {
-//           print!(", ");
-//       }
-//       count += 1;
-//   }
-// }
-// fn execute_demo_collection_looper() {
-//   print!("execute demo_collection_looper with slice");
-//   let s = [1, 2, 3, 4, 3, 2, 1];
-//   demo_collection_looper(&s);
-//   print!("execute demo_collection_looper with vector");
-//   let v = vec![1, 2, 3, 4, 3, 2, 1];
-//   demo_collection_looper(&v);
-//   print!("execute demo_collection_looper with PointN");
-//   let mut p = PointN::<i32>::new(0usize);
-//   p.push(1);
-//   p.push(2);
-//   p.push(3);
-//   p.push(4);
-//   p.push(3);
-//   p.push(2);
-//   p.push(1);
-//   demo_collection_looper(&p);
-// }
+fn demo_collection_looper<C: Debug, I: Debug>(c:&C) 
+where C: IntoIterator<Item = I> + Clone
+{
+  print!("\n  ");
+  let cc = c.clone();
+  let iter = cc.into_iter();
+  /* convert c into Vec to get len() method */
+  let v:Vec<_> = iter.collect();
+  let mut iter = v.iter();  // shadowing
+  let mut count = 0;
+  loop {
+      let item = iter.next();
+      match item {
+          Some(val) => print!("{val:?}"),
+          None => { println!(); break; }
+      }
+      if count < v.len() - 1 {
+          print!(", ");
+      }
+      count += 1;
+  }
+}
+fn execute_demo_collection_looper() {
+  print!("execute demo_collection_looper with slice");
+  let s = [1, 2, 3, 4, 3, 2, 1];
+  demo_collection_looper(&s);
+  print!("execute demo_collection_looper with vector");
+  let v = vec![1, 2, 3, 4, 3, 2, 1];
+  demo_collection_looper(&v);
+  print!("execute demo_collection_looper with PointN");
+  let mut p = PointN::<i32>::new(0usize);
+  p.push(1);
+  p.push(2);
+  p.push(3);
+  p.push(4);
+  p.push(3);
+  p.push(2);
+  p.push(1);
+  demo_collection_looper(&p);
+}
 /*----------------------------------------------- 
   for_looper<C: Debug, I: Debug>(c:&C) 
 -------------------------------------------------
@@ -691,29 +625,189 @@ fn execute_collection_with_operation() {
   print!("no side effects - same as original:");
   demo_slice_looper(&p.items);
 }
+/*-----------------------------------------------
+fn demo_collection_looper<C: Debug, I: Debug>(c:&C) 
+where C: IntoIterator<Item = I> + Clone
+*/
+fn demo_collection_with_mod_operation<T, F>(iter:&mut dyn Iterator<Item=T>, mut f: F)
+  where F: FnMut(&mut T)
+{
+  for mut item in iter {
+    f(&mut item);
+  }
+}
+fn execute_demo_collection_with_mod_operation() {
+  /*-- plus_one_mod on slice --*/
+  print!("execute demo_collection_with_mod_operation on slice");
+  let mut sl = [1i32, 2, 3, 2, 1];
+  let plus_one_mod = |item: &mut &mut i32| { **item += 1; print!("{:?} ", item); };
+  print!("\n  ");
+  demo_collection_with_mod_operation(&mut sl.iter_mut(), plus_one_mod);
+  println!();
+}
+
+// fn collection_with_mod_operation<I, F>(iter:&mut I, mut f:F)
+//   where I: Iterator + Debug, F: FnMut(&mut I::Item) -> ()
+// {
+//   print!("\n  ");
+//   for mut item in iter {
+//     f(&mut item);
+//   }
+// }
+// fn execute_collection_with_mod_operation() {
+//   /*-- plus_one_mod on Vec ----------*/
+//   print!("execute collection_with_operation plus_one_mod on Vec");
+//   let mut v = vec![1, 2, 3, 2, 1];
+//   let mut plus_one_mod = |item:&mut &mut i32| {
+//     **item = **item + 1;
+//     print!("{} ", item);
+//   };
+//   collection_with_mod_operation(&mut v.iter(), plus_one_mod);
+//   println!();
+//   print!("no side effects - original:");
+//   demo_slice_looper(&v);
+//   /*-- plus_one on PointN -----------*/
+//   print!("execute collection_with_operation plus_one on PointN");
+//   let mut p = PointN::<f64>::new(0);
+//   //let p.items = vec![1.0, 1.5, 2.0, 1.5, 1.0];
+//   p.push(1.0);
+//   p.push(1.5);
+//   p.push(2.0);
+//   p.push(1.5);
+//   p.push(1.0);
+//   let plus_one_mod = |item:&f64| {
+//     let val = *item + 1.0;
+//     print!("{:?} ", item);
+//   };
+//   collection_with_operation(&mut p.iter(), plus_one_mod);
+//   println!();
+//   print!("no side effects - same as original:");
+// }
+//   demo_slice_looper(&p.items);
+//   /*-- square on PointN -------------*/
+//   print!("execute collection_with_operation square on PointN");
+//   let mut p = PointN::<f64>::new(0);
+//   //let p.items = vec![1.0, 1.5, 2.0, 1.5, 1.0];
+//   p.push(1.0);
+//   p.push(1.5);
+//   p.push(2.0);
+//   p.push(1.5);
+//   p.push(1.0);
+//   let square = |item:&f64| {
+//     let val = item * item;
+//     print!("{val:?} ");
+//   };
+//   collection_with_operation(&mut p.iter(), square);
+//   println!();
+//   print!("no side effects - same as original:");
+  // demo_slice_looper(&p.items);
+  // /*-- square_mod on PointN ---------*/
+  // print!("execute collection_with_operation square_mod on PointN");
+  // let mut p = PointN::<f64>::new(0);
+  // //let p.items = vec![1.0, 1.5, 2.0, 1.5, 1.0];
+  // p.push(1.0);
+  // p.push(1.5);
+  // p.push(2.0);
+  // p.push(1.5);
+  // p.push(1.0);
+  // let square_mod = |item:&mut f64| {
+  //   let item = (*item) * (*item);
+  //   print!("{item:?} ");
+  // };
+  // let q = p.clone();
+  // collection_with_mod_operation(&mut p.iter(), square_mod);
+  // println!();
+  // print!("side effects - original was:");
+  // demo_slice_looper(&q.items);
+// }
+// fn collection_with_operation<C>(iter:C, f:impl Fn(C::Item))
+//   where 
+//     C: Iterator,
+//     C::Item: std::ops::Add<Output = C::Item> + std::ops::Mul<Output = C::Item> +
+//       PartialOrd + PartialEq + Debug + Copy
+// {
+//   // print!("  ");
+//   for mut item in iter {
+//       f(item)
+//   }
+//   println!();
+// }
+// fn execute_collection_with_operation() {
+//   /*-- plus_one on Vec --------------*/
+//   print!("execute collection_with_operation using plus_one() on Vec");
+//   let v = vec![1, 2, 3, 2, 1];
+//   let plus_one = |item:&i32|
+//   { 
+//     print!("{} ", item + 1i32); 
+//   };
+//   print!("\n  ");
+//   let mut iter = (&v).iter();
+//   collection_with_operation(iter, plus_one);
+//   print!("no side effects - original is:");
+//   demo_slice_looper(&v);
+//   /*-- plus_one on PointN -----------*/
+//   print!("execute collection_with_operation using plus_one on PointN");
+//   let mut p = PointN::<f64>::new(5);
+//   p[0] = 1.0;
+//   p[1] = 1.5;
+//   p[2] = 2.0;
+//   p[3] = 1.5;
+//   p[4] = 1.0;
+//   let iter = p.iter();
+//   let plus_one = |item:&f64|
+//   { 
+//     print!("{:?} ", item + 1.0); 
+//   };
+//   print!("\n  ");
+//   let mut iter = p.iter();
+//   collection_with_operation(&mut iter, plus_one);
+//   print!("no side effects - original is:");
+//   demo_slice_looper(&p.items);
+//  /*-- square on PointN -------------*/
+//   print!("execute collection_with_operations using square on PointN");
+//   print!("\n  ");
+//   let mut iter = p.iter();
+//   let square = |item:&f64| {
+//     print!("{:?} ", item*item);
+//   };
+//   collection_with_operation(&mut iter, square);
+//   print!("no side effects - original is:");
+//   demo_slice_looper(&p.items);
+//  /*-- square_mod on PointN ---------*/
+//  print!("execute collection_with_operations using square_mod on PointN");
+//  print!("\n  ");
+//  let mut iter = p.iter();
+//  let square_mod = |item:&mut f64| {
+//    *item = (*item) * (*item);
+//    print!("{:?} ", item);
+//  };
+//  collection_with_operation(&mut iter, square_mod);
+//  print!("side effects - original is:");
+//  demo_slice_looper(&p.items);
+// }
 /*-- Begin demonstrations ---------------------*/
 
 fn main() {
   analysis_iter::show_label("Demonstrate Rust Iteration",30);
 
-  analysis_iter::show_op("into_iterator()");
   execute_demo_array_into_iterator_loop();
   execute_demo_array_into_iterator_for();
-  execute_demo_vec_into_iterator_for();
-  execute_demo_collection_into_iterator();
-  println!();
-  analysis_iter::show_op("iter()");
   execute_demo_array_iter_for();
+  execute_demo_vec_into_iterator_for();
   execute_demo_vec_iter_for();
-  execute_demo_collection_iter_for();
-  println!();
-
-  analysis_iter::show_op("iter_mut()");
   execute_demo_vec_iter_mut_for();
   execute_demo_collection_iter_mut_for();
-  println!();
-
-  analysis_iter::show_op("iteration adapters");
+  // execute_demo_vec_indexer();
+  // execute_demo_for();
+  // execute_demo_for_ref();
+  // execute_demo_slice_indexer();
+  // execute_demo_sub_range_indexer();
+  // execute_demo_slice_looper();
+  // execute_demo_collection_looper();
+  // execute_demo_for_looper();
+  // execute_demo_ranger();
+  // execute_collection_with_operation();
+  execute_demo_collection_with_mod_operation();
   execute_demo_adapters();
 
   println!("\nThat's all folks!\n");

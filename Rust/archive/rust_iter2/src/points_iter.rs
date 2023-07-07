@@ -50,6 +50,11 @@ impl<T> PointN<T>
         self.items.iter_mut()
     }
 }
+// impl<&T> PointN<T> 
+//   where &T:Debug + Default + Clone
+// {
+
+// }
 /*-- implements const indexer -----------------*/
 impl<T:Debug, Idx> std::ops::Index<Idx> for PointN<T> 
     where
@@ -72,6 +77,17 @@ impl<T, Idx> std::ops::IndexMut<Idx> for PointN<T>
         &mut self.items[index]
     }
 }
+// /*-- IntoIterator trait for &PointN<T> ---------*/
+// impl<'a, T> IntoIterator for &'a PointN<T>
+//     where T:Debug + Default + Clone
+// {
+//     type Item = T;
+//     type IntoIter = std::vec::IntoIter<Self::Item>;
+//     fn into_iter(self) -> Self::IntoIter {
+//         let ccln = self.items.clone();
+//         ccln.into_iter()
+//     }
+// }
 /*-- IntoIterator trait for PointN<T> ----------*/
 impl<T> IntoIterator for PointN<T>
     where T:Debug + Default + Clone

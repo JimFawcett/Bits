@@ -1,0 +1,16 @@
+fn modify_collection<T, F>(collection: &mut dyn Iterator<Item = T>, mut modifier: F)
+where
+    F: FnMut(&mut T),
+{
+    collection.for_each(|mut item| modifier(&mut item));
+}
+fn main() {
+    let mut numbers = vec![1, 2, 3, 4, 5];
+
+    modify_collection(&mut numbers.iter_mut(), |item| {
+        **item *= 2;
+    });
+
+    println!("{:?}", numbers); // Prints: [2, 4, 6, 8, 10]
+}
+
