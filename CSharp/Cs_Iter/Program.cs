@@ -50,8 +50,10 @@ namespace CSharpIter
       }
       Display.Println("");
     }
-    static void executeListIndexer<T>(List<T> lst) {
+    static void executeListIndexer() {
+      Console.WriteLine("execute ListIndexer(lint)");
       List<int> lint = new List<int> { 1, 2, 3, 4, 3, 2 };
+      ListIndexer(lint);
     }
     /*-------------------------------------------
       void GenericIndexer<T>(List<T>)
@@ -94,6 +96,7 @@ namespace CSharpIter
     {
       Display.ShowLabel(" Demonstrate C# iteration");
 
+      executeListIndexer();
       /*-- create List, an enumerable collection --*/
       
       Display.ShowOp("new list");
