@@ -31,6 +31,7 @@ Standard methods for creating iterators:
 - iter()      : iterates over &T
 - iter_mut()  : iterates over &mut T
 - into_iter() : iterates over T, consumes collection
+
 //https://doc.rust-lang.org/std/iter/
 
 Closure traits (used with modifying iterators):
@@ -55,12 +56,18 @@ pub trait Fn<args> : FnMut<Args>
 //https://doc.rust-lang.org/stable/std/ops/trait.Fn.html#
 
 -----------------------------------------------*/
+/*-----------------------------------------------
+Note:
+Find all Bits code, including this in
+https://github.com/JimFawcett/Bits
+You can clone the repo from this link.
+-----------------------------------------------*/
 #![allow(dead_code)]
 #![allow(unused_variables)]
 
 /*-----------------------------------------------
-  - Don't need use for analysis_iter as it only 
-    contains functions.
+  - Don't need use for analysis_iter, below, 
+    as it only contains functions.
   - Do need for points_iter as it defines a type
     to be instantiated.
 */
@@ -70,15 +77,15 @@ mod analysis_iter;
 mod points_iter;
 use points_iter::*;
 
+use std::fmt::*;
+use std::cmp::*;
+
 /*---------------------------------------------------------
   Use of Rust iterators is encapsulated in a sequence of
   functions defined below and used in main.  This file 
   builds collections and applies the various functions
   to illustrate how iterators are used.
 ---------------------------------------------------------*/
-
-use std::fmt::*;
-use std::cmp::*;
 
 /*---------------------------------------------------------*/
 fn demo_array_into_iterator_loop<T:Debug>(arr:[T; 5]) {
@@ -127,12 +134,32 @@ fn execute_demo_vec_into_iterator_for() {
   //print!("\n  {:?}", v);  // won't compile because v moved
   println!();
 }
-/*---------------------------------------------------------*/
+/*---------------------------------------------------------
+  demo_collection_into_iterator
+  - prints comma separated list of Collection<I>'s 
+    items.
+  - where clause requires C to implement 
+    IntoIterator trait. 
+  - C is type of collection, I is type of C's items
+  - Accepts any collection type that implements
+    IntoIterator trait, e.g., array, slice, Vector, ...
+  - collection_looper can't accept String or &str
+    because String does not implement IntoIterator
+    - That's because String provides two iterators,
+      chars() to iterate multibyte chars and bytes()
+      to iterate over bytes.
+  https://stackoverflow.com/questions/49962611/why-does-str-not-implement-intoiterator
+*/
 fn demo_collection_into_iterator<C: Debug, I: Debug>(c:C) 
   where C: IntoIterator<Item = I> + Clone
 {
-  for item in c {
-    print!("{:?} ", item);
+  /* generate comma separated list */
+  let mut iter = c.into_iter();
+  if let Some(item) = iter.next() {
+    print!("{:?}", item);  // print first with no leading comma
+  }
+  for item in iter {
+    print!(", {:?}", item);
   }
 }
 fn execute_demo_collection_into_iterator() {
@@ -171,7 +198,7 @@ fn execute_demo_array_iter_for() {
   let arr = [1.0f64, 2.0, 3.0, 4.0, 5.0];
   let iter = arr.iter();
   print!("\n  ");
-  demo_array_iter_for::<f64>(&arr);
+  demo_array_iter_for::<f64>(&arr);  // ::<f64> optional here
   println!();
 }
 /*---------------------------------------------------------*/
@@ -319,6 +346,59 @@ fn execute_demo_collection_iter_mut_for() {
   println!();
 }
 /*-----------------------------------------------
+  demo_adapters<C, I>(c: C, i: I) -> Vec<I>
+-------------------------------------------------
+- iterates over collection C,
+  removes non-positive items, adds second 
+  argument i and collects into vector.
+-------------------------------------------------
+- adapters accept an iterator and return a
+  revised iterator, as discussed below.
+- adapter filter builds iterator over elements
+  that satisfy a predicate defined by closure
+- map builds iterator that modifies elements
+  according to a closure.
+- Adapter collect runs iterator and collects 
+  into destination collection, e.g., return type.
+*/
+fn demo_adapters<C, I>(c: C, i: I) -> Vec<I>
+where
+  C: IntoIterator<Item = I> + Debug + Clone,
+  I: std::ops::Add<Output = I> + std::ops::Mul<Output = I>
+      + PartialOrd + PartialEq + Debug + Default + Copy,
+{
+  let def = I::default();  // expect value is zero
+  c.into_iter()
+      .filter(|item| item > &def)
+      .map(|item| item + i)
+      .collect()
+}
+fn execute_demo_adapters() {
+  println!("execute demo_adapters<T, i32>(coll, 2) with array:");
+  let a = [1, -1, 0, 2, 3, 4];
+  println!("{:?} ", &a);
+  let vo = demo_adapters(a, 2);
+  println!("{:?} ", &vo);
+
+  println!("execute demo_adapters<T, f64>(coll, 1.5) with PointN<f64>:");
+  let mut pad = PointN::<f64>::new(5);
+  pad[0] = 1.5;
+  pad[1] = -2.0;
+  pad[2] = 0.0;
+  pad[3] = 1.1;
+  pad[4] = 2.2;
+  // this assignment works only in local module
+  // pad.items = vec![1.5, -2.0, 0.0, 1.1, 2.2];
+  println!("{:?} ", pad);
+  let vo = demo_adapters(pad, 1.5);
+  println!("{:?} ", &vo);
+}
+/*-----------------------------------------------
+  The functions below have some related details
+  that are worth saving, but can be skipped for
+  first study.
+*/
+/*-----------------------------------------------
   demo_vec_indexer<T: Debug>(v:&Vec<T>)
 -------------------------------------------------
 Simplest case - displays Vector with generic
@@ -430,65 +510,6 @@ fn execute_demo_slice_looper() {
   let s = [1, 2, 3, 4, 3, 2, 1];
   demo_slice_looper(&s);
 }
-/*-----------------------------------------------
-  collection_looper<C:Debug, I:Debug>(c:&C)
--------------------------------------------------
-- prints comma separated list of Collection<I>'s 
-  items.
-- where clause requires C to implement 
-  IntoIterator trait. 
-- C is type of collection, I is type of C's items
-- Accepts any collection type that implements
-  IntoIterator trait, e.g., array, slice, Vector, ...
-- collection_looper can't accept String or &str
-  because String does not implement IntoIterator
-- That's because String provides two iterators,
-  chars() to iterate multibyte chars and bytes()
-  to iterate over bytes.
-- Not very efficient - uses three order N operations,
-  clone, collect, and loop.
-  https://stackoverflow.com/questions/49962611/why-does-str-not-implement-intoiterator
-*/
-// fn demo_collection_looper<C: Debug, I: Debug>(c:&C) 
-// where C: IntoIterator<Item = I> + Clone
-// {
-//   print!("\n  ");
-//   let cc = c.clone();
-//   let iter = cc.into_iter();
-//   /* convert c into Vec to get len() method */
-//   let v:Vec<_> = iter.collect();
-//   let mut iter = v.iter();  // shadowing
-//   let mut count = 0;
-//   loop {
-//       let item = iter.next();
-//       match item {
-//           Some(val) => print!("{val:?}"),
-//           None => { println!(); break; }
-//       }
-//       if count < v.len() - 1 {
-//           print!(", ");
-//       }
-//       count += 1;
-//   }
-// }
-// fn execute_demo_collection_looper() {
-//   print!("execute demo_collection_looper with slice");
-//   let s = [1, 2, 3, 4, 3, 2, 1];
-//   demo_collection_looper(&s);
-//   print!("execute demo_collection_looper with vector");
-//   let v = vec![1, 2, 3, 4, 3, 2, 1];
-//   demo_collection_looper(&v);
-//   print!("execute demo_collection_looper with PointN");
-//   let mut p = PointN::<i32>::new(0usize);
-//   p.push(1);
-//   p.push(2);
-//   p.push(3);
-//   p.push(4);
-//   p.push(3);
-//   p.push(2);
-//   p.push(1);
-//   demo_collection_looper(&p);
-// }
 /*----------------------------------------------- 
   for_looper<C: Debug, I: Debug>(c:&C) 
 -------------------------------------------------
@@ -586,54 +607,6 @@ fn execute_demo_ranger() {
   demo_ranger(&mut p.iter());
 }
 /*-----------------------------------------------
-  demo_adapters<C, I>(c: C, i: I) -> Vec<I>
--------------------------------------------------
-- iterates over collection C,
-  removes non-positive items, adds second 
-  argument i and collects into vector.
--------------------------------------------------
-- adapters accept an iterator and return a
-  revised iterator, as discussed below.
-- adapter filter builds iterator over elements
-  that satisfy a predicate defined by closure
-- map builds iterator that modifies elements
-  according to a closure.
-- Adapter collect runs iterator and collects 
-  into Vec<I>.
-*/
-fn demo_adapters<C, I>(c: C, i: I) -> Vec<I>
-where
-  C: IntoIterator<Item = I> + Debug + Clone,
-  I: std::ops::Add<Output = I> + std::ops::Mul<Output = I>
-      + PartialOrd + PartialEq + Debug + Default + Copy,
-{
-  let def = I::default();  // expect value is zero
-  c.into_iter()
-      .filter(|item| item > &def)
-      .map(|item| item + i)
-      .collect()
-}
-fn execute_demo_adapters() {
-  println!("execute demo_adapters<T, i32>(coll, 2) with array:");
-  let a = [1, -1, 0, 2, 3, 4];
-  println!("{:?} ", &a);
-  let vo = demo_adapters(a, 2);
-  println!("{:?} ", &vo);
-
-  println!("execute demo_adapters<T, f64>(coll, 1.5) with PointN<f64>:");
-  let mut pad = PointN::<f64>::new(5);
-  pad[0] = 1.5;
-  pad[1] = -2.0;
-  pad[2] = 0.0;
-  pad[3] = 1.1;
-  pad[4] = 2.2;
-  // this assignment works only in local module
-  // pad.items = vec![1.5, -2.0, 0.0, 1.1, 2.2];
-  println!("{:?} ", pad);
-  let vo = demo_adapters(pad, 1.5);
-  println!("{:?} ", &vo);
-}
-/*-----------------------------------------------
 fn demo_collection_looper<C: Debug, I: Debug>(c:&C) 
 where C: IntoIterator<Item = I> + Clone
 */
@@ -691,6 +664,17 @@ fn execute_collection_with_operation() {
   print!("no side effects - same as original:");
   demo_slice_looper(&p.items);
 }
+
+fn test() {
+  println!();
+  analysis_iter::show_note("Testing related operations");
+  execute_demo_vec_indexer();
+  execute_demo_sub_range_indexer();
+  execute_demo_slice_looper();
+  execute_demo_for_looper();
+  execute_demo_ranger();
+  execute_collection_with_operation();
+}
 /*-- Begin demonstrations ---------------------*/
 
 fn main() {
@@ -716,5 +700,11 @@ fn main() {
   analysis_iter::show_op("iteration adapters");
   execute_demo_adapters();
 
+  const DOTEST:bool = false;
+  if DOTEST {
+    test();
+  }
+
   println!("\nThat's all folks!\n");
+
 }
