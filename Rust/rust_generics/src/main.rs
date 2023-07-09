@@ -3,53 +3,83 @@
 
 /*-------------------------------------------------------------------
   rust_generics::main.rs
-  - Demonstrates creation and use of generic Rust functions and structs
-  - Rust uses struct instead of class to create objects
+  ----------------------
+  Generics allow you to implement onec collections and algorithms
+  that work for many element types.
+  This code:
+  - Demonstrates creation and use of generic Rust types and functions
+  - Rust uses struct instead of class to create instances
 */
 mod analysis_generic;     // identify module source file
 use analysis_generic::*;  // import public functions and types
 mod points_generic;
 use points_generic::*;
+mod stats;
+use stats::*;
+
 use std::{fmt::*, collections::HashMap};
 
 /*---------------------------------------------------------
-  Test: user-defined generic type
+  Demo: user-defined generic type
+  - Not very useful except as a demonstration of how
+    to create a generic type.
+  - Demo instances hold a single value of T
+  - Generic parameter T is required to implement traits
+    Debug   - supports using debug format {:?}, 
+    Default - supports using a default value, T:default(),
+    Clone   - implements a copy of the physical type
+  - Specified traits, like those above, are often called
+    bounds because they limit the types that can be used
+    as function and method arguments. 
 */
 #[derive(Debug, Clone)]  // compiler generated code
-struct Test<T> 
+struct Demo<T>
   where T: Debug + Default + Clone
 {
   datum: T,
 }
-impl<T> Test<T>
+impl<T> Demo<T>
   where T: Debug + Default + Clone
 {
+  /* construct new instance with datum = d */
   fn new(d:T) -> Self {
-    Test::<T> {
+    Demo::<T> {
       datum: d,
     }
   }
+  /* construct new instance with default data value */
   fn default_new() -> Self {
-    Test::<T> {
+    Demo::<T> {
       datum: T::default(),
     }
   }
   /*  
-    As show, value() is equivalent to making datum public.
-    However value method supports code to modify the
-    result.
+    As shown, value() is equivalent to making datum public.
+    However value method supports adding code to modify the
+    return value.
   */
   fn value(&mut self) -> &mut T {
     &mut self.datum
   }
+  /* print representation of an instance */
   fn show(&self) {
-    println!("  Test {{ {:?} }}", self.datum);
+    println!("  Demo {{ {:?} }}", self.datum);
   }
 }
 
-fn demo_generic_types() {
-  
-  show_note("demo_generic_types");
+/*---------------------------------------------------------
+  We will demonstrate a generic type PointN<T>, defined
+  in the module points_generic.rs.  PointN<T> implements:
+  - methods supporting immutable and mutable indexing.
+  - methods to convert a PointN<T> instance into a slice
+    &T[m..n].
+  We will also demonstrate a generic type Stats<T>,
+  defined in the module stats.rs
+---------------------------------------------------------*/
+
+fn demo_std_generic_types() {
+
+  show_note("demo standard generic types");
   println!();
 
   show_op("arrays: [T; N]");
@@ -89,28 +119,55 @@ fn demo_generic_types() {
   m.insert("three", 3);
   println!("  maps: HashMap<&str, i32>");
   println!("    {:?}\n", m);
+}
 
-  show_op("user-defined types");
+fn demo_user_defined_generic_types() {
+  
+  show_note("demo user defined generic types");
   println!();
-  let mut t = Test::<f64>::new(3.1415927);
+
+  show_op("Demo<f64>");
+  println!();
+  let mut t = Demo::<f64>::new(3.1415927);
   t.show();
   *t.value() = 42.0;
   t.show();
   let tc = t.clone();
   tc.show();
   println!();
-  let mut p = PointN::<i32>::new(5)
+
+  show_op("PointN<i32>");
+  println!();
+
+  let mut p = PointN::<i32>::new(0)
          .init(vec![1, 2, 3, 2, 1]);
   p.show("p", 2, 12);
   *p.coors() = vec![1, 0, -1, 0, 1];
   p.show("p", 2, 12);
+  println!();
+
+  show_op("Stats<T>");
+  println!();
+
+  let s = Stats::<f64>::new(vec![1.5, 2.5, 3.0, -1.25, 0.5]);
+  println!("  {:?}", s);
+  println!("  max: {:?}", s.max());
+  println!("  min: {:?}", s.min());
+  println!("  sum: {:?}", s.sum());
+  println!("  avg: {:?}", s.avg());
+  
 }
 /*---------------------------------------------------------
+  generic functions
+-----------------------------------------------------------
   show_type(_t:&T, nm:&str)
   - Show input's call name and type
   - doesn't consume input
   - show_type is generic function with Debug bound.
     Using format "{:?}" requires Debug.
+  - Underscore _t used in first argument tells the
+    compiler that _t will not be used and don't warn
+    about that.
 */
 pub fn show_type<T:Debug>(_t: &T, nm: &str) {
   let typename = std::any::type_name::<T>();
@@ -132,9 +189,11 @@ fn demo_indexer<T: Debug + Display>(nm:&str, s:&[T])
       print!(", {:?}", s[i]);
   }
   println!(" ]");
-  /*---------------------------
-    clippy prefers no indexing:
-    for item in s.iter().take(max) {
+  /*---------------------------------------------
+    The code above is not idiomatic Rust.
+    Rust style prefers using iterators over indexing
+    like this:
+    for item in s.iter() {
       print!("{item} ");
     }
   */
@@ -165,9 +224,11 @@ fn demo_generic_functions() {
 */
 fn main() {
 
-  show_label("demonstrate generic functions and types", 50);
+  show_label("generic functions and types", 50);
 
-  demo_generic_types();
+  demo_std_generic_types();
+  demo_user_defined_generic_types();
+
   demo_generic_functions();
   // show_label(
   //   "std::library objects, string and vector<T>", 46

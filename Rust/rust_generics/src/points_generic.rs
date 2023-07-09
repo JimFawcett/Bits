@@ -30,7 +30,10 @@ T: Debug + Default + Clone
       coor: vec![T::default(); n],
     }
   }
-  /*-- moves new coordinate vector into coor --*/
+  /*------------------------------------------------------- 
+    init(...) moves new coordinate vector into coor and
+    overrides any specified n supplied in new(n: usize) 
+  -------------------------------------------------------*/
   pub fn init(mut self, coord: Vec<T>) -> PointN<T> {
     self.coor = coord;
     self
