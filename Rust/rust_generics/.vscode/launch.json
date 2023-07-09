@@ -31,15 +31,15 @@
         {
             "type": "lldb",
             "request": "launch",
-            "name": "Debug executable 'rust_hello_objects'",
+            "name": "Debug executable 'rust_generics'",
             "cargo": {
                 "args": [
                     "build",
                     "--bin=rust_hello_objects",
-                    "--package=rust_hello_objects"
+                    "--package=rust_generics"
                 ],
                 "filter": {
-                    "name": "rust_hello_objects",
+                    "name": "rust_generics",
                     "kind": "bin"
                 }
             },
@@ -57,11 +57,11 @@
                 "args": [
                     "test",
                     "--no-run",
-                    "--bin=rust_hello_objects",
-                    "--package=rust_hello_objects"
+                    "--bin=rust_generics",
+                    "--package=rust_generics"
                 ],
                 "filter": {
-                    "name": "rust_hello_objects",
+                    "name": "rust_generics",
                     "kind": "bin"
                 }
             },
