@@ -147,7 +147,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "rust_hello_objects"
+name = "rust_objects"
 version = "0.1.0"
 dependencies = [
  "chrono",

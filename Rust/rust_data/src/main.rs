@@ -1,7 +1,7 @@
 #![allow(unused_mut)]
 #![allow(clippy::approx_constant)]
 
-/* rust_hello_data::main.rs */
+/* rust_data::main.rs */
 /*
   Static Data Types:
     bool, char

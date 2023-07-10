@@ -7,15 +7,15 @@
         {
             "type": "lldb",
             "request": "launch",
-            "name": "Debug executable 'rust_hello_data'",
+            "name": "Debug executable 'rust_data'",
             "cargo": {
                 "args": [
                     "build",
-                    "--bin=rust_hello_data",
-                    "--package=rust_hello_data"
+                    "--bin=rust_data",
+                    "--package=rust_data"
                 ],
                 "filter": {
-                    "name": "rust_hello_data",
+                    "name": "rust_data",
                     "kind": "bin"
                 }
             },
@@ -25,16 +25,16 @@
         {
             "type": "lldb",
             "request": "launch",
-            "name": "Debug unit tests in executable 'rust_hello_data'",
+            "name": "Debug unit tests in executable 'rust_data'",
             "cargo": {
                 "args": [
                     "test",
                     "--no-run",
-                    "--bin=rust_hello_data",
-                    "--package=rust_hello_data"
+                    "--bin=rust_data",
+                    "--package=rust_data"
                 ],
                 "filter": {
-                    "name": "rust_hello_data",
+                    "name": "rust_data",
                     "kind": "bin"
                 }
             },

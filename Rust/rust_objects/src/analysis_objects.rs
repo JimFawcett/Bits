@@ -17,7 +17,7 @@ use std::fmt::*;
 */
 pub fn show_type<T:Debug>(_t: &T, nm: &str) {
     let typename = std::any::type_name::<T>();
-    println!("call name: {nm:?}, type: {typename:?}");
+    println!("{nm:?}, type: {typename:?}");
 }
 /*---------------------------------------------------------
   Show facts about a type's elements, e.g., name, type,
@@ -88,6 +88,55 @@ pub fn show_note(note: &str) {
 */
 pub fn show_op(opt: &str) {
   println!("--- {opt} ---");
+}
+/*---------------------------------------------------------
+  fold an enumerable's elements into rows of w elements
+  - indent by left spaces
+  - does not consume t since passed as reference
+  - returns string
+  https://users.rust-lang.org/t/generic-code-over-iterators/10907/3
+*/
+pub fn fold<T, I:Debug>(
+  t: &T, left: usize, width: usize
+) -> String
+    where for<'a> &'a T: IntoIterator<Item = &'a I>, T:Debug
+{
+  let mut accum = String::new();
+  accum += &offset(left);
+
+  /*-- Alternate direct implementation --*/
+  //let mut i = 0usize;
+  // for item in t {
+  //   accum += &format!("{item:?}, ");
+  //   if ((i + 1) % width) == 0 && i != 0 {
+  //       accum += "\n";
+  //       accum += &offset(left);
+  //   }
+  //   i += 1;
+  // }
+  
+  for (i, item) in t.into_iter().enumerate() {
+    accum += &format!("{item:?}, ");
+    if ((i + 1) % width) == 0 && i != 0 {
+        accum += "\n";
+        accum += &offset(left);
+    }
+  }
+  let opt = find_last_utf8(&accum, ',');
+  if let Some(index) = opt {
+    accum.truncate(index);
+  }
+  accum
+}
+/*---------------------------------------------------------
+  show enumerables's elements as folded rows
+  - width is number of elements in each row
+  - left is indent from terminal left
+*/
+pub fn show_fold<T:Debug, I:Debug>(t:&T, left:usize, width:usize) 
+  where for<'a> &'a T: IntoIterator<Item = &'a I>
+{
+  println!("{}",fold(t, left, width));
 }
 /*---------------------------------------------------------
   print newline

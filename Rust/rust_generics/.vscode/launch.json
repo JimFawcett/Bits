@@ -7,35 +7,35 @@
         {
             "type": "lldb",
             "request": "launch",
-            "name": "Cargo launch lib",
-            "cargo": {
-                "args": [
-                    "build",
-                    "--lib"
-                ]
-            },
-            "args": []
-        },
-        {
-            "type": "lldb",
-            "request": "launch",
             "name": "Cargo launch bin",
             "cargo": {
                 "args": [
                     "build",
-                    "--bin"
+                    "--bin=rust_generics"
                 ]
             },
             "args": []
         },
         {
+          "type": "lldb",
+          "request": "launch",
+          "name": "Cargo launch lib",
+          "cargo": {
+              "args": [
+                  "build",
+                  "--lib"
+              ]
+          },
+          "args": []
+      },
+      {
             "type": "lldb",
             "request": "launch",
             "name": "Debug executable 'rust_generics'",
             "cargo": {
                 "args": [
                     "build",
-                    "--bin=rust_hello_objects",
+                    "--bin=rust_generics",
                     "--package=rust_generics"
                 ],
                 "filter": {

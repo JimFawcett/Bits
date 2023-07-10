@@ -10,6 +10,13 @@
   - Demonstrates creation and use of generic Rust types and functions
   - Rust uses struct instead of class to create instances
 */
+/*-----------------------------------------------
+Note:
+Find all Bits code, including this in
+https://github.com/JimFawcett/Bits
+You can clone the repo from this link.
+-----------------------------------------------*/
+
 mod analysis_generic;     // identify module source file
 use analysis_generic::*;  // import public functions and types
 mod points_generic;

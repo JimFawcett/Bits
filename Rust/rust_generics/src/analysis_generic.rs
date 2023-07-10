@@ -4,7 +4,7 @@
   - a few of these require advanced generics code.
   - You don't need to know how these work to understand this
     demo. 
-  - We will come back to these functions in a later Bit. 
+  - We will come back to these functions in rust_generics. 
 -------------------------------------------------------------------*/
 
 use std::fmt::*;
