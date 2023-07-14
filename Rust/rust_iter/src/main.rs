@@ -679,25 +679,31 @@ fn test() {
 
 fn main() {
   analysis_iter::show_label("Demonstrate Rust Iteration",30);
+  println!();
 
   analysis_iter::show_op("into_iterator()");
+  println!();
   execute_demo_array_into_iterator_loop();
   execute_demo_array_into_iterator_for();
   execute_demo_vec_into_iterator_for();
   execute_demo_collection_into_iterator();
   println!();
+
   analysis_iter::show_op("iter()");
+  println!();
   execute_demo_array_iter_for();
   execute_demo_vec_iter_for();
   execute_demo_collection_iter_for();
   println!();
 
   analysis_iter::show_op("iter_mut()");
+  println!();
   execute_demo_vec_iter_mut_for();
   execute_demo_collection_iter_mut_for();
   println!();
 
   analysis_iter::show_op("iteration adapters");
+  println!();
   execute_demo_adapters();
 
   const DOTEST:bool = false;
