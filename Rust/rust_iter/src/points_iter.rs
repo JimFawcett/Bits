@@ -26,6 +26,7 @@ pub struct PointN<T>
 impl<T> PointN<T> 
     where T:Debug + Default + Clone
 {
+    /*-- constructor --*/
     pub fn new(n:usize) -> PointN<T> {
         PointN::<T> { 
             items: vec![T::default(); n],
@@ -43,6 +44,7 @@ impl<T> PointN<T>
     pub fn pop(&mut self) -> Option<T> {
       self.items.pop()
     }
+    /*-- non-destructive non-mutating iterator */
     pub fn iter(&self) -> impl Iterator<Item = &T> {
         self.items.iter()
     }
