@@ -1,8 +1,18 @@
 /*-------------------------------------------------------------------
   Cpp_Generics.cpp
+  - demonstrates creating and using std::library generic types:
+      array, string, vector, and map
+  - demonstrates creating and using user-defined generic types:
+      Stats, Demo, and PointsN
   - depends on PointsGen.h to provide user-defined point class
   - depends on Analysis.h for several display and analysis functions
 */
+/*-----------------------------------------------
+Note:
+Find all Bits code, including this in
+https://github.com/JimFawcett/Bits
+You can clone the repo from this link.
+-----------------------------------------------*/
 #include <iostream>       // std::cout
 #include <memory>         // std::unique_ptr
 #include <vector>         // vector<T> class
@@ -13,208 +23,158 @@
 #include "PointsGen.h"    // PointN<T> class declaration
 #include "Stats.h"        // Stats class declaration
 /*
-  This demo uses std::basic_string<char> and std::vector<T>
-  classes and user defined classes, Stats<T> and PointN<T>, to 
-  illustrate how objects are defined and instantiated.
-
-  Operations:
-    All the classes discussed here provide operations for:
-      T t2 = t1          // copy construction
-      T t3 = temporary   // move construction
-      t1 = t2            // copy assignment
-      t3 = temporary     // move assignment
-
-    All instances return their resources when they go out of
-    scope by implicitly calling their destructor.
-    Primitive types can all be copied.
-
-    Most library and user-defined types can be copied, moved, 
-    and deleted by providing member constructors and destructor.
-    Often compiler generation works well, but for classes with 
-    pointer members developers must provide them.
-
-  Processing:
-    All types are static, operations run as native code, and no 
-    garbage collection is needed. Resources are returned at end 
-    of their declaration scope.
+  
 */
 #pragma warning(disable: 4984)  // warns about C++17 extension
 
-/*-----------------------------------------------
-  alias type names
-  - pU<T> is the same type as std::unique_ptr<T> 
-  - this just provides a shorter name
-*/
-template<typename T>
-using pU = std::unique_ptr<T>;
-/*
-  The std library uses aliases:
-  using string = basic_string<char>;
-  using wstring = basic_string<wchar_t>;
-*/
 /*-------------------------------------------------------------------
-  Demonstration starts here 
+  Building types and functions for demonstration 
+*/
+/*-- user-defined type --*/
+template<typename T>
+class Demo {
+public:
+  Demo() = default;
+  Demo(T& tin) : t(tin) {};
+  Demo(const Demo<T>& t) = default;
+  Demo<T>& operator=(const Demo<T>&t) = default;
+  ~Demo() = default;
+  T& value() { return t };
+  void show();
+private:
+  T t;
+};
+
+template<typename T>
+void Demo<T>::show() {
+  std::cout << "  Demo<T> {\n  ";
+  std::cout << "  type: " 
+            << truncate(DisplayParams.trunc,typeid(t).name());  // show type
+  std::cout << ", size: " << sizeof(t);  // show size on stack
+  std::cout << ", value: " << t;
+  std::cout << "\n  }\n";
+}
+/*-- showArray function --*/
+template<typename T, int N>
+void showArray(std::array<T,N> &a) {
+  std::cout << "  array<T,N> [";
+  std::cout << a[0];
+  for(int i=1; i<N; ++i) {
+    std::cout << ", " << a[i];
+  }
+  std::cout << "]" << std::endl;
+}
+/*-- show collection function --*/
+template<typename C>
+void showColl(const C& c) {
+  std::cout << "  Collection [";
+  std::cout << c[0];
+  for(size_t i=1; i<c.size(); ++i) {
+    std::cout << ", " << c[i];
+  }
+  std::cout << "]" << std::endl;
+}
+/*-- showMap function --*/
+template<typename K, typename V>
+void showMap(const std::map<K,V> &m) {
+  std::cout << "  map<K,V> {\n    ";
+  bool first = true;
+  for(const auto& pair : m) {
+    if(first) {
+      std::cout << "{" << pair.first << "," << pair.second << "}";
+      first = false;
+    }
+    else {
+      std::cout << ", {" << pair.first << "," << pair.second << "}";
+    }
+  }
+  std::cout << "\n  }\n";
+}
+/*-- demonstrate use of std generic types --*/
+void demo_std_generic_types() {
+  
+  showNote("Demo std generic types", nl);
+  showOp("array<int,4>",nl);
+  auto a = std::array<int, 4> { 1, 2, 3, 4 };
+  showArray(a);
+  showColl(a);
+
+  showOp("vector<double>");
+  std::vector<double> v = { 1.0, 1.5, 2.0, 2.5 };
+  std::cout << v << "\n";
+  showColl(v);
+
+  showOp("map<string,int>", nl);
+  std::map<std::string, int> m {
+    {"zero", 0}, {"one", 1}, {"two", 2}, {"three", 3}
+  };
+  showMap(m);
+}
+/*-- demonstrate use of user-defined types --*/
+void demo_user_defined_generic_types() {
+  
+  showNote("Demo user-defined generic types", nl);
+  showOp("Stats<double>", nl);
+  std::vector<double> v { 1.0, 2.5, -3.0, 4.5 };
+  showColl(v);
+  Stats<double> s(v);
+  std::cout << "  min: " << s.min();
+  std::cout << ", max: " << s.max();
+  std::cout << ", sum: " << s.sum();
+  std::cout << ", avg: " << s.avg() << std::endl;
+
+  showOp("Demo<int>", nl);
+  int arg = 42;
+  Demo<int> dem(arg);
+  dem.show();
+
+  showOp("PointN<double>");
+  std::vector<double> vp{1.0, 1.5, 2.0};
+  PointN<double> p(0);
+  p.init(vp);
+  p.show("p");
+  println();
+}
+/*-- demonstrate use of generic functions --*/
+void demo_generic_functions() {
+
+showNote("demo generic functions", nl);
+
+showOp("showType for std::string");
+std::string s = "a string";
+showType(s, "s", nl);
+
+showOp("showType for std::vector");
+std::vector<int> v {1, 2, 3, 2, 1};
+showType(v, "v", nl);
+
+showOp("showColl for std::string", nl);
+showColl(s);
+
+showOp("showColl for std::vector", nl);
+showColl(v);
+}
+/*-----------------------------------------------
+  Demo execution starts here
 */
 void testFormats();
 
 int main() {
 
-    print("Demonstrate C++ Generic Objects\n");
-
-    showNote("std library types string and vector<T>");
-    /* create and display std::basic_string<char> object */
-    auto str = std::basic_string<char>("\"Wile E. Coyote\"");
-    auto out = std::basic_string<char>("contents of str = ") + str;
-    print(out);
-    print("--- showType(str, \"str\"); ---");
-    showType(str, "str", nl);
-
-    /* create and display std::vector<double> */
-    auto vec = std::vector<double>{ 3.5, 3, 2.5, 2 };
-    std::cout << vec;
-    showOp("showType(vec, \"vec\");");
-    showType(vec, "vec", nl);
-
-    showOp("vec[2] = -2.5;");
-    vec[2] = -2.5;
-    std::cout << "\n  vec:" << vec;
-
-    showOp("auto vec2 = vec : copy construction");
-    /* copy construction */
-    auto vec2 = vec;
-    std::cout << "\n  vec2:" << vec2;
-    
-    showOp("vec2[0] = 42;");
-    vec2[0] = 42;
-    std::cout << "\n  vec2: " << vec2;
-    std::cout << "\n  vec: " << vec;
-
-    showNote(
-      "Copy construction, auto vec2 = vec, creates\n    " 
-      "independent instance. So changing target vec2\n    "
-      "has no affect on source vec.", nl
-    );
-
-    showNote("User-defined Types", nl);
-
-    showOp("statistics for integer types");
-
-    auto v1 = std::vector<int>{1, 2, 3, 4, 5, 6};
-    auto s1 = Stats<int>(v1);
-    s1.show("s1");
-    std::cout << "\n  s1.size() = " << s1.size();
-    std::cout << "\n  s1.max() = " << s1.max();
-    std::cout << "\n  s1.min() = " << s1.min();
-    std::cout << "\n  s1.sum() = " << s1.sum();
-    std::cout << "\n  s1.avg() = " << s1.avg();
-    print();
-
-    showOp("statistics for float types");
-    
-    auto v2 = std::vector<double>{1.0, 2.1, 3.2, 4.3, 5.4, 6.5};
-    auto s2 = Stats<double>(v2);
-    s2.show("s2");
-    std::cout << "\n  s2.size() = " << s2.size();
-    std::cout << "\n  s2.max() = " << s2.max();
-    std::cout << "\n  s2.min() = " << s2.min();
-    std::cout << "\n  s2.sum() = " << s2.sum();
-    std::cout << "\n  s2.avg() = " << s2.avg();
-    print();
-
-  showOp("user-defined type PointN<T>", nl);
-
-    PointN<double> p1(5);
-    p1.show("p1");
-    print();
-
-    showNote(
-      "p1.coords() = std::vector<double>\n    "
-      "{ 1.0, -2.0, 3.0, 4.5, -42.0 }", nl
-    );
-    p1.coords() = std::vector<double>{1.0, -2.0, 3.0, 4.5, -42.0 };
-    p1.show("p1");
-    print();
-
-    showOp("showType(p1, \"p1\", nl);");
-    showType(p1, "p1", nl);
-    std::cout << "  p1.coords()[2] = " << p1.coords()[2] << "\n";
-    
-    /*-- copy construction --*/
-
-    auto p2 = p1;
-    showOp("auto p2 = p1");
-    p2.show("p2");
-    showOp("p2[1] = 5.5");
-    p2[1] = 5.5;
-    p2.show("p2");
-    p1.show("p1");
-    print();
-
-    showNote("heap-based string instance");
+    showNote("Demonstrate C++ Generic Objects", nl);
   
-    /* standard library type std::basic_string<char> */
-    /* uses alias pU for std::unique_ptr, defined above */
-    showOp(
-      "pU<std::basic_string<char>> "
-      "pStr(new std::basic_string<char>(\"\\\"Road Runner\\\"\")"
-    );
-    pU<std::basic_string<char>> pStr(new std::basic_string<char>("\"Road Runner\""));
-    std::cout << "\n  pStr contents = " << *pStr << "\n";
-    
-    showOp("showType(*pStr, \"*pStr\")");
-    showType(*pStr, "*pStr", nl);
+    demo_std_generic_types();
+    demo_user_defined_generic_types();
+    demo_generic_functions();
 
-    /* std::unique_ptr<T> cannot be copied but can be moved */
-    showOp("showType(move(pStr), \"pStr\")");
-    showType(move(pStr), "pStr", nl);
-
-    /* standard library type std::vector<T> */
-    showNote("heap-based vector instance");
-    showOp(
-      "pU<std::vector<double>>\n "
-      "     pVec(new std::vector<double>{ 1.5, 2.5, 3.5 });"
-    );
-    pU<std::vector<double>> pVec(
-      new std::vector<double>{ 1.5, 2.5, 3.5 }
-    );
-    std::cout << "\n  *pVec = " << *pVec;
-    showType(*pVec, "*pVec", nl);
-    std::cout << "\n  pVec = " << pVec;
-    showType(move(pVec), "move(pVec)", nl);
-
-    /* custom point type */
-
-    showNote("heap-based PointN<T> instance");
-    
-    showOp("pU<PointN<double>> pPointN(new PointN<double>(4))");
-    pU<PointN<double>> pPointN(new PointN<double>(4));
-    pPointN->show("*pPointN");
-    
-    showOp(
-      "pPointN->coords() = \n"
-      "      std::vector<double>{ 1.0, 3.5, -2.0, 42.0 };"
-    );
-    pPointN->coords() = std::vector<double>{ 1.0, 3.5, -2.0, 42.0 };
-    pPointN->show("*pPointN");
-    std::cout << "\n  value of pPointN->coords()[1] is " 
-              << pPointN->coords()[1];
-    
-    showOp("showType(*pPointN, \"*pPointN\");");
-    showType(*pPointN, "*pPointN");
-    
-    showOp("showType(std::move(pPointN), \"pPointN\");");
-    showType(std::move(pPointN), "pPointN");
-    /* pPointN moved, so now invalid */
-    print();
-
-    //#define TEST
+    // #define TEST
     #ifdef TEST
       testFormats();
     #endif
 
     print("\n  That's all Folks!\n\n");
 }
-
+/*-- testFormats adds details to the main demonstration --*/
 void testFormats() {
 
     showNote("Test and demonstrate formatting functions");

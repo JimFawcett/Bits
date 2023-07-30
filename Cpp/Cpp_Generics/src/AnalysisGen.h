@@ -129,7 +129,7 @@ template<typename T>
 std::string fold(std::vector<T>& v, size_t left, size_t width) {
   std::stringstream out("\n");
   out << indent(left);
-  for(int i=0; i<v.size(); ++i) {
+  for(size_t i=0; i<v.size(); ++i) {
     if((i % width) == 0 && i != 0 && i != width - 1) {
       out << "\n" << indent(left);
     }

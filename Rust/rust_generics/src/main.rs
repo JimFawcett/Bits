@@ -125,12 +125,22 @@ fn demo_std_generic_types() {
   m.insert("two", 2);
   m.insert("three", 3);
   println!("  maps: HashMap<&str, i32>");
-  println!("    {:?}\n", m);
+  println!("    {:?}", m);
 }
 
 fn demo_user_defined_generic_types() {
   
   show_note("demo user defined generic types");
+  println!();
+
+  show_op("Stats<T>");
+  println!();
+  let s = Stats::<f64>::new(vec![1.5, 2.5, 3.0, -1.25, 0.5]);
+  println!("  {:?}", s);
+  println!("  max: {:?}", s.max());
+  println!("  min: {:?}", s.min());
+  println!("  sum: {:?}", s.sum());
+  println!("  avg: {:?}", s.avg());
   println!();
 
   show_op("Demo<f64>");
@@ -151,18 +161,7 @@ fn demo_user_defined_generic_types() {
   p.show("p", 2, 12);
   *p.coors() = vec![1, 0, -1, 0, 1];
   p.show("p", 2, 12);
-  println!();
 
-  show_op("Stats<T>");
-  println!();
-
-  let s = Stats::<f64>::new(vec![1.5, 2.5, 3.0, -1.25, 0.5]);
-  println!("  {:?}", s);
-  println!("  max: {:?}", s.max());
-  println!("  min: {:?}", s.min());
-  println!("  sum: {:?}", s.sum());
-  println!("  avg: {:?}", s.avg());
-  
 }
 /*---------------------------------------------------------
   generic functions

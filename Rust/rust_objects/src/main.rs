@@ -21,7 +21,7 @@ use points_objects::*;    // import public functions and types
 fn demo_standard_objects() {
 
   show_label(
-    "std::library objects, string and vector<T>", 46
+    "std::library objects: string and vector<T>", 46
   );
   nl();
 

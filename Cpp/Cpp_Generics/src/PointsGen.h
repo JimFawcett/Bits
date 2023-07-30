@@ -27,6 +27,7 @@ public:
   PointN& operator=(const PointN& pt) = default;  // copy assignment
   PointN& operator=(PointN&& pt) = default;       // move assignemnt
   ~PointN() = default;                            // dtor
+  void init(const std::vector<T>& v);
 
   size_t size() const;
   T& operator[](size_t index);                    // index oper
@@ -70,6 +71,10 @@ T PointN<T>::operator[](size_t index) const {
     throw "indexing error";
   }
   return coord[index];
+}
+template<typename T>
+void PointN<T>::init(const std::vector<T>& v) {
+  coord = v;
 }
 template<typename T>
 void PointN<T>::push_back(T t) {
