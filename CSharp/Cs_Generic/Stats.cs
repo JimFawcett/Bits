@@ -1,10 +1,10 @@
 /*-------------------------------------------------------------------
-  Points.cs
-  - provides definitions for user-defined class Point4D
+  Stats.cs
+  - provides definitions for user-defined class Stats<T>
 */
 
 using System.Collections;
-using System.Collections.Generic;   // IEnumerable<T>, List<T>
+using System.Collections.Generic;   // IEnumerable<T>, List<T>, ...
 using Analysis;
 
 namespace Stats {

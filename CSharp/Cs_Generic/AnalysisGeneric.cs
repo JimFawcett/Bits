@@ -70,37 +70,6 @@ namespace Analysis {
             Console.WriteLine("value: \"{0}\"{1}", t, suffix);
         }
         /*-------------------------------------------------
-        Show type information for any type that implements
-        the IShow interface
-        */
-        public static void ShowTypeShowable<T>(
-            T t, string nm, string suffix=""
-        )
-        where T:IShow
-        {
-            ShowType(t, nm);
-            Console.WriteLine("value:");
-            t.Show(nm);     // guaranteed by IShow implementation
-            Console.Write(suffix);
-        }
-        /*-------------------------------------------------
-        Provides name of caller, nm, as label for IShow() information.
-        - works for all Showable instances
-        */
-        public static void ShowLabeledObject<T>(
-            T t, string nm
-        ) where T:IShow {
-            // Console.Write(nm);
-            t.Show(nm);
-        }
-        /*-------------------------------------------------
-        Provides name of caller, nm, as label for value.
-        - works for all T with ToString.
-        */
-        public static void DisplayLabeledObject<T>(T t, string nm) {
-            Console.WriteLine("{0}: {1}", nm, t!.ToString());
-        }
-        /*-------------------------------------------------
         Show type information for any type that implements 
         IEnumerable<T> interface.
         */
@@ -139,6 +108,37 @@ namespace Analysis {
             Console.Write(tmp);
             Console.WriteLine("\n  }");
             Console.Write(suffix);
+        }
+        /*-------------------------------------------------
+        Show type information for any type that implements
+        the IShow interface
+        */
+        public static void ShowTypeShowable<T>(
+            T t, string nm, string suffix=""
+        )
+        where T:IShow
+        {
+            ShowType(t, nm);
+            Console.WriteLine("value:");
+            t.Show(nm);     // guaranteed by IShow implementation
+            Console.Write(suffix);
+        }
+        /*-------------------------------------------------
+        Provides name of caller, nm, as label for IShow() information.
+        - works for all Showable instances
+        */
+        public static void ShowLabeledObject<T>(
+            T t, string nm
+        ) where T:IShow {
+            // Console.Write(nm);
+            t.Show(nm);
+        }
+        /*-------------------------------------------------
+        Provides name of caller, nm, as label for value.
+        - works for all T with ToString.
+        */
+        public static void DisplayLabeledObject<T>(T t, string nm) {
+            Console.WriteLine("{0}: {1}", nm, t!.ToString());
         }
         /*-------------------------------------------------
         create string of count spaces, used to offset output 

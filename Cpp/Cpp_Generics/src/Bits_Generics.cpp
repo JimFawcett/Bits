@@ -1,7 +1,7 @@
 /*-------------------------------------------------------------------
   Cpp_Generics.cpp
   - demonstrates creating and using std::library generic types:
-      array, string, vector, and map
+      array, basic_string, vector, and map
   - demonstrates creating and using user-defined generic types:
       Stats, Demo, and PointsN
   - depends on PointsGen.h to provide user-defined point class

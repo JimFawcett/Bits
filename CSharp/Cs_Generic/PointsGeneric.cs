@@ -1,6 +1,6 @@
 /*-------------------------------------------------------------------
   Points.cs
-  - provides definitions for user-defined class Point4D
+  - provides definitions for user-defined class PointN<T>
 */
 
 using System.Collections;
@@ -9,7 +9,7 @@ using Analysis;
 
 namespace Points {
   /*----------------------------------------------------------------------
-    PointN<T> is a generalization of Point4D 
+    PointN<T> represents a point in N-dimensional space 
      - holds any finite number of generic coordinates
      - coordinates are held in a List<T>
      - implements IEnumerable<T> so it can be indexed and iterated
@@ -29,7 +29,7 @@ namespace Points {
         }
       }
     }
-    /* translates IShow::show() for needs of Point2 class */
+    /* translates IShow::show() for needs of PointN class */
     public void Show(string name) {
       PrintSelf(name);
     }
