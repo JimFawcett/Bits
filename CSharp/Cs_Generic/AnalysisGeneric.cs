@@ -35,6 +35,9 @@ namespace Analysis {
         public void Println(String s) {
             Console.WriteLine(s);
         }
+        public static bool IsAssociativeColl(IEnumerable coll) {
+          return coll is IDictionary;
+        }
         public static void ShowType<T>(T t, string nm) {
             Type tt = t!.GetType();
             string tnm = tt.Name;
@@ -105,7 +108,28 @@ namespace Analysis {
         IEnumerable<T> t, string nm, int w = 5, string suffix = ""
         )
         {
-            ShowType(t, nm);
+            Type tt = t!.GetType();
+            string tnm = tt.Name;
+            if(tt.IsGenericType) {
+                if(tnm.Length > 1) {
+                    tnm = tnm.Remove(tnm.Length - 2);
+                    if(IsAssociativeColl(t)) {
+                      tnm += "<K,V>";
+                    }
+                    else {
+                      tnm += "<T>";
+                    }
+                }
+            }
+            Console.Write("{0}: {1}, ", nm, tnm);
+            int size = GetManagedSize(tt);
+            Console.Write("size: {0}, ", size);
+            if (tt.IsValueType) {
+                Console.WriteLine("value type");
+            }
+            else {
+                Console.WriteLine("reference type");
+            }
             Console.WriteLine("value:\n{0}{1} {{", "  ", nm);
             /* 
                 beautify value list into rows of w elements 
