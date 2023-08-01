@@ -11,6 +11,12 @@
 #include <set>          // set<T> class
 #include "AnalysisObj.h"   // Analysis functions for this demo
 #include "PointsObj.h"     // Point4D class declaration
+/*-----------------------------------------------
+  Note:
+  Find all Bits code, including this in
+  https://github.com/JimFawcett/Bits
+  You can clone the repo from this link.
+-----------------------------------------------*/
 /*
   This demo uses the std::string and std::vector<T> classes
   and a user defined class, Point4D, to illustrate how objects 

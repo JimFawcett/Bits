@@ -14,6 +14,12 @@
 #include <set>              // set<T> class
 #include "AnalysisIter.h"   // Analysis functions
 #include "PointsIter.h"     // PointN<T> class declaration
+/*-----------------------------------------------
+  Note:
+  Find all Bits code, including this in
+  https://github.com/JimFawcett/Bits
+  You can clone the repo from this link.
+-----------------------------------------------*/
 /*
   This demo uses the std::string and std::vector<T> classes
   and a user-defined class, PointN<T>, to illustrate how

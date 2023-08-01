@@ -8,10 +8,10 @@
   - depends on Analysis.h for several display and analysis functions
 */
 /*-----------------------------------------------
-Note:
-Find all Bits code, including this in
-https://github.com/JimFawcett/Bits
-You can clone the repo from this link.
+  Note:
+  Find all Bits code, including this in
+  https://github.com/JimFawcett/Bits
+  You can clone the repo from this link.
 -----------------------------------------------*/
 #include <iostream>       // std::cout
 #include <memory>         // std::unique_ptr

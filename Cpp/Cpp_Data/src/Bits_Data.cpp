@@ -7,6 +7,12 @@
 #include <memory>    // std::unique_ptr
 #include <utility>   // move()
 
+/*-----------------------------------------------
+  Note:
+  Find all Bits code, including this in
+  https://github.com/JimFawcett/Bits
+  You can clone the repo from this link.
+-----------------------------------------------*/
 /*
   Static Data Types:
     byte, bool, int, char, char16_t, char32_t, wchar_t
