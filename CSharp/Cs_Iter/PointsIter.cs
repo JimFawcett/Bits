@@ -55,7 +55,7 @@ namespace Points {
       Console.Write("\n{0}", Display.Indent(Left));
       Console.WriteLine("}");
     }
-    /* The three functions below support indexing and iterating */
+    /* The functions below support indexing and iterating */
     public T this[int index] {
       get { return coor[index]; }
       set { coor.Insert(index, value); }

@@ -57,10 +57,10 @@ namespace Analysis {
             }
         }
         /*-------------------------------------------------
-        Display information about the type of any scalar type.
-        - scalar types are those with a single value like:
-            int, double, string, ...
-        - This function directly uses only simple reflection
+          Display information about the type of any scalar type.
+          - scalar types are those with a single value like:
+              int, double, string, ...
+          - This function directly uses only simple reflection
         */
         public static void ShowTypeScalar<T>(
             T t, string nm, string suffix = ""
@@ -70,8 +70,8 @@ namespace Analysis {
             Console.WriteLine("value: \"{0}\"{1}", t, suffix);
         }
         /*-------------------------------------------------
-        Show type information for any type that implements
-        the IShow interface
+          Show type information for any type that implements
+          the IShow interface
         */
         public static void ShowTypeShowable<T>(
             T t, string nm, string suffix=""
@@ -84,8 +84,8 @@ namespace Analysis {
             Console.Write(suffix);
         }
         /*-------------------------------------------------
-        Provides name of caller, nm, as label for IShow() information.
-        - works for all Showable instances
+          Provides name of caller, nm, as label for IShow() information.
+          - works for all Showable instances
         */
         public static void ShowLabeledObject<T>(
             T t, string nm
@@ -94,15 +94,15 @@ namespace Analysis {
             t.Show(nm);
         }
         /*-------------------------------------------------
-        Provides name of caller, nm, as label for value.
-        - works for all T with ToString.
+          Provides name of caller, nm, as label for value.
+          - works for all T with ToString.
         */
         public static void DisplayLabeledObject<T>(T t, string nm) {
             Console.WriteLine("{0}: {1}", nm, t!.ToString());
         }
         /*-------------------------------------------------
-        Show type information for any type that implements 
-        IEnumerable<T> interface.
+          Show type information for any type that implements 
+          IEnumerable<T> interface.
         */
         public static void ShowTypeEnum<T> (
         IEnumerable<T> t, string nm, int w = 5, string suffix = ""
@@ -119,6 +119,9 @@ namespace Analysis {
             Console.WriteLine("\n  }");
             Console.Write(suffix);
         }
+        /*-------------------------------------------------
+          Show values in folded array
+        */
         public static void ShowEnum<T> (
         IEnumerable<T> t, string nm, int w = 5, string suffix = ""
         )
@@ -136,7 +139,7 @@ namespace Analysis {
             Console.Write(suffix);
         }
         /*-------------------------------------------------
-        create string of count spaces, used to offset output 
+          create string of count spaces, used to offset output 
         */
         public static string Indent(int count) {
             StringBuilder sb = new StringBuilder();
@@ -144,8 +147,8 @@ namespace Analysis {
             return sb.ToString();
         }
         /*-------------------------------------------------
-        Truncate string to length of N, but only if
-        its length is greater than N
+          Truncate string to length of N, but only if
+          its length is greater than N
         */
         string truncate(int N, string bigStr) {
             if(bigStr.Length <= N) {
@@ -157,7 +160,7 @@ namespace Analysis {
             return sb.ToString();
         }
         /*------------------------------------------------- 
-        fold array elements into rows of w elements 
+          fold array elements into rows of w elements 
         */
         public static string FoldArray<T>(T[] arr, int w, int Left) {
             StringBuilder tmp = new StringBuilder();
@@ -176,7 +179,7 @@ namespace Analysis {
             return tmp.ToString();
         }
         /*-------------------------------------------------
-        do t1 and t2 share the same address?
+          do t1 and t2 share the same address?
         */
         public static void IsSameObj<T>(
         T t1, String n1, T t2, String n2, string suffix = ""
@@ -192,8 +195,8 @@ namespace Analysis {
         }
         }
         /*-------------------------------------------------
-        Beware, two distinct objects may have same hashcode.
-        - Not used in this demo for that reason.
+          Beware, two distinct objects may have same hashcode.
+          - Not used in this demo for that reason.
         */
         public static void showIdent<T>(
             T t, String n, string suffix = ""
@@ -202,8 +205,8 @@ namespace Analysis {
             Console.WriteLine("{0}, {1}{2}", n, id, suffix);
         }
         /*-------------------------------------------------
-        Display function call or operation to help turn 
-        output data into information 
+          Display function call or operation to help turn 
+          output data into information 
         */
         public static void ShowOp(string op, string suffix = "") {
             Console.WriteLine("--- {0} ---{1}", op, suffix);
@@ -215,7 +218,7 @@ namespace Analysis {
             Console.WriteLine(s);
         }
         /*-------------------------------------------------
-        Emphasize text with borders
+          Emphasize text with borders
         */
         public static void ShowNote(string s, string suffix = "") {
             Console.WriteLine(
@@ -228,7 +231,7 @@ namespace Analysis {
             );
         }
         /*-------------------------------------------------
-        Surround note with empty lines
+          Surround note with empty lines
         */
         public static void ShowLabel(string s) {
             Console.WriteLine();
@@ -265,9 +268,9 @@ namespace Analysis {
             }
         }
         /*-------------------------------------------------
-        Build string of comma separated values from 
-        Enumerable collection
-        - no longer used here, but will be useful so kept
+          Build string of comma separated values from 
+          Enumerable collection
+          - no longer used here, but will be useful so kept
         */
         // https://stackoverflow.com/questions/330493/join-collection-of-objects-into-comma-separated-string
         public static string ToCSV<T>(IEnumerable<T> coll) {
@@ -278,10 +281,10 @@ namespace Analysis {
             return sb.ToString(0, sb.Length - 2);
         }
         /*-------------------------------------------------
-        Returns value of T for IEnumerable<T> at runtime.  
-        Needed for some functions that operate on generic 
-        collections.
-        - at this time, not used in this demo
+          Returns value of T for IEnumerable<T> at runtime.  
+          Needed for some functions that operate on generic 
+          collections.
+          - at this time, not used in this demo
         */
         // https://www.codeproject.com/Tips/5267157/How-To-Get-A-Collection-Element-Type-Using-Reflect
         public static Type? GetTypeOfCollection(Object coll) {
