@@ -4,42 +4,55 @@
 #---------------------------------------------------
 
 #---------------------------------------------------
+cmake_minimum_required(VERSION 3.25)
 project(DataCMake)
 #---------------------------------------------------
-#   CppHello dir
+#   CppData dir
 #   -- CMakeLists.txt (this file)
 #   -- src dir
-#      -- Cpp_Hello.cpp
+#      -- Bits_Data.cpp
+#      -- Bits_DataAnalysis.h
+#      -- Bits_DataAnalysis.cpp
 #   -- build directory
 #      -- Debug directory 
-#         -- Cpp_Hello.exe 
+#         -- Cpp_Data.exe 
 #         -- ...
-#      -- Cpp_Hello.dir directory
+#      -- Cpp_Data.dir directory
 #         -- Debug directory 
-#            -- Cpp_Hello.obj 
-
+#            -- Bits_Data.obj
+#            -- Bits_DataAnalysis.obj 
+#            -- ...
 #---------------------------------------------------
 
 set(CMake_CXX_STANDARD 20)
 
 #---------------------------------------------------
-# build HelloCMake.obj in folder build/Cpp_Hello.dir/debug
+# build Bits_Data.obj, Bits_DataAnalysis.obj
+#   in folder build/Cpp_Data.dir/debug
 #---------------------------------------------------
-add_executable(Cpp_Data src/Bits_Data.cpp)
+set(SRC 
+  src/Bits_Data.cpp src/Bits_DataAnalysis.cpp
+)
+include_directories(src)
+add_executable(Cpp_Data ${SRC})
 
 #---------------------------------------------------
-# build HelloCMakeLib.lib in folder build/debug
+# To build library:
 #---------------------------------------------------
-#add_library(HelloCMakeLib STATIC libs/hello_lib/hello_lib.cpp)
+# build Cpp_DataLib.lib in folder build/debug
+#---------------------------------------------------
+#add_library(
+#  Cpp_DataLib STATIC libs/Cpp_Data_lib/Cpp_Data_lib.cpp
+#)
 
 #---------------------------------------------------
-# link HelloCMake.obj and HelloCMakeLib.lib to 
-# create HelloCMake.exe in folder  build/debug
+# link Bits_Data.obj and Cpp_Data_Lib.lib to 
+# create Cpp_Data.exe in folder  build/debug
 #---------------------------------------------------
-#target_link_libraries(HelloCMake HelloCMakeLib)
+#target_link_libraries(DataCMake Data_Lib)
 
 #---------------------------------------------------
-# Build process with CMake version 3.18.2
+# Build process with CMake version 3.25
 #---------------------------------------------------
 #   1. add source files to project directories 
 #   2. add CMakeLists.txt (this file)

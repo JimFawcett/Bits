@@ -6,6 +6,9 @@
 #include <typeinfo>  // typeid
 #include <memory>    // std::unique_ptr
 #include <utility>   // move()
+#include <vector>
+#include <unordered_map>
+#include "Bits_DataAnalysis.h"
 
 /*-----------------------------------------------
   Note:
@@ -37,29 +40,20 @@
     All types are static, operations run as native code, and no garbage
     collection is needed. Resources are returned at end of declr scope.
 */
-/* C++ requires declaration before use */
-template<typename T>
-void showType(T t, const std::string &nm);
-void showOp(const std::string& text);
-void showLabel(const std::string& text, size_t n = 50);
-void print(const std::string& txt = "");
-void println(const std::string& txt = "");
+/*-----------------------------------------------
+  create and display values of primitive types
+  in stack frame
+*/
+void initialize_primitives_from_literals() {
 
-void nl() {
-  std::cout << std::endl;
-}
-
-int main() {
-    showLabel(" Demonstrate C++ types");
-    nl();
-
-    /*-- objects live in stack frame, may have values in heap --*/
+    showLabel("initialize primitives in stack from literals");
     
-    showOp("initialize from literals");
+    /*-- objects live in stack frame, may have values in heap --*/
     
     int t1{3}; 
     showType(t1, "t1");
-    
+    // double t1 = 3.1415927; // not allowed to redefine type of t1
+        
     long long int t1a = 3;
     showType(t1a, "t1a");
 
@@ -68,36 +62,46 @@ int main() {
 
     std::string s{"a literal string"};  // char values in heap
     showType(s, "s");
+    nl();
 
-    println("-- copy construct --");
+    showOp("copy construct");
     
     auto t1b = t1a;
     showType(t1b, "t1b");
-    // double t1 = 3.1415927; // not allowed to redefine type of t1
+    nl();
+}
+/*-----------------------------------------------
+  create and display values of primitive types
+  in heap
+*/
+void create_primitives_in_heap() {
+
+    showLabel("store instances of primitives in heap");
     
     /*-- values live in heap when using new --*/
-    
-    println("-- store in heap --");
     
     double* dptr = new double{3.14159};
     showType(dptr, "dptr");
     showType(*dptr, "*dptr");
     delete(dptr);  // see unique_ptr, below
-    
+    nl();
+
     /*-- control block lives in stack, char data live in heap --*/
     
-    println("-- string: control block in stack, data in heap --");
+    showOp("string: control block in stack, data in heap");
     
     auto s2 = std::string("Hello Data");  // move ctor - rhs is temp
     showType(s2, "s2");
+    nl();
     
-    println("-- C++ reference --");
+    showOp("C++ reference");
     auto& rs2 = s2;      // create reference, no copy or move
     showType(rs2, "rs2");
+    nl();
     
     /*-- unique_ptr may not be copied but move allowed --*/
     
-    println("-- unique_ptr owns data --");
+    showOp("unique_ptr owns data");
     
     auto ptr = std::unique_ptr<int>(new int{-3});
     *ptr += 1;
@@ -110,51 +114,31 @@ int main() {
     nl();
 
     showOp("heap data deleted when unique_ptr leaves scope");
+    nl();
+}
+/*-----------------------------------------------
+  create and display values of std lib types
+  - uses showTypeEnum for sequential containers
+  - uses showTypeAssoc for associative containers
+*/
+void demo_stdlib_types() {
+
+  showLabel("demo std library types");
+  std::vector<int> v { 1, 2, 3, 2, 1};
+  showTypeEnum(v, "v");
+
+  std::unordered_map<std::string, int> m {
+    {"zero", 0}, {"one", 1}, {"two", 2}
+  };
+  showTypeAssoc(m, "m");
+}
+int main() {
+    showLabel(" Demonstrate C++ types");
+    nl();
+
+    initialize_primitives_from_literals();
+    create_primitives_in_heap();
+    demo_stdlib_types();
 
     println("\n  That's all Folks!\n\n");
-}
-/*---------------------------------------------------------
-  Truncates input string to n chars. Beware: side-effects.
-  - used in showType which may generate long type names.
-*/
-std::string truncate(const std::string& str, size_t n = 40) {
-  std::string tmp = str;
-  if(tmp.size() < n) {
-    return tmp;
-  }
-  tmp.resize(n);
-  tmp += "...";
-  return tmp;
-}
-/*---------------------------------------------------------
-  Show call name, static type, value, and size
-*/
-template<typename T>
-void showType(T t, const std::string &nm) {
-  std::cout << "\n  " << nm;                // show name at call site
-  std::cout << ": type: " << truncate(typeid(t).name());  // show type
-  std::cout << "\n  value: " << t;          // show value
-  std::cout << ",  size:  " << sizeof(t);   // show size on stack
-  std::cout << "\n";
-}
-/*---------------------------------------------------------
-  Show operation text surrounded by "---" strings
-*/
-void showOp(const std::string& text) {
-  std::cout << "  --- " << text << " ---" << std::endl;
-}
-/*---------------------------------------------------------
-  Show text surrounded by long lines of '-' characters
-*/
-void showLabel(const std::string& text, size_t n) {
-  auto line = std::string(n, '-');
-  std::cout << line << std::endl;
-  std::cout << "  " << text << std::endl;
-  std::cout << line << std::endl;
-}
-void print(const std::string& txt) {
-  std::cout << "\n  " << txt;
-}
-void println(const std::string& txt) {
-  std::cout << "\n  " << txt << "\n";
 }
