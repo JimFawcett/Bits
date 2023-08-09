@@ -1,8 +1,11 @@
+/*---------------------------------------------------------
+ rust_data::src::main.rs 
+ - demonstrate move, copy, and borrow for
+   primitives and selected std::library types
+---------------------------------------------------------*/
 #![allow(unused_mut)]
 #![allow(dead_code)]
 #![allow(clippy::approx_constant)]
-
-/* rust_data::main.rs */
 /*
   Static Data Types:
     bool, char
@@ -38,28 +41,70 @@ https://github.com/JimFawcett/Bits
 You can clone the repo from this link.
 -----------------------------------------------*/
 
+mod bits_data_analysis;
+use bits_data_analysis::*;
+use std::collections::*;
+
 use std::fmt::Debug;
 
-/*-- show_type --------------------------------------------
-  Shows compiler recognized type and data value
-*/
-fn show_type<T: Debug>(t: &T, nm: &str) {
-  let typename = std::any::type_name::<T>();
-  print!("  {nm}, {typename}");
-  println!(
-    "\n  value: {:?}, size: {}", 
-    t, std::mem::size_of::<T>()
-  );
+/*---------------------------------------------------------
+  Primitive data types: i32, f64, ... occupy contiguous
+  regions of memory, so they satisfy the copy trait.
+
+  Library types like String have a control block in stack
+  and data in heap. So they do not satisfy the copy trait.
+
+  A move type can be cloned, but that requires an explicit 
+  call to clone(). Otherwise, assignment and pass by value
+  result in move which transfers ownership of heap 
+  resources and invalidates the moved instance.
+
+  Any attempt to use a moved instance results in compile
+  failure.
+---------------------------------------------------------*/
+
+/*-- demonstrate initialization of Rust's types ---------*/
+fn create_initialize() {
+  show_note("create and initialize");
+  nl();
+
+  show_op("initialize primitives");
+  let int = 42i64;
+  show_type(&int, "int");
+  let double:f64 = 3.15927;
+  show_type(&double, "double");
+  let arr = [1, 2, 3];
+  show_type(&arr, "arr");
+  nl();
+
+  show_op("initialize std::lib types");
+  let vec = vec![1, 2, 3, 2, 1];
+  show_type(&vec, "vec");
+  let mut map = HashMap::<&str,i32>::new();
+  map.insert("zero", 0);
+  map.insert("one", 1);
+  map.insert("two", 2);
+  show_type(&map, "map");
+  nl();
+
+  show_op("initialize user-defined type");
+  #[derive(Debug)]
+  struct Demo { name: String }
+  let udt = Demo { name: "demo".to_string() };
+  show_type(&udt, "udt");
 }
-/*-- pass argument by value -----------------------------*/
-fn pass_by_val<T:Debug>(t:T) {
-  show_type(&t,"T");
-  // println!("  value is {:?}", t);
+
+/*---------------------------------------------------------
+  pass argument by value
+  - t is destination of move operation on caller's 
+    argument
+*/
+fn pass_by_val<T:Debug>(t:T) { 
+  show_type(&t,"T"); 
 }
 /*-- pass argument by reference -------------------------*/
-fn pass_by_ref<T:Debug>(t:&T) {
+fn pass_by_ref<T:Debug>(t:&T) {  // t is ref to caller's arg
   show_type(&t,"T");
-  // println!("  value is {:?}", t);
 }
 /*-- demonstrate variable has not been moved ------------*/
 fn verify<T>(_t:T) {  // can only call this if t is valid
@@ -67,56 +112,66 @@ fn verify<T>(_t:T) {  // can only call this if t is valid
 }
 /*-- demonstrate copy types -----------------------------*/
 fn demo_copy<T:Debug + Copy>(t:T) {
-  let tc = t;     // copy
+  let tc = t;      // copy
   pass_by_val(tc);    // pass by value - copy for copy type
   pass_by_ref(&tc);   // pass by ref - no copy of tc
   verify(tc);
 }
 fn execute_demo_copy() {
+  show_note("demonstrate copy");
+  nl();
+
   let i = 42i64;  // copy literal 42 into i
-  println!("execute_demo_copy for i64");
+  show_op("demo_copy for i64");
   demo_copy(i);
-  println!("  copied i: {i:?}");
+  println!("  copied i: {i:?}\n");
   
   let arr = [3.14f64, 0.5, -0.75];  // copy type
-  println!("execute_demo_copy for array of f64");
+  show_op("demo_copy for array of f64");
   demo_copy(arr);
-  println!("  copied arr: {arr:?}");
-  println!();
+  println!("  copied array arr: {arr:?}");
 }
 /*-- demonstrate move types -----------------------------*/
-fn demo_move<T:Debug + Clone>(t:T) {
-  let tc = t;             // move
-  pass_by_val(tc.clone());   // pass by value - moves clone
-  pass_by_ref(&tc);          // pass by ref - no move of tc
-  verify(tc);
+fn demo_move<T:Debug + Clone>(t:T) {  // t is dest of move
+  let tc = t;              // t moved to tc
+  pass_by_val(tc.clone());    // pass by value - moves clone
+  pass_by_ref(&tc);           // pass by ref - no move of tc
+  verify(tc);                 // tc valid
 }
-
 fn execute_demo_move() {
-  println!("execute_demo_move for String");
+  show_note("demonstrate move");
+  nl();
+
+  show_op("demo_move for String");
   let s = "a string".to_owned();
   demo_move(s);
+  println!("  moved String s");
   // Try uncommenting line below
-  // println!("  moved arr: {s:?}");  // s moved, can't print
+  // println!("  moved s: {s:?}");  // s moved, can't print
+  println!();
   
-  println!("execute_demo_move for Vec");
+  show_op("demo_move for Vec");
   let v = vec![1, 2, 3];
   demo_move(v);
+  println!("  moved Vec v");
   // println!("  moved v: {v:?}");  // v moved, can't print
+  println!();
 
-  use std::collections::HashMap;
-  println!("execute_demo_move for HashMap");
+  show_op("demo_move for HashMap");
   let mut m = HashMap::<&str,i32>::new();
   m.insert("zero", 0);
   m.insert("one", 1);
   m.insert("two", 2);
   demo_move(m);
+  println!("  moved HashMap m");
   // println!("  moved m: {m:?}");  // m moved, can't print
-  println!();
 }
 /*-- demonstrate mutability -----------------------------*/
 fn execute_demo_mutable() {
-  println!("execute_demo_mutable");
+  show_note("demonstrate mutability");
+  nl();
+
+  show_op("demo_mutable for primitives");
   let mut i = 42i32;
   print!("  original value: {i:?}");
   i += 1;
@@ -126,13 +181,14 @@ fn execute_demo_mutable() {
   print!("  original value: {f:?}");
   f += 1.0;
   println!(", changed value:  {f:?}");
-  
+  nl();
+
+  show_op("demo_mutable for std::lib types");
   let mut v = vec![1, 2, 3];
   print!("  original value: {v:?}");
   v[1] += 1;
   println!(", changed value:  {v:?}");
 
-  use std::collections::HashMap;
   let mut m = HashMap::<&str,i32>::new();
   m.insert("zero", 0);
   m.insert("one", 1);
@@ -141,56 +197,49 @@ fn execute_demo_mutable() {
   /* entry returns reference to value of supplied key */
   let mut value = m.entry("one").or_insert(1);
   *value += 1;
-  println!("  changed value:  {m:?}")
+  println!("  changed value:  {m:?}\n");
 }
+/*-- demonstrate references -----------------------------*/
+fn execute_demo_ref() {
+  show_note("demonstrate references");
+  nl();
+
+  show_op("demo_ref immutable");
+  let v1 = vec![1, 2, 3, 2, 1];
+  /* can use any number of immutable referenes */
+  let r1v1 = &v1;
+  println!("  r1v1: {r1v1:?}");
+  let r2v1 = &v1;
+  println!("  r2v1: {r2v1:?}");
+  nl();
+
+  show_op("demo_ref mutable");
+  /* can't mutate data through shared references */
+  let mut v2 = vec![1, 2, 3, 4, 5];
+  /* immutable borrow */
+  let r1v2 = &v2;
+  println!("  r1v2: {r1v2:?}");
+  /* mutable borrow ok if we don't use immutable borrow later */
+  let mr2v2 = &mut v2;
+  mr2v2.push(42);
+  println!("  mr2v2: {mr2v2:?}");
+  /*
+    Use of immutable borrow in println! illegal with active 
+    mutable borrow. Try uncommenting line below.
+  */
+  // println!("  r1v2: {r1v2:?}");
+}
+/*-- execute demonstrations -----------------------------*/
 fn main() {
-    println!(
-        "\n Demonstrate Rust types\n\
-       ------------------------"
+    show_note(
+      "Demonstrate Rust types"
     );
-    println!();
     
+    create_initialize();
     execute_demo_copy();
     execute_demo_move();
     execute_demo_mutable();
-    /*
-      Primitive data types: i32, f64, ... occupy contiguous
-      regions of memory, so they satisfy the copy trait.
-
-      Library types like String have a control block in stack
-      and data in heap. So they do not satisfy the copy trait.
-
-      A move type can be cloned, but that requires an explicit 
-      call to clone(). Otherwise, assignment and pass by value
-      result in move which transfers ownership of heap 
-      resources and invalidates the moved instance.
-
-      Any attempt to use a moved instance results in compile
-      failure.
-    */
+    execute_demo_ref();
 
     println!("\n\nThat's all Folks!!\n\n");
 }
-/*
-  show_type is generic function with Debug bound.
-  Using format "{:?}" requires Debug.
-  - mem::size_of::<T> measures size of T in stackframe.
-    It does not measure size of resources on heap.
-*/
-// fn show_type<T: Debug>(t: &T, nm: &str) {
-//   let typename = std::any::type_name::<*const T>();
-//   print!("  {nm}, {typename}");
-//   println!(
-//     "  value: {:?}, size: {}", 
-//     t, std::mem::size_of::<T>()
-//   );
-// }
-// fn show_type_move<T: Debug>(t: T, nm: &str) {
-//   let typename = std::any::type_name::<T>();
-//   print!("  {nm}, {typename}");
-//   println!(
-//     "  value: {:?}, size: {}", 
-//     t, std::mem::size_of::<T>()
-//   );
-// }
-

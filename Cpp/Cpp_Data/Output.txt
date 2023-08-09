@@ -1,59 +1,152 @@
 C:\github\JimFawcett\Bits\Cpp\Cpp_Data\build
-> ./Debug/Cpp_Data
+> debug/Cpp_Data 
 --------------------------------------------------
    Demonstrate C++ types
 --------------------------------------------------
 
-  --- initialize from literals ---
-
+--------------------------------------------------
+  initialize primitives in stack from literals
+--------------------------------------------------
   t1: type: int
-  value: 3,  size:  4
-
   t1a: type: __int64
-  value: 3,  size:  8
-
   d: type: double
-  value: 3.14159,  size:  8
-
   s: type: class std::basic_string<char,struct std:...
-  value: a literal string,  size:  40
 
-  -- copy construct --
-
-  t1b: type: __int64
-  value: 3,  size:  8
-
-  -- store in heap --
-
-  dptr: type: double * __ptr64
-  value: 0000023FB0046510,  size:  8
-
-  *dptr: type: double
-  value: 3.14159,  size:  8
-
-  -- string: control block in stack, data in heap --
-
+  --- copy construct ---
   s2: type: class std::basic_string<char,struct std:...
-  value: Hello Data,  size:  40
 
-  -- C++ reference --
+--------------------------------------------------  
+  store instances of primitives in heap
+--------------------------------------------------  
+  dptr: type: double *
+  *dptr: type: double
 
+  --- string: control block in stack, data in heap ---
+  s2: type: class std::basic_string<char,struct std:...
+
+  --- C++ reference ---
   rs2: type: class std::basic_string<char,struct std:...
-  value: Hello Data,  size:  40
 
-  -- unique_ptr owns data --
-
+  --- unique_ptr owns data ---
   ptr: type: class std::unique_ptr<int,struct std::de...
-  value: 0000023FB0036C70,  size:  8
-
   *ptr: type: int
-  value: -4,  size:  4
 
   --- heap data deleted when unique_ptr leaves scope ---
+
+--------------------------------------------------  
+  demo std library types
+--------------------------------------------------  
+
+  v: type: class std::vector<int,class std::allocat...
+  value: {
+      1, 2, 3, 2, 1
+  }
+  size:  16
+
+  m: type: class std::unordered_map<class std::basi...
+  value: {
+    {zero, 0}, {one, 1}, {two, 2}
+  }
+
+--------------------------------------------------  
+  demonstrate copy
+--------------------------------------------------  
+
+  --- direct integer copy ---
+  source: 42
+  destin: 42
+
+  --- direct vector copy ---
+  source:
+  v_src: {
+    1, 2, 3, 4, 5
+  }
+  destin:
+  v_dst: {
+    1, 2, 3, 4, 5
+  }
+
+  --- copy integer ---
+  before pass_by_value: 42
+  t:T: type: int
+  after pass_by_value:  42
+
+  --- copy vector ---
+  before pass_by_value:
+  v: {
+    1, 2, 3, 2, 1
+  }
+  t:T: type: class std::vector<int,class std::allocat...
+  after pass_by_value:
+  v: {
+    1, 2, 3, 2, 1
+  }
+
+  --- copy unordered_map ---
+  before pass_by_value:
+  map {
+    {zero, 0}, {one, 1}, {two, 2}
+  }
+  t:T: type: class std::unordered_map<class std::basi...
+  after pass_by_value:
+  map {
+    {zero, 0}, {one, 1}, {two, 2}
+  }
+
+--------------------------------------------------  
+  demonstrate copy by reference
+--------------------------------------------------  
+
+  --- copy ref of integer ---
+  before pass_by_ref: 42
+  T: type: int
+  after pass_by_ref:  0
+  before pass_by_ref:
+  v: {
+    1, 2, 3, 2, 1
+  }
+  T: type: class std::vector<int,class std::allocat...
+  after pass_by_ref:
+  v: {
+
+  }
+  --- copy ref of unordered_map ---
+  before pass_by_ref:
+  map {
+    {zero, 0}, {one, 1}, {two, 2}
+  }
+  T: type: class std::unordered_map<class std::basi...
+  after pass_by_ref:
+  map {
+
+  }
+
+--------------------------------------------------
+  demonstrate move
+--------------------------------------------------
+
+  --- move string ---
+  s1 = "a string"
+  s2 = " plus more"
+  s = s1 + s2 => "a string plus more"
+
+  --- move vector ---
+  before move:
+  v: {
+    1, 2, 3, 2, 1
+  }
+  after move of v into vm:
+  vm: {
+    1, 2, 3, 2, 1
+  }
+
+  v: {
+
+  }
 
 
   That's all Folks!
 
 
 C:\github\JimFawcett\Bits\Cpp\Cpp_Data\build
->
+>>

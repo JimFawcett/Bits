@@ -6,6 +6,7 @@
 #---------------------------------------------------
 cmake_minimum_required(VERSION 3.25)
 project(DataCMake)
+set(CMAKE_BUILD_TYPE Debug)
 #---------------------------------------------------
 #   CppData dir
 #   -- CMakeLists.txt (this file)

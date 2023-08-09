@@ -1,57 +1,154 @@
- Demonstrate Rust types
-------------------------
+C:\github\JimFawcett\Bits\Cpp\Cpp_Data\build
+> debug/Cpp_Data 
+--------------------------------------------------
+   Demonstrate C++ types
+--------------------------------------------------
 
-  -- initialize on stack from literals --
+--------------------------------------------------
+  initialize primitives in stack from literals
+--------------------------------------------------
+  t1: type: int
+  t1a: type: __int64
+  d: type: double
+  s: type: class std::basic_string<char,struct std:...
 
-t1, i32
-value: 42, size: 4
+  --- copy construct ---
+  s2: type: class std::basic_string<char,struct std:...
 
-t1a, i64
-value: 42, size: 8
+--------------------------------------------------
+  store instances of primitives in heap
+--------------------------------------------------
+  dptr: type: double *
+  *dptr: type: double
 
-t1a, f64
-value: 42.0, size: 8
+  --- string: control block in stack, data in heap ---
+  s2: type: class std::basic_string<char,struct std:...
 
-t1b, &mut f64
-value: 84.0, size: 8
+  --- C++ reference ---
+  rs2: type: class std::basic_string<char,struct std:...
 
-  -- initialize on heap --
+  --- unique_ptr owns data ---
+  ptr: type: class std::unique_ptr<int,struct std::de...
+  *ptr: type: int
 
-*t2, f64
-value: 3.14159, size: 8
+  --- heap data deleted when unique_ptr leaves scope ---
 
-t2, alloc::boxed::Box<f64>
-value: 3.14159, size: 8
+--------------------------------------------------
+  demo std library types
+--------------------------------------------------
 
-  -- size_of measures size of handle to heap element --
+  v: type: class std::vector<int,class std::allocat...
+  value: {
+      1, 2, 3, 2, 1
+  }
+  size:  16
 
-size_of::<Box<i8>>() = 8
-size_of::<Box<i64>>() = 8
+  m: type: class std::unordered_map<class std::basi...
+  value: {
+    {zero, 0}, {one, 1}, {two, 2}
+  }
 
-  -- use clone to avoid src move --
+--------------------------------------------------
+  demonstrate copy
+--------------------------------------------------
 
-t3.clone(), alloc::string::String
-value: "Hello Data", size: 24
+  --- direct integer copy ---
+  source: 42
+  destin: 42
 
-t4, &alloc::string::String
-value: "Hello Data", size: 8
+  --- direct vector copy ---
+  source:
+  v_src: {
+    1, 2, 3, 4, 5
+  }
+  destin:
+  v_dst: {
+    1, 2, 3, 4, 5
+  }
 
-  -- array of copy type elements is copy --
+  --- copy integer ---
+  before pass_by_value: 42
+  t:T: type: int
+  after pass_by_value:  42
 
-t5, [i32; 5]
-value: [1, 2, 3, 4, 5], size: 20
+  --- copy vector ---
+  before pass_by_value:
+  v: {
+    1, 2, 3, 2, 1
+  }
+  t:T: type: class std::vector<int,class std::allocat...
+  after pass_by_value:
+  v: {
+    1, 2, 3, 2, 1
+  }
 
-t5 was copied into show_type(...), see:
-t5 = [1, 2, 3, 4, 5] is still valid
+  --- copy unordered_map ---
+  before pass_by_value:
+  map {
+    {zero, 0}, {one, 1}, {two, 2}
+  }
+  t:T: type: class std::unordered_map<class std::basi...
+  after pass_by_value:
+  map {
+    {zero, 0}, {one, 1}, {two, 2}
+  }
 
-  -- vec is like an extendable array --
+--------------------------------------------------
+  demonstrate copy by reference
+--------------------------------------------------
 
-"v1", alloc::vec::Vec<i32>
-value: [1, 4, -1], size: 24
+  --- copy ref of integer ---
+  before pass_by_ref: 42
+  T: type: int
+  after pass_by_ref:  0
 
-&v2, &alloc::vec::Vec<i32>
-value: [42, 84, 126], size: 8
+  --- copy ref of vector ---
+  before pass_by_ref:
+  v: {
+    1, 2, 3, 2, 1
+  }
+  T: type: class std::vector<int,class std::allocat...
+  after pass_by_ref:
+  v: {
+
+  }
+  --- copy ref of unordered_map ---
+  before pass_by_ref:
+  map {
+    {zero, 0}, {one, 1}, {two, 2}
+  }
+  T: type: class std::unordered_map<class std::basi...
+  after pass_by_ref:
+  map {
+
+  }
+
+--------------------------------------------------
+  demonstrate move
+--------------------------------------------------
+
+  --- move string ---
+  s1 = "a string"
+  s2 = " plus more"
+  s = s1 + s2 => "a string plus more"
+
+  --- move vector ---
+  before move:
+  v: {
+    1, 2, 3, 2, 1
+  }
+  after move of v into vm:
+  vm: {
+    1, 2, 3, 2, 1
+  }
+
+  v: {
+
+  }
 
 
-That's all Folks!!
+  That's all Folks!
 
+
+C:\github\JimFawcett\Bits\Cpp\Cpp_Data\build
+>
