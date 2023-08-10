@@ -49,10 +49,10 @@ use std::fmt::Debug;
 
 /*---------------------------------------------------------
   Primitive data types: i32, f64, ... occupy contiguous
-  regions of memory, so they satisfy the copy trait.
+  regions of memory, so they satisfy the Copy trait.
 
   Library types like String have a control block in stack
-  and data in heap. So they do not satisfy the copy trait.
+  and data in heap. So they do not satisfy the Copy trait.
 
   A move type can be cloned, but that requires an explicit 
   call to clone(). Otherwise, assignment and pass by value
@@ -63,7 +63,9 @@ use std::fmt::Debug;
   failure.
 ---------------------------------------------------------*/
 
-/*-- demonstrate initialization of Rust's types ---------*/
+/*---------------------------------------------------------
+  Demonstrate initialization of Rust's types
+*/
 fn create_initialize() {
   show_note("create and initialize");
   nl();
@@ -98,76 +100,164 @@ fn create_initialize() {
   pass argument by value
   - t is destination of move operation on caller's 
     argument
+  - t mutated in function to demonstrate that there
+    are no side effects from calling this function
 */
-fn pass_by_val<T:Debug>(t:T) { 
+fn pass_by_val<T:Debug + Default>(mut t:T) { 
   show_type(&t,"T"); 
+  t = T::default();
+  println!("  value mutated internally to {:?}", t);
+  // no side effect since t was copied or moved
 }
-/*-- pass argument by reference -------------------------*/
-fn pass_by_ref<T:Debug>(t:&T) {  // t is ref to caller's arg
+/*---------------------------------------------------------
+  pass argument by reference
+  - t is reference to caller's argument
+  - t mutated in function to demonstrate that there
+    are side effects from calling this function
+*/
+fn pass_by_ref<T:Debug + Default>(t:&mut T) {
   show_type(&t,"T");
+  *t = T::default();
+  println!("  value mutated internally to {:?}", t);
+  // has side effects since t is ref to caller's value
 }
 /*-- demonstrate variable has not been moved ------------*/
 fn verify<T>(_t:T) {  // can only call this if t is valid
   /* t is valid */
 }
-/*-- demonstrate copy types -----------------------------*/
-fn demo_copy<T:Debug + Copy>(t:T) {
-  let tc = t;      // copy
-  pass_by_val(tc);    // pass by value - copy for copy type
-  pass_by_ref(&tc);   // pass by ref - no copy of tc
-  verify(tc);
-}
-fn execute_demo_copy() {
-  show_note("demonstrate copy");
+
+/*-- demonstrate copy types -------------------------------
+  Primitives and arrays of primitives are Copy types so
+  construction, assignment, and pass-by-value result in
+  copying entire source to destination.
+
+  Most non-primitive types are not Copy, but provide a
+  clone() function to make copies explicitly.
+*/
+fn demo_copy() {
+  show_note("demonstrate copy and pass-by-value");
   nl();
 
-  let i = 42i64;  // copy literal 42 into i
-  show_op("demo_copy for i64");
-  demo_copy(i);
-  println!("  copied i: {i:?}\n");
+  show_op("direct integer copy");
+  let i_src = 42i64;  // copy literal 42 into i
+  let i_dst = i_src;
+  println!("  source: {i_src:?}");
+  println!("  destin: {i_dst:?}");
+  nl();
   
-  let arr = [3.14f64, 0.5, -0.75];  // copy type
-  show_op("demo_copy for array of f64");
-  demo_copy(arr);
-  println!("  copied array arr: {arr:?}");
+  show_op("direct copy of array of f64");
+  let arr_src = [3.14f64, 0.5, -0.75];  // copy type
+  let arr_dst = arr_src;
+  println!("  source: {arr_src:?}");
+  println!("  destin: {arr_dst:?}");
+  nl();
+
+  show_op("direct vector clone");
+  let v_src = vec![1, 2, 3, 2, 1];
+  let v_dst = v_src.clone();
+  // let v_dst = v_src;  moves v_src resources to v_dst
+  // does not copy
+  println!("  source: {v_src:?}");
+  println!("  destin: {v_dst:?}");
+  nl();
+  
+  show_op("pass-by-value copies integer");
+  pass_by_val(i_src);
+  nl();
+
+  show_op("pass-by-value moves vector");
+  pass_by_val(v_src);
+  // println!("{:?}", v_src); fails to compile, v_scr moved
+
 }
-/*-- demonstrate move types -----------------------------*/
-fn demo_move<T:Debug + Clone>(t:T) {  // t is dest of move
-  let tc = t;              // t moved to tc
-  pass_by_val(tc.clone());    // pass by value - moves clone
-  pass_by_ref(&tc);           // pass by ref - no move of tc
-  verify(tc);                 // tc valid
+
+/*-- demonstrate references -------------------------------
+  Illustrates  side affects of passing by reference
+  - function pass_by_ref(&t) mutates t to illustrate
+    that caller sees this change.
+*/
+fn demo_pass_by_ref() {
+  show_label("demonstrate pass-by-reference", 50);
+
+  show_label("these demos have side effects", 35);
+  nl();
+
+  show_op("pass integer reference");
+  let mut i = 42i64;
+  println!("  before pass_by_ref: {i:?}");
+  pass_by_ref(&mut i); 
+  println!("  after pass_by_ref: {i:?}");
+  nl();
+
+  show_op("pass reference to vector");
+  let mut v = vec![1, 2, 3, 4, 5];
+  println!("  before pass_by_ref: {v:?}");
+  pass_by_ref(&mut v);
+  println!("  after pass_by_ref: {v:?}");
+  nl();
+
+  show_op("pass reference to HashMap");
+  let mut m = HashMap::<&str, i32>::new();
+  m.insert("zero", 0);
+  m.insert("one", 1);
+  m.insert("two", 2);
+  println!("  before pass_by_ref: {m:?}");
+  pass_by_ref(&mut m);
+  println!("  after pass_by_ref: {m:?}");
 }
-fn execute_demo_move() {
+
+/*-- demonstrate move types -------------------------------
+  Construction, assignment, and pass-by-value all result
+  in moving the source resources to the destination.
+
+  That is fast, usually only a few bytes are copied.
+
+  This demo shows that move source and destination are 
+  unique, but source and destination share same heap buffer.
+*/
+fn show_addresses<'a, T:Debug + AsRef<[u8]>>(t:&T, nm:&str) {
+  println!("  {}: {:?}", nm, t);  // show value of t
+  let addr_t = std::ptr::addr_of!(*t);
+  println!("  static address of {}: {:?}", nm, addr_t);
+  let byte_ref = t.as_ref();
+  let addr_res = std::ptr::addr_of!(byte_ref[0]);
+  println!("  heap address of {}'s buffer: {:?}", nm, addr_res);
+}
+fn demo_move() {
   show_note("demonstrate move");
   nl();
 
   show_op("demo_move for String");
-  let s = "a string".to_owned();
-  demo_move(s);
-  println!("  moved String s");
-  // Try uncommenting line below
-  // println!("  moved s: {s:?}");  // s moved, can't print
-  println!();
-  
-  show_op("demo_move for Vec");
-  let v = vec![1, 2, 3];
-  demo_move(v);
-  println!("  moved Vec v");
-  // println!("  moved v: {v:?}");  // v moved, can't print
-  println!();
+  let s = String::from("a string");
+  show_addresses(&s, "s");
+  let addrzero = std::ptr::addr_of!(s.as_bytes()[0]);
+  println!("  check - address of first byte of chars: {:?}", addrzero);
 
-  show_op("demo_move for HashMap");
-  let mut m = HashMap::<&str,i32>::new();
-  m.insert("zero", 0);
-  m.insert("one", 1);
-  m.insert("two", 2);
-  demo_move(m);
-  println!("  moved HashMap m");
-  // println!("  moved m: {m:?}");  // m moved, can't print
+  let t = s;  // move
+  show_op("let t:String = s; // move");
+  show_addresses(&t, "t");
+  nl();
+
+  println!("  Note: s and t are unique objects");
+  println!("  that share same buffer");
+  println!("  but now, s is invalid");
+  nl();
+
+  show_op("demo_move for Vec");
+  let u = vec![1, 2, 3, 2, 1];
+  show_addresses(&u, "u");
+  let addrzero = std::ptr::addr_of!(u[0]);
+  println!("  check - address of u[0]: {:?}", addrzero);
+
+  show_op("let v:Vec<u8> = u; // move");
+  let v = u;  // move
+  show_addresses(&v, "v");
 }
-/*-- demonstrate mutability -----------------------------*/
-fn execute_demo_mutable() {
+
+/*---------------------------------------------------------
+  Demonstrate mutability
+*/
+fn demo_mutable() {
   show_note("demonstrate mutability");
   nl();
 
@@ -199,8 +289,12 @@ fn execute_demo_mutable() {
   *value += 1;
   println!("  changed value:  {m:?}\n");
 }
-/*-- demonstrate references -----------------------------*/
-fn execute_demo_ref() {
+/*---------------------------------------------------------
+  Demonstrate references
+  - illustrates that mutability cannot be shared using
+    references
+*/
+fn demo_ref() {
   show_note("demonstrate references");
   nl();
 
@@ -236,10 +330,11 @@ fn main() {
     );
     
     create_initialize();
-    execute_demo_copy();
-    execute_demo_move();
-    execute_demo_mutable();
-    execute_demo_ref();
+    demo_copy();
+    demo_pass_by_ref();
+    demo_move();
+    demo_mutable();
+    demo_ref();
 
     println!("\n\nThat's all Folks!!\n\n");
 }

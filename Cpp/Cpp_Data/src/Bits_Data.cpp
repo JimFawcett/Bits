@@ -60,7 +60,7 @@ void initialize_primitives_from_literals() {
     double d{3.1415927};
     showTypeScalar(d, "d");
 
-    std::string s = "a literal string";  // char values in heap
+    std::string s {"a literal string"};  // char values in heap
     showTypeScalar(s, "s");
     nl();
 
@@ -321,7 +321,7 @@ void demo_move() {
   showEnum(vm, "vm");
   /*-- v has been moved so not guarenteed to be in viable state --*/
   try {
-    showEnum(v, "v");   // undefined behavior since resources moved
+    showEnum(v, "v");   // undefined behavior since resources moved, 
   }                     // works without exception using VS compiler
   catch(std::exception& ex) {
     std::cout << "\n  bad things happened\n";
