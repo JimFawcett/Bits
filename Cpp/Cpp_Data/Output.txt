@@ -1,5 +1,5 @@
 C:\github\JimFawcett\Bits\Cpp\Cpp_Data\build
-> debug/Cpp_Data 
+> debug/Cpp_Data
 --------------------------------------------------
    Demonstrate C++ types
 --------------------------------------------------
@@ -7,50 +7,63 @@ C:\github\JimFawcett\Bits\Cpp\Cpp_Data\build
 --------------------------------------------------
   initialize primitives in stack from literals
 --------------------------------------------------
-  t1: type: int
-  t1a: type: __int64
-  d: type: double
+  t1: type: int, value = 3
+  t1a: type: __int64, value = 3
+  d: type: double, value = 3.14159
   s: type: class std::basic_string<char,struct std:...
+      value = "a literal string"
 
   --- copy construct ---
   s2: type: class std::basic_string<char,struct std:...
+      value = "a literal string"
 
---------------------------------------------------  
+--------------------------------------------------
   store instances of primitives in heap
---------------------------------------------------  
-  dptr: type: double *
-  *dptr: type: double
+--------------------------------------------------
+
+  dptr: type: double * __ptr64, value = 000001E650FEA3C0
+  *dptr: type: double, value = 3.14159
 
   --- string: control block in stack, data in heap ---
   s2: type: class std::basic_string<char,struct std:...
+      value = "Hello Data"
 
   --- C++ reference ---
   rs2: type: class std::basic_string<char,struct std:...
+      value = "Hello Data"
 
   --- unique_ptr owns data ---
   ptr: type: class std::unique_ptr<int,struct std::de...
-  *ptr: type: int
+      value = "000001E650FD64B0"
+  *ptr: type: int, value = -4
 
   --- heap data deleted when unique_ptr leaves scope ---
 
---------------------------------------------------  
+--------------------------------------------------
   demo std library types
---------------------------------------------------  
+--------------------------------------------------
 
   v: type: class std::vector<int,class std::allocat...
   value: {
       1, 2, 3, 2, 1
   }
-  size:  16
+  size:  32
 
   m: type: class std::unordered_map<class std::basi...
   value: {
     {zero, 0}, {one, 1}, {two, 2}
   }
 
---------------------------------------------------  
-  demonstrate copy
---------------------------------------------------  
+--------------------------------------------------
+  demonstrate user-defined type
+--------------------------------------------------
+
+  demo: type: class Demo
+  Demo {demo }
+
+--------------------------------------------------
+  demonstrate copy and pass-by-value
+--------------------------------------------------
 
   --- direct integer copy ---
   source: 42
@@ -66,12 +79,12 @@ C:\github\JimFawcett\Bits\Cpp\Cpp_Data\build
     1, 2, 3, 4, 5
   }
 
-  --- copy integer ---
+  --- pass-by-value copies integer ---
   before pass_by_value: 42
   t:T: type: int
   after pass_by_value:  42
 
-  --- copy vector ---
+  --- pass-by-value copies vector using ctor ---
   before pass_by_value:
   v: {
     1, 2, 3, 2, 1
@@ -82,7 +95,7 @@ C:\github\JimFawcett\Bits\Cpp\Cpp_Data\build
     1, 2, 3, 2, 1
   }
 
-  --- copy unordered_map ---
+  --- pass-by-value copies unordered_map using ctor ---
   before pass_by_value:
   map {
     {zero, 0}, {one, 1}, {two, 2}
@@ -93,14 +106,20 @@ C:\github\JimFawcett\Bits\Cpp\Cpp_Data\build
     {zero, 0}, {one, 1}, {two, 2}
   }
 
---------------------------------------------------  
-  demonstrate copy by reference
---------------------------------------------------  
+--------------------------------------------------
+  demonstrate pass-by-reference
+--------------------------------------------------
+
+-----------------------------------
+  all demos have side effects
+-----------------------------------
 
   --- copy ref of integer ---
   before pass_by_ref: 42
   T: type: int
   after pass_by_ref:  0
+
+  --- copy ref of vector ---
   before pass_by_ref:
   v: {
     1, 2, 3, 2, 1
@@ -110,6 +129,7 @@ C:\github\JimFawcett\Bits\Cpp\Cpp_Data\build
   v: {
 
   }
+
   --- copy ref of unordered_map ---
   before pass_by_ref:
   map {
@@ -149,4 +169,4 @@ C:\github\JimFawcett\Bits\Cpp\Cpp_Data\build
 
 
 C:\github\JimFawcett\Bits\Cpp\Cpp_Data\build
->>
+>

@@ -34,9 +34,9 @@ t1a is not same object as t1
 --- string t2 = "a string" ---
 t2, String
 value: a string, size: 8
-------------------------------------------------------------
-  string has many methods - uncomment next line to see them
-------------------------------------------------------------
+------------------------------------------------------------    
+  string has many methods - uncomment next line to see them     
+------------------------------------------------------------    
 --- string t3 = t2 : copy handle of ref type ---
 t3, String
 value: a string, size: 8
@@ -47,16 +47,17 @@ value: a string, size: 8
 t3, String
 value: a string is here, size: 8
 t3 is not same object as t2
--------------------------------------------------------    
-  t2 not modified by change in t3 due to copy on write     
--------------------------------------------------------    
+-------------------------------------------------------
+  t2 not modified by change in t3 due to copy on write
+-------------------------------------------------------
+
 -----------------------------------
   Object - base reference type
 -----------------------------------
 --- Object obj1 - new Object() ---
 obj, Object
 value: System.Object, size: 8
---- interate over ref type members using reflection ---    
+--- interate over ref type members using reflection ---
 fields:
 methods:
   GetType
@@ -77,7 +78,7 @@ value: HelloData.Svt, size: 24
 ---------------------------------------------
   value type: size of object in stackframe
 ---------------------------------------------
---- iterate over val type members using reflection ---     
+--- Iterate over val type members using reflection ---
 fields:
   <I>k__BackingField = 3
   <D>k__BackingField = 3.1415927
@@ -89,7 +90,7 @@ methods:
   set_D
   get_C
   set_C
-  printSelf
+  PrintSelf
   Equals
   GetHashCode
   ToString
@@ -120,7 +121,7 @@ value: HelloData.Crt, size: 8
 t5a  { I:0, D:1, S:SomeString }
 t5a is same object as t5
 t5a.S is same object as t5.S
---- t5a.S = "new literal string" : no copy on write ---        
+--- t5a.S = "new literal string" : no copy on write ---
 t5a  { I:0, D:1, S:new string }
 t5  { I:0, D:1, S:new string }
 t5a is same object as t5

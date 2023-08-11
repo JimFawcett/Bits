@@ -1,154 +1,147 @@
-C:\github\JimFawcett\Bits\Cpp\Cpp_Data\build
-> debug/Cpp_Data 
---------------------------------------------------
-   Demonstrate C++ types
---------------------------------------------------
+C:\github\JimFawcett\Bits\Rust\rust_data
+> cargo run
+    Finished dev [unoptimized + debuginfo] target(s) in 0.00s
+     Running `target\debug\rust_data.exe`
 
---------------------------------------------------
-  initialize primitives in stack from literals
---------------------------------------------------
-  t1: type: int
-  t1a: type: __int64
-  d: type: double
-  s: type: class std::basic_string<char,struct std:...
+-------------------------
+ Demonstrate Rust types
+-------------------------
 
-  --- copy construct ---
-  s2: type: class std::basic_string<char,struct std:...
+-------------------------
+ create and initialize
+-------------------------
 
---------------------------------------------------
-  store instances of primitives in heap
---------------------------------------------------
-  dptr: type: double *
-  *dptr: type: double
+--- initialize primitives ---
+  int, i64
+  value: 42, size: 8
+  double, f64
+  value: 3.15927, size: 8
+  arr, [i32; 3]
+  value: [1, 2, 3], size: 12
 
-  --- string: control block in stack, data in heap ---
-  s2: type: class std::basic_string<char,struct std:...
+--- initialize std::lib types ---
+  vec, alloc::vec::Vec<i32>
+  value: [1, 2, 3, 2, 1], size: 24
+  map, std::collections::hash::map::HashMap<&str, i32>
+  value: {"one": 1, "two": 2, "zero": 0}, size: 48
 
-  --- C++ reference ---
-  rs2: type: class std::basic_string<char,struct std:...
+--- initialize user-defined type ---
+  udt, rust_data::create_initialize::Demo
+  value: Demo { name: "demo" }, size: 24
 
-  --- unique_ptr owns data ---
-  ptr: type: class std::unique_ptr<int,struct std::de...
-  *ptr: type: int
+-------------------------
+ demonstrate copy and pass-by-value
+-------------------------
 
-  --- heap data deleted when unique_ptr leaves scope ---
-
---------------------------------------------------
-  demo std library types
---------------------------------------------------
-
-  v: type: class std::vector<int,class std::allocat...
-  value: {
-      1, 2, 3, 2, 1
-  }
-  size:  16
-
-  m: type: class std::unordered_map<class std::basi...
-  value: {
-    {zero, 0}, {one, 1}, {two, 2}
-  }
-
---------------------------------------------------
-  demonstrate copy
---------------------------------------------------
-
-  --- direct integer copy ---
+--- direct integer copy ---
   source: 42
   destin: 42
 
-  --- direct vector copy ---
-  source:
-  v_src: {
-    1, 2, 3, 4, 5
-  }
-  destin:
-  v_dst: {
-    1, 2, 3, 4, 5
-  }
+--- direct copy of array of f64 ---
+  source: [3.14, 0.5, -0.75]
+  destin: [3.14, 0.5, -0.75]
 
-  --- copy integer ---
-  before pass_by_value: 42
-  t:T: type: int
-  after pass_by_value:  42
+--- direct vector clone ---
+  source: [1, 2, 3, 2, 1]
+  destin: [1, 2, 3, 2, 1]
 
-  --- copy vector ---
-  before pass_by_value:
-  v: {
-    1, 2, 3, 2, 1
-  }
-  t:T: type: class std::vector<int,class std::allocat...
-  after pass_by_value:
-  v: {
-    1, 2, 3, 2, 1
-  }
+--- pass-by-value copies integer ---
+  T, i64
+  value: 42, size: 8
+  value mutated internally to 0
 
-  --- copy unordered_map ---
-  before pass_by_value:
-  map {
-    {zero, 0}, {one, 1}, {two, 2}
-  }
-  t:T: type: class std::unordered_map<class std::basi...
-  after pass_by_value:
-  map {
-    {zero, 0}, {one, 1}, {two, 2}
-  }
+--- pass-by-value moves vector ---
+  T, alloc::vec::Vec<i32>
+  value: [1, 2, 3, 2, 1], size: 24
+  value mutated internally to []
 
 --------------------------------------------------
-  demonstrate copy by reference
+  demonstrate pass-by-reference
 --------------------------------------------------
 
-  --- copy ref of integer ---
+-----------------------------------
+  these demos have side effects
+-----------------------------------
+
+--- pass integer reference ---
   before pass_by_ref: 42
-  T: type: int
-  after pass_by_ref:  0
+  T, &mut i64
+  value: 42, size: 8
+  value mutated internally to 0
+  after pass_by_ref: 0
 
-  --- copy ref of vector ---
-  before pass_by_ref:
-  v: {
-    1, 2, 3, 2, 1
-  }
-  T: type: class std::vector<int,class std::allocat...
-  after pass_by_ref:
-  v: {
+--- pass reference to vector ---
+  before pass_by_ref: [1, 2, 3, 4, 5]
+  T, &mut alloc::vec::Vec<i32>
+  value: [1, 2, 3, 4, 5], size: 8
+  value mutated internally to []
+  after pass_by_ref: []
 
-  }
-  --- copy ref of unordered_map ---
-  before pass_by_ref:
-  map {
-    {zero, 0}, {one, 1}, {two, 2}
-  }
-  T: type: class std::unordered_map<class std::basi...
-  after pass_by_ref:
-  map {
+--- pass reference to HashMap ---
+  before pass_by_ref: {"zero": 0, "two": 2, "one": 1}
+  T, &mut std::collections::hash::map::HashMap<&str, i32>
+  value: {"zero": 0, "two": 2, "one": 1}, size: 8
+  value mutated internally to {}
+  after pass_by_ref: {}
 
-  }
+-------------------------
+ demonstrate move
+-------------------------
 
---------------------------------------------------
-  demonstrate move
---------------------------------------------------
+--- demo_move for String ---
+  s: "a string"
+  static address of s: 0x6a4c5af440
+  heap address of s's buffer: 0x1d0d45282e0
+  check - address of first byte of chars: 0x1d0d45282e0
+--- let t:String = s; // move ---
+  t: "a string"
+  static address of t: 0x6a4c5af4a0
+  heap address of t's buffer: 0x1d0d45282e0
 
-  --- move string ---
-  s1 = "a string"
-  s2 = " plus more"
-  s = s1 + s2 => "a string plus more"
+  Note: s and t are unique objects
+  that share same buffer
+  but now, s is invalid
 
-  --- move vector ---
-  before move:
-  v: {
-    1, 2, 3, 2, 1
-  }
-  after move of v into vm:
-  vm: {
-    1, 2, 3, 2, 1
-  }
+--- demo_move for Vec ---
+  u: [1, 2, 3, 2, 1]
+  static address of u: 0x6a4c5af550
+  heap address of u's buffer: 0x1d0d4534980
+  check - address of u[0]: 0x1d0d4534980
+--- let v:Vec<u8> = u; // move ---
+  v: [1, 2, 3, 2, 1]
+  static address of v: 0x6a4c5af5b0
+  heap address of v's buffer: 0x1d0d4534980
 
-  v: {
+-------------------------
+ demonstrate mutability
+-------------------------
 
-  }
+--- demo_mutable for primitives ---
+
+--- demo_mutable for primitives ---
+  original value: 42, changed value:  43
+  original value: 3.14159, changed value:  4.14159
+
+--- demo_mutable for std::lib types ---
+  original value: [1, 2, 3], changed value:  [1, 3, 3]
+  original value: {"one": 1, "two": 2, "zero": 0}
+  changed value:  {"one": 2, "two": 2, "zero": 0}
 
 
-  That's all Folks!
+-------------------------
+ demonstrate references
+-------------------------
+
+--- demo_ref immutable ---
+  r1v1: [1, 2, 3, 2, 1]
+  r2v1: [1, 2, 3, 2, 1]
+
+--- demo_ref mutable ---
+  r1v2: [1, 2, 3, 4, 5]
+  mr2v2: [1, 2, 3, 4, 5, 42]
 
 
-C:\github\JimFawcett\Bits\Cpp\Cpp_Data\build
->
+That's all Folks!!
+
+
+C:\github\JimFawcett\Bits\Rust\rust_data

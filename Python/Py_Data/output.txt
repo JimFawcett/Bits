@@ -1,7 +1,8 @@
 C:\github\JimFawcett\Bits\Python\Py_Data
 > python Py_Data.py
- Demonstrate Python Types
---------------------------
+----------------------------------------
+  Demonstrate Python Types
+---------------------------------------- 
 
   -- instances of all types reside in managed heap --
 
@@ -15,88 +16,91 @@ t1 <class 'list'>
 value:  [1, 2, 3, 4] , size:  88 
 
 -- t2 = t1 --
-t1 [1, 2, 3, 4] 2778705766400 
-t2 [1, 2, 3, 4] 2778705766400 
-
+t1 [1, 2, 3, 4] : 2001901245312 
+t2 [1, 2, 3, 4] : 2001901245312 
 
 -- t2 = 3.33333 : change of object --
-t2 3.33333 2778703241072 
+t2 3.33333 : 2001900380016 
 t2 <class 'float'>
 value:  3.33333 , size:  24 
 
 -- t2 += -1.0 : modify object --
-t2 2.33333 2778703242608 
+t2 2.33333 : 2001900380656 
 t2 <class 'float'>
 value:  2.33333 , size:  24 
 
 -- t3 = [1, "one"] --
-t3 [1, 'one'] 2778705703488 
+t3 [1, 'one'] : 2001901076864 
 t3 <class 'list'>
 value:  [1, 'one'] , size:  72 
 
 -- t4 = t3 --
-t3 [1, 'one'] 2778705703488
+t3 [1, 'one'] : 2001901076864 
 t3 <class 'list'>
-value:  [1, 'one'] , size:  72
-t4 [1, 'one'] 2778705703488
+value:  [1, 'one'] , size:  72 
+t4 [1, 'one'] : 2001901076864 
 t4 <class 'list'>
-value:  [1, 'one'] , size:  72
+value:  [1, 'one'] , size:  72 
+----------------------------------------
+  t3 and t4 are two distinct handles
+  pointing to same instance
+----------------------------------------
 
 -- t4.append('b') : no copy on write --
-t3 [1, 'one', 'b'] 2778705703488
+t3 [1, 'one', 'b'] : 2001901076864
 t3 <class 'list'>
 value:  [1, 'one', 'b'] , size:  120
-t4 [1, 'one', 'b'] 2778705703488
+t4 [1, 'one', 'b'] : 2001901076864
 t4 <class 'list'>
 value:  [1, 'one', 'b'] , size:  120
--------------------------
-t3 modified - same heap object, no copy on write
--------------------------
+----------------------------------------
+  t3 modified - same heap object,
+  no copy on write
+----------------------------------------
 
 -- t5 = (1, 2, 3) --
-t5 (1, 2, 3) 2778706025792
+t5 (1, 2, 3) : 2001901003264
 -- t6 = [1, t5, "weird"] --
-t6 [1, (1, 2, 3), 'weird'] 2778706031616
+t6 [1, (1, 2, 3), 'weird'] : 2001901088640
 t6 <class 'list'>
 value:  [1, (1, 2, 3), 'weird'] , size:  80
 -- t5 = 1 + 1j : new object --
-t5 (1+1j) 2778703241008
-t6 [1, (1, 2, 3), 'weird'] 2778706031616
--------------------------
-new object for t5, t6 not affected
--------------------------
+t5 (1+1j) : 2001900380112
+t6 [1, (1, 2, 3), 'weird'] : 2001901088640
+----------------------------------------
+  new object for t5, t6 not affected
+----------------------------------------
 
 -- t7 = "a string" --
-t7 a string 2778706030512
+t7 a string : 2001901007984
 t7 <class 'str'>
 value:  a string , size:  57
 -- t8 = t7 --
-t8 a string 2778706030512
--- t8 += " and another string" : copy on write
-t7 a string 2778706030512
-t8 a string and another string 2778706039936
+t8 a string : 2001901007984
+-- t8 += " and another string" : copy on write --
+t7 a string : 2001901007984
+t8 a string and another string : 2001901016752
 t8 <class 'str'>
 value:  a string and another string , size:  76
--------------------------
-t7 not modified : copy on write
--------------------------
+----------------------------------------
+  t7 not modified : str copy on write
+----------------------------------------
+
+-- t10 = copy.deepcopy(t9) --
+t9 list[1, 2, 3] : 2001901244160
+t10 list[1, 2, 3] : 2001901244096
+----------------------------------------
+  two distinct handles each with
+  a unique instance
+----------------------------------------
 
 -- iterate over t6 children --
-elem 1 2778702217456
-elem (1, 2, 3) 2778706025792
-elem weird 2778706030064
+elem 1 : 2001899356400
+elem (1, 2, 3) : 2001901003264
+elem weird : 2001901007472
 
 -- iterate over t6 methods --
-['__add__', '__class__', '__class_getitem__', '__contains__', 
-'__delattr__', '__delitem__', '__dir__', '__doc__', '__eq__', 
-'__format__', '__ge__', '__getattribute__', '__getitem__', '
-__gt__', '__hash__', '__iadd__', '__imul__', '__init__', '
-__init_subclass__', '__iter__', '__le__', '__len__', '__lt__', 
-'__mul__', '__ne__', '__new__', '__reduce__', '__reduce_ex__', 
-'__repr__', '__reversed__', '__rmul__', '__setattr__', 
-'__setitem__', '__sizeof__', '__str__', '__subclasshook__', 
-'append', 'clear', 'copy', 'count', 'extend', 'index', 'insert', 
-'pop', 'remove', 'reverse', 'sort']
+['__add__', '__class__', '__class_getitem__', '__contains__', '__delattr__', '__delitem__', '__dir__', '__doc__', '__eq__', '__format__', '__ge__', '__getattribute__', '__getitem__', '__gt__', '__hash__', '__iadd__', '__imul__', '__init__', '__init_subclass__', '__iter__', '__le__', '__len__', '__lt__', '__mul__', '__ne__', '__new__', '__reduce__', '__reduce_ex__', '__repr__', '__reversed__', '__rmul__', '__setattr__', '__setitem__', '__sizeof__', '__str__', '__subclasshook__', 'append', 'clear', 'copy', 'count', 'extend', 'index', 'insert', 'pop', 'remove', 'reverse', 'sort']
 
 That's all folks!
 
