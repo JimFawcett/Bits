@@ -70,18 +70,101 @@ fn create_initialize() {
   show_note("create and initialize");
   nl();
 
-  show_op("initialize primitives");
-  let int = 42i64;
+  show_op("initialize primitive values");
+  nl();
+  /*-- integer --------------------------------*/
+  show_op("i8");
+  let int = 42i8;
   show_type(&int, "int");
-  let double:f64 = 3.15927;
+  /*-- bool -----------------------------------*/
+  show_op("bool");
+  let b = true;
+  show_type(&b, "b");
+  /*-- float ----------------------------------*/
+  show_op("f32");
+  let double:f32 = 3.15927;
   show_type(&double, "double");
+  /*-- character ------------------------------*/
+  show_op("char");
+  let c = 'z';
+  show_type(&c, "c");
+  /*-- literal string -------------------------*/
+  show_op("&str");
+  let ls = "literal string";
+  show_type(&ls, "ls");
+  let second = ls.chars().nth(1);
+  show_type(&second, "second");
+  /*-- string ---------------------------------*/
+  show_op("String");
+  let st = "an owned string".to_string();
+  show_type(&st, "st");
+  let fourth = st.chars().nth(3);
+  show_type(&fourth, "fourth");
+  /*-- array ----------------------------------*/
+  show_op("[i32; 3]");
   let arr = [1, 2, 3];
   show_type(&arr, "arr");
+  let first = arr[0];
+  show_type(&first, "first");
+  /*-- tuple ----------------------------------*/
+  show_op("(i32, f64, char)");
+  let tp: (i32, f64, char) = (1, 2.5, 'a');
+  show_type(&tp, "tp");
+  let second = tp.1;
+  show_type(&second, "second");
+  /*-- reference: integer ---------------------*/
+  show_op("&i8");
+  let iref: &i8 = &int;
+  show_type(&iref, "iref");
+  /*-- reference: array -----------------------*/
+  show_op("&[i32; 3]");
+  let aref: &[i32; 3] = &arr;
+  show_type(&aref, "aref");
+  let second = aref[1];
+  show_type(&second, "second");
+  /*-- reference: slice of literal string -----*/
+  show_op("&ls[1..5]");
+  let lscs = &ls[1..5];
+  show_type(&lscs, "lscs");
+  let second = lscs.chars().nth(1);
+  show_type(&second, "second");
+  /*-- reference: slice of array --------------*/
+  show_op("&[i32]");
+  let sla = &arr[1..3];
+  show_type(&sla, "sla");
+  let second = sla[1];
+  show_type(&second, "second");
+  nl();
+
+  show_op("initialize primitive values and locations");
+  static PI:f64 = 3.1415927;
+  show_type(&PI, "PI in static memory");
+  println!("  address: {:p}", &PI);
+  let f:f64 = 3.1415927;
+  show_type(&f, "f in stack memory");
+  println!("  address: {:p}", &f);
+  let s:&str = "a literal string";
+  show_type(&s, "s in stack memory");
+  println!("  address: {:p}", &s);
+  let g = Box::new(3.1415927f64);
+  show_type(&g, "g in heap memory");
+  println!("  address: {:p}", &*g);
   nl();
 
   show_op("initialize std::lib types");
+  let tu = (42i32, 3.14159f64, 'z');
+  show_type(&tu, "tu");
   let vec = vec![1, 2, 3, 2, 1];
   show_type(&vec, "vec");
+  let st = "an owned string".to_string();
+  show_type(&st, "st");
+  let mut vecdeq = VecDeque::<f64>::new();
+  vecdeq.push_front(1.0);
+  vecdeq.push_front(1.5);
+  vecdeq.push_front(2.0);
+  vecdeq.push_front(1.5);
+  vecdeq.push_front(1.0);
+  show_type(&vecdeq, "vecdeq");
   let mut map = HashMap::<&str,i32>::new();
   map.insert("zero", 0);
   map.insert("one", 1);
@@ -215,6 +298,9 @@ fn demo_pass_by_ref() {
   This demo shows that move source and destination are 
   unique, but source and destination share same heap buffer.
 */
+fn get_address<'a, T:Debug + AsRef<[u8]>>(t:&T) -> *const T {
+  std::ptr::addr_of!(*t)
+}
 fn show_addresses<'a, T:Debug + AsRef<[u8]>>(t:&T, nm:&str) {
   println!("  {}: {:?}", nm, t);  // show value of t
   let addr_t = std::ptr::addr_of!(*t);
