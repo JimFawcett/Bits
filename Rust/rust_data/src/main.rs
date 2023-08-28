@@ -235,6 +235,46 @@ fn demo_copy() {
   println!("  destin: {arr_dst:?}");
   nl();
 
+  show_op("direct copy str");
+  let lstrs = "literal string";  // copy type
+  let lstrd = lstrs;
+  println!("  source: {lstrs:?}, address: {:p}", lstrs);
+  println!("  destin: {lstrd:?}, address: {:p}", lstrd);
+  nl();
+  println!("  Note: a literal string is a fixed value in memory.
+  All access occurs through a reference, so copies just copy
+  the reference. Both variables point to the same address." 
+  );
+  nl();
+
+  show_op("string clone");
+  let s_src = String::from("a string");
+  let s_src_addr = &s_src;
+  let s_src_bufaddr = std::ptr::addr_of!(s_src.as_bytes()[0]);
+  println!("  s_src: {:?}, address: {:p}", s_src, s_src_addr);
+  println!("  s_src_bufaddr: {:p}", s_src_bufaddr);
+  let s_cln = s_src.clone();
+  let s_cln_addr = &s_cln;
+  let s_cln_bufaddr = std::ptr::addr_of!(s_cln.as_bytes()[0]);
+  println!("  s_cln: {:?}, address: {:p}", s_cln, s_cln_addr);
+  println!("  s_cln_bufaddr: {:p}", s_cln_bufaddr);
+  nl();
+  println!("  Note: s_src and s_cln have different addresses
+  and their buffers have different addresses.
+  So they are unique entities.");
+  // let mut s_clnmut = s_src.clone();
+  // let s_clnmut_addr = &s_clnmut;
+  // let s_clnmut_bufaddr = std::ptr::addr_of!(s_clnmut.as_bytes()[0]);
+  // println!("  s_clnmut: {:?}, address: {:p}", s_clnmut, s_clnmut_addr);
+  // println!("  s_clnmut_buffaddr: {:p}", s_clnmut_bufaddr);
+  // // let mut s_cln = s_src.clone();
+  // s_clnmut.push_str(" plus more");
+  // let s_clnmut_addr = &s_clnmut;
+  // let s_clnmut_bufaddr = std::ptr::addr_of!(s_clnmut.as_bytes()[0]);
+  // println!("  s_clnmut: {:?}, address: {:p}", s_clnmut, s_clnmut_addr);
+  // println!("  s_clnmut_buffaddr: {:p}", s_clnmut_bufaddr);
+  nl();
+
   show_op("direct vector clone");
   let v_src = vec![1, 2, 3, 2, 1];
   let v_dst = v_src.clone();
@@ -314,22 +354,43 @@ fn demo_move() {
   nl();
 
   show_op("demo_move for String");
-  let s = String::from("a string");
-  show_addresses(&s, "s");
-  let addrzero = std::ptr::addr_of!(s.as_bytes()[0]);
-  println!("  check - address of first byte of chars: {:?}", addrzero);
-
-  let t = s;  // move
-  show_op("let t:String = s; // move");
-  show_addresses(&t, "t");
   nl();
+  show_op("let s = String::from(\"a string\")");
+  let s = String::from("a string");
+  let addrvec = &s;
+  let addrzero = std::ptr::addr_of!(s.as_bytes()[0]);
+  println!("address of s: {:p}", addrvec);
+  println!("address of first byte of s&apos;s char buffer: {:p}\n", addrzero);
 
-  println!("  Note: s and t are unique objects");
-  println!("  that share same buffer");
-  println!("  but now, s is invalid");
+  show_op("let t:String = s; // move");
+  let t = s;  // move
+  let addrvec = &t;
+  let addrzero = std::ptr::addr_of!(t.as_bytes()[0]);
+  println!("address of t: {:p}", addrvec);
+  println!("address of first byte of t&apos;s char buffer: {:p}\n", addrzero);
+
+  println!("Note: s and t are unique objects");
+  println!("that share same buffer");
+  println!("but now, s is invalid");
+
+  // show_op("demo_move for String");
+  // let s = String::from("a string");
+  // show_addresses(&s, "s");
+  // let addrzero = std::ptr::addr_of!(s.as_bytes()[0]);
+  // println!("  check - address of first byte of chars: {:?}", addrzero);
+
+  // let t = s;  // move
+  // show_op("let t:String = s; // move");
+  // show_addresses(&t, "t");
+  // nl();
+
+  // println!("  Note: s and t are unique objects");
+  // println!("  that share same buffer");
+  // println!("  but now, s is invalid");
   nl();
 
   show_op("demo_move for Vec");
+  nl();
   let u = vec![1, 2, 3, 2, 1];
   show_addresses(&u, "u");
   let addrzero = std::ptr::addr_of!(u[0]);
@@ -408,6 +469,15 @@ fn demo_ref() {
     mutable borrow. Try uncommenting line below.
   */
   // println!("  r1v2: {r1v2:?}");
+  nl();
+
+  show_op("attempt to mutate Vec while immutable ref exists");
+  let mut v3 = vec![1, 2, 3];
+  println!("  v3 capacity: {:?}", v3.capacity());
+  let rv3 = &v3[1]; // ok to declare
+  // uncomment next line to see build failure
+  //v3.push(4);  // v3 will reallocate if capacity is 3
+  println!("  r2v2: {rv3:?}"); // not ok to use
 }
 /*-- execute demonstrations -----------------------------*/
 fn main() {
