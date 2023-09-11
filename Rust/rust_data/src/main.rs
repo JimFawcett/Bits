@@ -262,6 +262,7 @@ fn demo_copy() {
   println!("  Note: s_src and s_cln have different addresses
   and their buffers have different addresses.
   So they are unique entities.");
+  
   // let mut s_clnmut = s_src.clone();
   // let s_clnmut_addr = &s_clnmut;
   // let s_clnmut_bufaddr = std::ptr::addr_of!(s_clnmut.as_bytes()[0]);

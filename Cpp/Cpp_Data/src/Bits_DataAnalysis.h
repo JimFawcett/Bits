@@ -3,6 +3,7 @@
   - Display creation and simple use of basic types
 */
 #include <iostream>  // std::cout
+#include <iomanip>
 #include <typeinfo>  // typeid
 // #include <memory>    // std::unique_ptr
 // #include <utility>   // move()
@@ -23,8 +24,8 @@ std::string truncate(const std::string& str, size_t n = 40);
 */
 template<typename T>
 void showType(T t, const std::string &nm) {
-  std::cout << "  " << nm;                // show name at call site
-  std::cout << ": type: " << truncate(typeid(t).name());  // show type
+  std::cout << "  " << std::setw(9) << std::left << nm + ": ";      // show name at call site
+  std::cout << "type: " << truncate(typeid(t).name());  // show type
   std::cout << "\n";
 }
 /*-----------------------------------------------
