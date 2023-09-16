@@ -1,0 +1,8 @@
+﻿  Scanning sources for module dependencies...
+  std.ixx
+  std.compat.ixx
+  Compiling...
+  std.ixx
+  std.compat.ixx
+  TestCpp20.cpp
+  TestCpp20.vcxproj -> C:\github\JimFawcett\Bits\Cpp\TestCpp20\x64\Debug\TestCpp20.exe

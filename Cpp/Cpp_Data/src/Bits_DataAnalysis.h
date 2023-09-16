@@ -4,7 +4,9 @@
 */
 #include <iostream>  // std::cout
 #include <iomanip>
+#include <sstream>
 #include <typeinfo>  // typeid
+#include <concepts>
 // #include <memory>    // std::unique_ptr
 // #include <utility>   // move()
 
@@ -14,6 +16,8 @@
   https://github.com/JimFawcett/Bits
   You can clone the repo from this link.
 -----------------------------------------------*/
+
+static const size_t WIDTH = 8;
 /*-----------------------------------------------
   truncate string to length n
   - does nothing if string length is less than n
@@ -24,9 +28,20 @@ std::string truncate(const std::string& str, size_t n = 40);
 */
 template<typename T>
 void showType(T t, const std::string &nm) {
-  std::cout << "  " << std::setw(9) << std::left << nm + ": ";      // show name at call site
+  std::cout << "  " << std::setw(WIDTH) << std::left << nm + ": ";      // show name at call site
   std::cout << "type: " << truncate(typeid(t).name());  // show type
   std::cout << "\n";
+}
+/*-----------------------------------------------
+  return type of t
+*/
+template<typename T>
+std::string getType(T t, const std::string &nm) {
+  std::ostringstream out;
+  out << "  " << std::setw(WIDTH) << std::left << nm + ": ";      // show name at call site
+  out << "type: " << truncate(typeid(t).name());  // show type
+  out << "\n";
+  return out.str();
 }
 /*-----------------------------------------------
   show type and value of t
@@ -133,7 +148,7 @@ void showAssoc(T t, const std::string &nm) {
 /*-----------------------------------------------
   display text in several formats
 */
-void showOp(const std::string& text);
+void showOp(const std::string& text, const std::string& suffix = "");
 void showLabel(const std::string& text, size_t n = 50);
 void print(const std::string& txt = "");
 void println(const std::string& txt = "");

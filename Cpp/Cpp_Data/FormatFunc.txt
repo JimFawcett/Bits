@@ -1,0 +1,63 @@
+/*-----------------------------------------------
+  show type of t
+*/
+template<typename T>
+void showType(T t, const std::string &nm) {
+  std::cout << "  " << std::setw(WIDTH) << std::left << nm + ": ";      // show name at call site
+  std::cout << "type: " << truncate(typeid(t).name());  // show type
+  std::cout << "\n";
+}
+/*-- format output --------------------------------------
+  - last argument is the standard lambda std::function
+  - intent is to pass in formatting customized for type T
+  - lots of examples of that below
+*/
+template <typename T>
+void formatOutput(
+  const T& t,                               // variable being formatted
+  const std::string& nm,                    // caller name
+  std::function<std::string(const T&)> f,   // convert to formatted string
+  bool showtype = true                      // default to show type
+){
+  std::cout << "  " << std::setw(WIDTH) << std::left << nm + ": "
+            << f(t) << "\n";
+  if(showtype) {
+    showType(t, nm);
+  }
+}
+
+/*-- convert scalar to string ---------------------------*/
+template <typename T>
+std::string scalarToString(const T& scalar) {
+  /* format in-memory stringstream so formats are temporary */
+  std::ostringstream out;
+  out.precision(3);
+  out << std::showpoint;
+  out << std::boolalpha;
+  out << scalar;
+  return out.str();
+}
+
+/*-- convert sequential collection to string ------------*/
+template <typename C>
+std::string seq_collectionToString(const C& coll) {
+  /* format in-memory stringstream so formats are temporary */
+  std::ostringstream out;
+  out.precision(3);
+  out << std::showpoint;
+  out << std::boolalpha;
+  out << "[ ";
+  /*-- show comma only in interior of sequence --*/
+  bool first = true;
+  for(auto item : coll) {
+    if(first) {
+      out << item;
+      first = false;
+    }
+    else {
+      out << ", " << item;
+    }
+  }
+  out << " ]";
+  return out.str();
+}

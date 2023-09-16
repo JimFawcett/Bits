@@ -1,0 +1,124 @@
+  /*-- primitive copy construction - bit-wise copy --*/
+  showOp("copy construction");
+  int ival = 42;
+  /*-- demonstrate bit-wise copy --*/
+  formatOutput<int>(ival, "ival", scalarToString<int>);
+  std::cout << formatAddress(ival, "ival");
+  showOp("int jval = ival");
+  int jval = ival;
+  formatOutput<int>(jval, "jval", scalarToString<int>);
+  std::cout << formatAddress(jval, "jval");
+  nl();
+
+  showOp("copy assignment");
+  double dval = 3.1415927;
+  formatOutput<double>(dval, "dval", floatToString<double>);
+  /*-- demonstrate bit-wise copy --*/
+  std::cout << formatAddress(dval, "dval");
+  double eval = 1.33333;
+  formatOutput<double>(eval, "eval", floatToString<double>);
+  std::cout << formatAddress(eval, "eval");
+  showOp("dval = eval");
+  dval = eval;
+  formatOutput<double>(dval, "dval", floatToString<double>);
+  std::cout << formatAddress(dval, "dval");
+  nl();
+
+  /*-- library type copy construction ---------------------
+    - uses copy constructor and assignment operator 
+  */
+
+  showLabel("copy operations for std::library types");
+  nl();
+
+  showOp("vector copy construction");
+  std::vector<double> vec { 1.0, 1.5, 2.0 };
+  std::cout << "  " << std::setw(WIDTH) << "vec: " 
+            << seq_collectionToString<std::vector<double>>(vec) 
+            << "\n";
+  /*-- demonstrate copy construction --*/
+  std::cout << formatAddress(vec, "vec");
+  std::cout << formatAddress(vec[0], "vec[0]");
+  showOp("auto uec = vec");
+  auto uec = vec;
+  std::cout << "  " << std::setw(WIDTH) << "uec: " 
+            << seq_collectionToString<std::vector<double>>(uec) 
+            << "\n";
+  std::cout << formatAddress(uec, "uec");
+  std::cout << formatAddress(uec[0], "uec[0]");
+  
+  showLabel(
+    "Note:\n  Both uec and vec and their resources are unique.\n"
+    "  That's because the vector copy constructor\n"
+    "  copies each element of vec to uec.\n\n"
+    "  Managed languages copy handles to instances,\n"
+    "  not the instances themselves, so construction\n"
+    "  does not create a new instance in those\n"
+    "  languages.  Resources are shared."
+  );
+  nl();
+  
+ showOp("vector copy assignment");
+  std::vector<double> tec { 1.0, 1.5, 2.0, 2.5 };
+  std::cout << "  " << std::setw(WIDTH) << std::left << "tec: " 
+            << seq_collectionToString<std::vector<double>>(tec) 
+            << "\n";
+  /*-- demonstrate copy assignment --*/
+  std::cout << formatAddress(tec, "tec");
+  std::cout << formatAddress(tec[0], "tec[0]");
+  showOp("uec = tec");
+  uec = tec;
+  std::cout << "  " << std::setw(WIDTH) << std::left << "uec: " 
+            << seq_collectionToString<std::vector<double>>(uec) 
+            << "\n";
+  std::cout << formatAddress(uec, "uec");
+  std::cout << formatAddress(uec[0], "uec[0]");
+  
+  showOp("vec has not changed");
+  std::cout << "  " << std::setw(WIDTH) << std::left << " vec: " 
+            << seq_collectionToString<std::vector<double>>(vec) 
+            << "\n";
+  std::cout << formatAddress(vec, "vec");
+  std::cout << formatAddress(vec[0], "vec[0]");
+  
+  showLabel(
+    "Note:\n  Both uec and tec and their resources are unique.\n"
+    "  That's because vector copy assignment operator\n"
+    "  copies each element of tec to uec.\n\n"
+    "  Managed languages copy handles to instances,\n"
+    "  not the instances themselves, so assignment\n"
+    "  causes sharing of resources in those languages."
+  );
+  nl();
+
+  showLabel("std::string moves");
+  nl();
+
+  showOp("move temporary string");
+  auto first = std::string("first part");
+  auto mid = std::string(" and ");
+  auto last = std::string("last part");
+  formatOutput<std::string>(first, "first", quotedString<std::string>, false);
+  formatOutput<std::string>(mid, "mid", quotedString<std::string>, false);
+  formatOutput<std::string>(last, "last", quotedString<std::string>, false);
+  showOp("auto aggr = first + mid + last");
+  auto aggr = first + mid + last;
+  formatOutput<std::string>(aggr, "aggr", quotedString<std::string>, false);
+  showLabel(
+    "first + mid + last is a temporary string that\n  "
+    "is moved to aggr using move constructor."
+  );
+  nl();
+
+  showOp("forced string move");
+  auto src = std::string("src string");
+  formatOutput<std::string>(src, "src", quotedString<std::string>);
+  showOp("auto dst = std::move(src)");
+  auto dst = std::move(src);
+  formatOutput<std::string>(dst, "dst", quotedString<std::string>);
+  formatOutput<std::string>(src, "src", quotedString<std::string>);
+  showLabel(
+    "There is no guarantee that src will have a valid\n  "
+    "state after move, so the src display, above, has\n  "
+    "undefined behavior - just happens to work on MSVC."
+  );

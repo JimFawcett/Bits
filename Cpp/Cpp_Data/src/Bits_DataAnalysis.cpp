@@ -41,8 +41,8 @@ std::string truncate(const std::string& str, size_t n) {
 /*---------------------------------------------------------
   Show operation text surrounded by "---" strings
 */
-void showOp(const std::string& text) {
-  std::cout << "  --- " << text << " ---" << std::endl;
+void showOp(const std::string& text, const std::string& suffix) {
+  std::cout << "  --- " << text << " ---" << std::endl << suffix;
 }
 /*---------------------------------------------------------
   Show text surrounded by long lines of '-' characters

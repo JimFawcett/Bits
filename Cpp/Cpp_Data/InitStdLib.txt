@@ -1,0 +1,47 @@
+  showLabel("initialize std::library types");
+  nl();
+
+  /*-- generic array --*/
+  showOp("std::array<double>");
+  std::array<double, 7> 
+  sarr { 1.0, 1.5, 2.0, 2.5, 2.0, 1.5, 1.0 };
+  std::cout << formatOutput<std::array<double, 7>>(
+    sarr, "sarr", 
+    seq_collectionToString<std::array<double, 7>>
+  );
+
+  /*-- expandable string --*/
+  showOp("std::string => std::basic_string<char>");
+  std::string sstr = "a string";   // initializes from literal
+  std::cout << formatOutput<std::string>(
+    sstr, "sstr", quotedString<std::string>
+  );
+
+  /*-- expandable indexable array --*/
+  showOp("std::vector<int>");
+  std::vector<int> vec { 1, 2, 3, 4 };
+  vec.push_back(5);
+  std::cout << formatOutput<std::vector<int>>(
+    vec, "vec", seq_collectionToString<std::vector<int>>
+  );
+
+  /*-- expandable double-ended queue --*/
+  showOp("std::deque<int>");
+  std::deque<int> dq { 1, 2, 3 };
+  dq.push_front(0);
+  dq.push_back(4);
+  std::cout << formatOutput<std::deque<int>>(
+    dq, "dq", seq_collectionToString<std::deque<int>>
+  );
+
+  /*-- expandable associative container --*/
+  showOp("std::unordered_map<std::string, int>");
+  std::unordered_map<std::string, int> umap
+  {{"one", 1}, {"two", 2}, {"three", 3}};
+  umap.insert({"zero", 0});
+  std::cout << formatOutput<std::unordered_map<std::string, int>>(
+    umap, "umap", 
+    assoc_collectionToString<std::unordered_map<std::string, int>>
+  );
+
+

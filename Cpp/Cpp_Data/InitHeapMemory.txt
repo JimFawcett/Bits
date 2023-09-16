@@ -1,0 +1,49 @@
+    showOp("initialized in heap memory");
+  nl();
+
+  showOp("raw pointer");
+  int* tmol = new int{42};
+  std::cout << formatOutput<int>(
+                 *tmol, "*tmol", scalarToString<int>
+               );
+  std::cout << formatOutput<int*>(
+                 tmol, "tmol", scalarToString<int*>
+               );
+  delete tmol;  // forgetting this causes memory leak
+
+  showOp("std::shared_ptr");
+  std::shared_ptr<int> utmol = std::make_shared<int>(42);
+  int tmp = *utmol;
+  std::cout << formatOutput<int>(
+    *utmol, "*utmol", scalarToString<int>
+  );
+  std::cout << formatOutput<std::shared_ptr<int>>(
+    utmol, "utmol", scalarToString<std::shared_ptr<int>>
+  );
+  // std::shared_ptr deallocates heap storage when
+  // all references go out of scope. So no memory leak.
+
+  showOp("std::shared_ptr<std::vector<int>>");
+  std::shared_ptr<std::vector<int>> pVec = 
+  make_shared<std::vector<int>>(std::vector<int>{ 1, 2, 3 });
+  std::cout << formatOutput<std::vector<int>>(
+                 *pVec, "*pVec", 
+                 seq_collectionToString<std::vector<int>>
+               );
+  std::cout << formatOutput<std::shared_ptr<std::vector<int>>>(
+                 pVec, "pVec", 
+                 scalarToString<std::shared_ptr<std::vector<int>>>
+               );
+
+  showOp("using aliases to simplify");
+  using VecI = std::vector<int>;
+  using SPtr = std::shared_ptr<std::vector<int>>;
+  SPtr pVec2 = make_shared<VecI>(VecI{ 1, 2, 3 });
+  std::cout << formatOutput<VecI>(*pVec2, "*pVec2", seq_collectionToString<VecI>);
+  std::cout << formatOutput<SPtr>(
+                 pVec2, "pVec2", 
+                 scalarToString<SPtr>
+               );
+  nl();
+
+

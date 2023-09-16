@@ -1,0 +1,64 @@
+  showLabel("copy operations for std::library types");
+  nl();
+
+  showOp("vector copy construction");
+  std::vector<double> vec { 1.0, 1.5, 2.0 };
+  std::cout << formatOutput<std::vector<double>>(
+    vec, "vec", seq_collectionToString<std::vector<double>>, false
+  );
+  /*-- demonstrate copy construction --*/
+  std::cout << formatAddress(vec, "vec");
+  std::cout << formatAddress(vec[0], "vec[0]");
+  showOp("auto uec = vec");
+  auto uec = vec;
+  std::cout << formatOutput<std::vector<double>>(
+    uec, "uec", seq_collectionToString<std::vector<double>>, false
+  );
+  std::cout << formatAddress(uec, "uec");
+  std::cout << formatAddress(uec[0], "uec[0]");
+  
+  showLabel(
+    "Note:\n  Both uec and vec and their resources are unique.\n"
+    "  That's because the vector copy constructor\n"
+    "  copies each element of vec to uec.\n\n"
+    "  Managed languages copy handles to instances,\n"
+    "  not the instances themselves, so construction\n"
+    "  does not create a new instance in those\n"
+    "  languages.  Resources are shared."
+  );
+  nl();
+  
+ showOp("vector copy assignment");
+  std::vector<double> tec { 1.0, 1.5, 2.0, 2.5 };
+  std::cout << formatOutput<std::vector<double>>(
+    tec, "tec", seq_collectionToString<std::vector<double>>, false
+  );
+  /*-- demonstrate copy assignment --*/
+  std::cout << formatAddress(tec, "tec");
+  std::cout << formatAddress(tec[0], "tec[0]");
+  showOp("uec = tec");
+  uec = tec;
+  std::cout << formatOutput<std::vector<double>>(
+    uec, "uec", seq_collectionToString<std::vector<double>>, false
+  );
+  std::cout << formatAddress(uec, "uec");
+  std::cout << formatAddress(uec[0], "uec[0]");
+  
+  showOp("original source vec has not changed");
+  std::cout << formatOutput<std::vector<double>>(
+    vec, "vec", seq_collectionToString<std::vector<double>>, false
+  );
+  std::cout << formatAddress(vec, "vec");
+  std::cout << formatAddress(vec[0], "vec[0]");
+  
+  showLabel(
+    "Note:\n  Both uec and tec and their resources are unique.\n"
+    "  That's because vector copy assignment operator\n"
+    "  copies each element of tec to uec.\n\n"
+    "  Managed languages copy handles to instances,\n"
+    "  not the instances themselves, so assignment\n"
+    "  causes sharing of resources in those languages."
+  );
+  nl();
+
+

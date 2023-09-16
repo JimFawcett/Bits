@@ -66,6 +66,10 @@ use std::fmt::Debug;
 /*---------------------------------------------------------
   Demonstrate initialization of Rust's types
 */
+fn show_formatted<T:Debug>(t:&T, nm:&str) {
+  show_op(std::any::type_name::<T>());
+  show_type(t, nm);
+}
 fn create_initialize() {
   show_note("create and initialize");
   nl();
@@ -73,85 +77,99 @@ fn create_initialize() {
   show_op("initialize primitive values");
   nl();
   /*-- integer --------------------------------*/
-  show_op("i8");
   let int = 42i8;
-  show_type(&int, "int");
+  show_formatted(&int, "int");
+  // show_op("i8");
+  // show_type(&int, "int");
   /*-- bool -----------------------------------*/
-  show_op("bool");
   let b = true;
-  show_type(&b, "b");
+  show_formatted(&b, "b");
+  // show_op("bool");
+  // show_type(&b, "b");
   /*-- float ----------------------------------*/
-  show_op("f32");
   let double:f32 = 3.15927;
-  show_type(&double, "double");
+  show_formatted(&double, "double");
+  // show_op("f32");
+  // show_type(&double, "double");
   /*-- character ------------------------------*/
-  show_op("char");
   let c = 'z';
-  show_type(&c, "c");
+  show_formatted(&c, "c");
+  // show_op("char");
+  // show_type(&c, "c");
   /*-- literal string -------------------------*/
-  show_op("&str");
   let ls = "literal string";
-  show_type(&ls, "ls");
+  show_formatted(&ls, "ls");
+  // show_op("&str");
+  // show_type(&ls, "ls");
   let second = ls.chars().nth(1);
   show_type(&second, "second");
   /*-- string ---------------------------------*/
-  show_op("String");
   let st = "an owned string".to_string();
-  show_type(&st, "st");
+  show_formatted(&st, "st");
+  // show_op("String");
+  // show_type(&st, "st");
   let fourth = st.chars().nth(3);
   show_type(&fourth, "fourth");
   /*-- array ----------------------------------*/
-  show_op("[i32; 3]");
   let arr = [1, 2, 3];
-  show_type(&arr, "arr");
+  show_formatted(&arr, "arr");
+  // show_op("[i32; 3]");
+  // show_type(&arr, "arr");
   let first = arr[0];
   show_type(&first, "first");
   /*-- tuple ----------------------------------*/
-  show_op("(i32, f64, char)");
   let tp: (i32, f64, char) = (1, 2.5, 'a');
-  show_type(&tp, "tp");
+  show_formatted(&tp, "tp");
+  // show_op("(i32, f64, char)");
+  // show_type(&tp, "tp");
   let second = tp.1;
   show_type(&second, "second");
   /*-- reference: integer ---------------------*/
-  show_op("&i8");
   let iref: &i8 = &int;
-  show_type(&iref, "iref");
+  show_formatted(&iref, "iref");
+  // show_op("&i8");
+  // show_type(&iref, "iref");
   /*-- reference: array -----------------------*/
-  show_op("&[i32; 3]");
   let aref: &[i32; 3] = &arr;
-  show_type(&aref, "aref");
+  show_formatted(&aref, "aref");
+  // show_op("&[i32; 3]");
+  // show_type(&aref, "aref");
   let second = aref[1];
   show_type(&second, "second");
   /*-- reference: slice of literal string -----*/
-  show_op("&ls[1..5]");
   let lscs = &ls[1..5];
-  show_type(&lscs, "lscs");
+  show_formatted(&lscs, "lscs");
+  // show_op("&ls[1..5]");
+  // show_type(&lscs, "lscs");
   let second = lscs.chars().nth(1);
   show_type(&second, "second");
   /*-- reference: slice of array --------------*/
-  show_op("&[i32]");
   let sla = &arr[1..3];
-  show_type(&sla, "sla");
+  show_formatted(&sla, "sla");
+  // show_op("&[i32]");
+  // show_type(&sla, "sla");
   let second = sla[1];
   show_type(&second, "second");
   nl();
 
   show_op("initialize primitive values and locations");
+  nl();
   static PI:f64 = 3.1415927;
   show_type(&PI, "PI in static memory");
-  println!("  address: {:p}", &PI);
+  println!("  address: {:p}\n", &PI);
   let f:f64 = 3.1415927;
   show_type(&f, "f in stack memory");
-  println!("  address: {:p}", &f);
+  println!("  address: {:p}\n", &f);
   let s:&str = "a literal string";
   show_type(&s, "s in stack memory");
-  println!("  address: {:p}", &s);
+  println!("  address: {:p}\n", &s);
   let g = Box::new(3.1415927f64);
   show_type(&g, "g in heap memory");
   println!("  address: {:p}", &*g);
   nl();
 
   show_op("initialize std::lib types");
+  nl();
   let tu = (42i32, 3.14159f64, 'z');
   show_type(&tu, "tu");
   let vec = vec![1, 2, 3, 2, 1];
@@ -173,6 +191,7 @@ fn create_initialize() {
   nl();
 
   show_op("initialize user-defined type");
+  nl();
   #[derive(Debug)]
   struct Demo { name: String }
   let udt = Demo { name: "demo".to_string() };
@@ -281,6 +300,7 @@ fn demo_copy() {
   let v_dst = v_src.clone();
   // let v_dst = v_src;  moves v_src resources to v_dst
   // does not copy
+  //dbg!(&v_dst);
   println!("  source: {v_src:?}");
   println!("  destin: {v_dst:?}");
   nl();

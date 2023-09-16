@@ -1,0 +1,38 @@
+  --- scalars ---
+
+  --- bool ---
+  b:      true
+  b:      type: bool
+  --- byte ---
+  byte:   0xf
+  byte:   type: enum std::byte
+  --- int ---
+  i:      42
+  i:      type: int
+  --- double ---
+  d:      3.141593
+  d:      type: double
+  --- char ---
+  ch:     z
+  ch:     type: char
+  --- const char* ---
+  lst:    "a literal string"
+  lst:    type: char const * __ptr64
+
+  --- aggregate types ---
+
+  --- native array ---
+  fa[]:   [ 1, 2, 3, 4, 5 ]
+  fa[]:   type: short const * __ptr64
+  --- struct ---
+  strct:  S { 1, a, 3.14159 }
+  strct:  type: struct `void __cdecl initialize_primitiv...
+  --- tuple ---
+  tup:    { 1, 3.14, z }
+  tup:    type: class std::tuple<int,double,char>
+  --- optional ---
+  opt1:    3.14159
+  opt2:   empty
+  opt1:   type: class std::optional<double>
+
+

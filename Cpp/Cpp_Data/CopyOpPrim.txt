@@ -1,0 +1,31 @@
+    showLabel("copy operations for primitives");
+  nl();
+
+  /*-- primitive copy construction - bit-wise copy --*/
+  showOp("copy construction");
+  int ival = 42;
+  /*-- demonstrate bit-wise copy --*/
+  std::cout << formatOutput<int>(ival, "ival", scalarToString<int>);
+  std::cout << formatAddress(ival, "ival");
+  showOp("int jval = ival");
+  int jval = ival;
+  std::cout << formatOutput<int>(jval, "jval", scalarToString<int>);
+  std::cout << formatAddress(jval, "jval");
+  nl();
+
+  showOp("copy assignment");
+  double dval = 3.1415927;
+  std::cout << formatOutput<double>(dval, "dval", floatToString<double>);
+  /*-- demonstrate bit-wise copy --*/
+  std::cout << formatAddress(dval, "dval");
+  double eval = 1.33333;
+  std::cout << formatOutput<double>(eval, "eval", floatToString<double>);
+  std::cout << formatAddress(eval, "eval");
+  showOp("dval = eval");
+  dval = eval;
+  std::cout << formatOutput<double>(dval, "dval", floatToString<double>);
+  std::cout << formatAddress(dval, "dval");
+  nl();
+
+
+
