@@ -1,5 +1,5 @@
 /*---------------------------------------------------------
-  Bits::Cpp::Cpp_Data::src::Cpp_DataAnalysis.cpp
+  Bits::Cpp::Cpp_Data::src::Bits_DataAnalysis.cpp
   - Functions to analyze and display data
 */
 #include <iostream>  // std::cout
