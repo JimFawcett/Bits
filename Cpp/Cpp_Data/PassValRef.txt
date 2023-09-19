@@ -1,0 +1,47 @@
+template<typename T>
+void pass_seq_by_value(T t) {
+  std::cout << formatOutput<T>(t, "   passed", seq_collectionToString<T>);
+  std::cout << formatAddress<T>(t, "   passed");
+  std::cout << formatAddress<typename T::value_type>(t[0], "passed[0]");
+}
+template<typename T>
+void pass_seq_by_reference(T& t) {
+  std::cout << formatOutput<T>(t, "   passed", seq_collectionToString<T>);
+  std::cout << formatAddress<T>(t, "   passed");
+  std::cout << formatAddress<typename T::value_type>(t[0], "passed[0]");
+}
+void pass_by_value_and_ref() {
+
+  showLabel("pass-by-value and pass-by-reference");
+  nl();
+
+  showOp("std::vector<int> pass-by-value");
+  nl();
+  using VECI = std::vector<int>;
+  auto v = std::vector<int>() = { 1, 2, 3 };
+  std::cout << formatOutput<VECI>(v, "     call", seq_collectionToString<VECI>);
+  std::cout << formatAddress<VECI>(v, "     call");
+  std::cout << formatAddress<int>(v[0], "  call[0]");
+  pass_seq_by_value(v);
+  showLabel(
+    "passed has the same value as call.\n"
+    "  call and its resources are different from\n"
+    "  passed and its resources.  That demonstrates\n"
+    "  passed was copy constructed from call."
+  );
+  nl();
+
+  showOp("std::vector<int> pass-by-reference");
+  nl();
+  using VECI = std::vector<int>;
+  auto rv = std::vector<int>() = { 1, 2, 3 };
+  std::cout << formatOutput<VECI>(rv, "     call", seq_collectionToString<VECI>);
+  std::cout << formatAddress<VECI>(rv, "     call");
+  std::cout << formatAddress<int>(rv[0], "  call[0]");
+  pass_seq_by_reference(rv);
+  showLabel(
+    "call and its resources are the same as\n"
+    "  passed and its resources.  That demonstrates\n"
+    "  that only reference was copied."
+  );
+

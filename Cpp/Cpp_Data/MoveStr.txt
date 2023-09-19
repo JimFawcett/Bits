@@ -1,0 +1,29 @@
+  showOp("move temporary string");
+  auto first = std::string("first part");
+  auto mid = std::string(" and ");
+  auto last = std::string("last part");
+  std::cout << formatOutput<std::string>(first, "first", quotedString<std::string>, false);
+  std::cout << formatOutput<std::string>(mid, "mid", quotedString<std::string>, false);
+  std::cout << formatOutput<std::string>(last, "last", quotedString<std::string>, false);
+  showOp("auto aggr = first + mid + last");
+  auto aggr = first + mid + last;
+  std::cout << formatOutput<std::string>(aggr, "aggr", quotedString<std::string>, false);
+  showLabel(
+    "first + mid + last is a temporary string that\n  "
+    "is moved to aggr using move constructor."
+  );
+  nl();
+
+  showOp("forced string move");
+  auto src = std::string("src string");
+  std::cout << formatOutput<std::string>(src, "src", quotedString<std::string>);
+  showOp("auto dst = std::move(src)");
+  auto dst = std::move(src);
+  std::cout << formatOutput<std::string>(dst, "dst", quotedString<std::string>);
+  std::cout << formatOutput<std::string>(src, "src", quotedString<std::string>);
+  showLabel(
+    "There is no guarantee that src will have a valid\n  "
+    "state after move, so the src display, above, has\n  "
+    "undefined behavior - just happens to work on MSVC."
+  );
+
