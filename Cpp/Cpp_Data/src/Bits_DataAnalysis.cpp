@@ -5,8 +5,6 @@
 #include <iostream>  // std::cout
 #include <typeinfo>  // typeid
 #include "Bits_DataAnalysis.h"
-//#include <memory>    // std::unique_ptr
-//#include <utility>   // move()
 
 /*-----------------------------------------------
   Note:
@@ -27,17 +25,6 @@ std::string truncate(const std::string& str, size_t n) {
   tmp += "...";
   return tmp;
 }
-/*---------------------------------------------------------
-  Show call name, static type, value, and size
-*/
-// template<typename T>
-// void showType(T t, const std::string &nm) {
-//   std::cout << "\n  " << nm;                // show name at call site
-//   std::cout << ": type: " << truncate(typeid(t).name());  // show type
-//   std::cout << "\n  value: " << t;          // show value
-//   std::cout << ",  size:  " << sizeof(t);   // show size on stack
-//   std::cout << "\n";
-// }
 /*---------------------------------------------------------
   Show operation text surrounded by "---" strings
 */
