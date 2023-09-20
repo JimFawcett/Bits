@@ -7,8 +7,6 @@
 #include <sstream>
 #include <typeinfo>  // typeid
 #include <concepts>
-// #include <memory>    // std::unique_ptr
-// #include <utility>   // move()
 
 /*-----------------------------------------------
   Note:
