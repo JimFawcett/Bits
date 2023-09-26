@@ -147,10 +147,12 @@ std::string formatOutput(
   bool showtype = true                      // default to show type
 ){
   std::stringstream out;
-  out << "  " << std::setw(WIDTH) << std::left << nm + ": "
+  //out << "  " << std::setw(WIDTH) << std::left << nm + ": "
+  out << "  " << nm + ": "
       << f(t) << "\n";
   if(showtype) {
     out << getType(t, nm);
+    out << "  " << nm + ": size = " << sizeof(t) << "\n";
   }
   return out.str();
 }
@@ -171,6 +173,7 @@ void initialize_primitives() {
   std::cout << formatOutput<bool>(
     b, "b", scalarToString<bool>
   );
+  size_t bsize = sizeof(b);
 
   showOp("byte");
   std::byte byte { 0x0f };
@@ -202,6 +205,7 @@ void initialize_primitives() {
   std::cout << formatOutput<const char*>(
     lst, "lst", quotedString<const char*>
   );
+  std::cout << "  lst: char count = " << std::strlen(lst);
   nl();
 
   showOp("aggregate types");
@@ -211,9 +215,11 @@ void initialize_primitives() {
   showOp("native array");
   short int fa[] { 1, 2, 3, 4, 5 };
   short int fa_alt[5] { 1, 2, 3, 4, 5 };
+  auto afirst = fa[0];
   std::cout << formatOutput<short int[5]>(
     fa, "fa[]", seq_collectionToString<short int[5]>
   );
+  std::cout << "  afirst = " << afirst << "\n";
 
   /*-- struct ---------------------------------------------
     - user-defined, so generic formatOutput function 
@@ -222,34 +228,43 @@ void initialize_primitives() {
   */
   showOp("struct");
   struct S { int a; char b; double c; };
-  S strct { 1, 'a', 3.1415927 };
-  std::string fstr = std::format("  {:8}{}", "strct: ", "S { ");
+  S strct { 42, 'a', 3.1415927 };
+  auto sfirst = strct.a;
+  std::string fstr = std::format("  {}{}", "strct: ", "S { ");
   fstr += std::format("{}, {}, {:.5f} }}\n", strct.a, strct.b, strct.c);
   std::cout << fstr;
   showType(strct, "strct");
+  std::cout << "  strct: size = " << sizeof(strct) << "\n";
+  std::cout << "  sizeof(strct.a) = " << sizeof(strct.a) << "\n";
+  std::cout << "  sizeof(strct.b) = " << sizeof(strct.b) << "\n";
+  std::cout << "  sizeof(strct.c) = " << sizeof(strct.c) << "\n";
+  std::cout << "  sfirst = " << sfirst << "\n";
 
   /*-- tuple ----------------------------------------------
     - user-defined, so generic formatOutput function 
       is not practical
   */
   showOp("tuple");
-  std::tuple<int, double, char> tup { 1, 3.14, 'z' };
-  std::cout << "  " << std::setw(WIDTH) << std::left << "tup: " << "{ " 
+  std::tuple<int, double, char> tup { -1, 3.14, 'z' };
+  std::cout << "  " << "tup: " << "{ " 
             << std::get<0>(tup) << ", " 
             << std::get<1>(tup) << ", " 
             << std::get<2>(tup)
             << " }\n";
   showType(tup, "tup");
-  
+  std::cout << "  size = " << sizeof(tup) << "\n";
+  auto tfirst = get<0>(tup);
+  std::cout << "  tfirst = " << tfirst << "\n";
+
   /*-- optional -------------------------------------------
     - generic format output function would only match this
       one type, so no code reuse
   */
   showOp("optional");
   std::optional<double> opt1 { 3.1415927 };
-  std::cout << "  " << std::setw(9) << "opt1: " << opt1.value_or(42.0) << "\n"; 
+  std::cout << "  " << "opt1: " << opt1.value_or(42.0) << "\n"; 
   std::optional<double> opt2; // { std::nullopt };
-  std::cout << "  " << std::setw(WIDTH) << std::left << "opt2: ";
+  std::cout << "  " << "opt2: ";
   if(opt2 == std::nullopt) {
     std::cout << "empty\n";
   }
@@ -257,6 +272,7 @@ void initialize_primitives() {
     std::cout << *opt2 << "\n";
   }
   showType(opt1, "opt1");
+  std::cout << "  opt1: size = " << sizeof(opt1) << "\n";
   nl();
 
   showOp("initialized in heap memory");
@@ -299,7 +315,7 @@ void initialize_primitives() {
 
   showOp("using aliases to simplify");
   using VecI = std::vector<int>;
-  using SPtr = std::shared_ptr<std::vector<int>>;
+  using SPtr = std::shared_ptr<VecI>;
   SPtr pVec2 = make_shared<VecI>(VecI{ 1, 2, 3 });
   std::cout << formatOutput<VecI>(*pVec2, "*pVec2", seq_collectionToString<VecI>);
   std::cout << formatOutput<SPtr>(
@@ -329,6 +345,8 @@ void initialize_std_library_types() {
   std::cout << formatOutput<std::string>(
     sstr, "sstr", quotedString<std::string>
   );
+  auto sfirst = sstr[0];
+  std::cout << "  sfirst = " << sfirst << "\n";
 
   /*-- expandable indexable array --*/
   showOp("std::vector<int>");

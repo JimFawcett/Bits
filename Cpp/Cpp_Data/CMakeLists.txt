@@ -13,17 +13,14 @@ set(CMAKE_BUILD_TYPE Debug)
 #      -- Debug directory 
 #         -- Cpp_Data.exe 
 #         -- ...
-#      -- Cpp_Data.dir directory
-#         -- Debug directory 
-#            -- Bits_Data.obj
-#            -- Bits_DataAnalysis.obj 
-#            -- ...
 #---------------------------------------------------
 
-# Wasn't able to get std::library modules to work.
+# Wasn't able to get std::library modules to work with CMake.
 # - does work in Visual Studio, preview edition, non CMake project
-# set(CMAKE_MODULE_PATH "C:/Users/Public/std_modules")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /experimental:module /std:c++latest /EHsc /MD")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}
+  /experimental:module /std:c++latest /EHsc /MD"
+)
+set(CMAKE_MODULE_PATH "C:/Users/Public/std_modules")
 # set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /std:c++20")
 # set_property(TARGET $CppData PROPERTY CXX_STANDARD 20)
 # target_compile_features(CppData PUBLIC CXX_STANDARD 20)
@@ -41,39 +38,4 @@ set(SRC
 )
 include_directories(src)
 add_executable(CppData.exe ${SRC})
-
-#---------------------------------------------------
-# To build library:
-#---------------------------------------------------
-# build Cpp_DataLib.lib in folder build/debug
-#---------------------------------------------------
-#add_library(
-#  Cpp_DataLib STATIC libs/Cpp_Data_lib/Cpp_Data_lib.cpp
-#)
-
-#---------------------------------------------------
-# link Bits_Data.obj and Cpp_Data_Lib.lib to 
-# create Cpp_Data.exe in folder  build/debug
-#---------------------------------------------------
-#target_link_libraries(DataCMake Data_Lib)
-
-#---------------------------------------------------
-# Build process with CMake version 3.25
-#---------------------------------------------------
-#   1. add source files to project directories 
-#   2. add CMakeLists.txt (this file)
-#   3. mkdir build                 - this puts intermediate
-#   4. cd build                      files in build directory
-#   5. cmake ..                    - create cmake config files
-#   6. cmake --build . [--config Debug | --config Release]
-#   7. "./Debug/HelloCmake.exe"    - runs executable 
-#   8. Notes:
-#      - you can change any of the source files then: 
-#          cmake --build . --config Debug
-#          "./Debug/HelloCmake.exe
-#      - delete contents of build directory to clean
-#          cmake will regenerate
-#   9. Note: 
-#      - you can substitute Release for Debug 
-#        in contents of 8.
 #---------------------------------------------------

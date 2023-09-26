@@ -26,7 +26,8 @@ std::string truncate(const std::string& str, size_t n = 40);
 */
 template<typename T>
 void showType(T t, const std::string &nm) {
-  std::cout << "  " << std::setw(WIDTH) << std::left << nm + ": ";      // show name at call site
+  //std::cout << "  " << std::setw(WIDTH) << std::left << nm + ": ";      // show name at call site
+  std::cout << "  " << nm + ": ";      // show name at call site
   std::cout << "type: " << truncate(typeid(t).name());  // show type
   std::cout << "\n";
 }
@@ -36,7 +37,8 @@ void showType(T t, const std::string &nm) {
 template<typename T>
 std::string getType(T t, const std::string &nm) {
   std::ostringstream out;
-  out << "  " << std::setw(WIDTH) << std::left << nm + ": ";      // show name at call site
+  //out << "  " << std::setw(WIDTH) << std::left << nm + ": ";      // show name at call site
+  out << "  " << nm + ": ";      // show name at call site
   out << "type: " << truncate(typeid(t).name());  // show type
   out << "\n";
   return out.str();
