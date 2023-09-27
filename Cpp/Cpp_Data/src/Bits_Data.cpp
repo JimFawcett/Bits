@@ -147,7 +147,6 @@ std::string formatOutput(
   bool showtype = true                      // default to show type
 ){
   std::stringstream out;
-  //out << "  " << std::setw(WIDTH) << std::left << nm + ": "
   out << "  " << nm + ": "
       << f(t) << "\n";
   if(showtype) {
@@ -288,7 +287,23 @@ void initialize_primitives() {
                );
   delete tmol;  // forgetting this causes memory leak
 
-  showOp("std::shared_ptr");
+  showOp("std::unique_ptr<int>");
+  std::unique_ptr<int> suni = std::make_unique<int>(-1);
+  int utmp = *suni;
+  std::cout << formatOutput<int>(
+    *suni, "*suni", scalarToString<int>
+  );
+  // can't use formatOutput<T>(t, ...) function here, 
+  // because that requires making a copy of t internally, 
+  // but std::unique_ptr disallows copies to preserve
+  // uniqueness
+  std::cout << "  suni: " << suni << "\n";
+  size_t sz = sizeof(suni);
+  std::cout << getType(std::move(suni), "suni");
+  // suni no longer valid after move
+  std::cout << "  suni: size = " << sz << "\n";
+
+  showOp("std::shared_ptr<int>");
   std::shared_ptr<int> stmol = std::make_shared<int>(42);
   int stmp = *stmol;
   std::cout << formatOutput<int>(

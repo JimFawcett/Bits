@@ -37,7 +37,6 @@ void showType(T t, const std::string &nm) {
 template<typename T>
 std::string getType(T t, const std::string &nm) {
   std::ostringstream out;
-  //out << "  " << std::setw(WIDTH) << std::left << nm + ": ";      // show name at call site
   out << "  " << nm + ": ";      // show name at call site
   out << "type: " << truncate(typeid(t).name());  // show type
   out << "\n";
