@@ -34,7 +34,7 @@ set(CMAKE_MODULE_PATH "C:/Users/Public/std_modules")
 #   in folder build/Cpp_Data.dir/debug
 #---------------------------------------------------
 set(SRC 
-  src/Bits_Data.cpp src/Bits_DataAnalysis.cpp
+  src/Bits_Data.cpp
 )
 include_directories(src)
 add_executable(CppData.exe ${SRC})
