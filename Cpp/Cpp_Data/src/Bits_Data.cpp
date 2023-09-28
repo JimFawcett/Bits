@@ -232,7 +232,7 @@ void initialize_primitives() {
   std::string fstr = std::format("  {}{}", "strct: ", "S { ");
   fstr += std::format("{}, {}, {:.5f} }}\n", strct.a, strct.b, strct.c);
   std::cout << fstr;
-  showType(strct, "strct");
+  std::cout << getType(strct, "strct");
   std::cout << "  strct: size = " << sizeof(strct) << "\n";
   std::cout << "  sizeof(strct.a) = " << sizeof(strct.a) << "\n";
   std::cout << "  sizeof(strct.b) = " << sizeof(strct.b) << "\n";
@@ -250,7 +250,7 @@ void initialize_primitives() {
             << std::get<1>(tup) << ", " 
             << std::get<2>(tup)
             << " }\n";
-  showType(tup, "tup");
+  std::cout << getType(tup, "tup");
   std::cout << "  size = " << sizeof(tup) << "\n";
   auto tfirst = get<0>(tup);
   std::cout << "  tfirst = " << tfirst << "\n";
@@ -270,7 +270,7 @@ void initialize_primitives() {
   else {
     std::cout << *opt2 << "\n";
   }
-  showType(opt1, "opt1");
+  std::cout << getType(opt1, "opt1");
   std::cout << "  opt1: size = " << sizeof(opt1) << "\n";
   nl();
 
@@ -392,8 +392,10 @@ void initialize_std_library_types() {
   nl();
 }
 /*---------------------------------------------------------
-  Demonstrate copy and move operations for various types
+  return formatted address as string
 */
+static const size_t WIDTH = 8;
+
 /*-- return address of t --*/
 template<typename T>
 std::string formatAddress(const T& t, const std::string& nm) {
@@ -406,6 +408,9 @@ std::string formatAddress(const T& t, const std::string& nm) {
   out << std::showbase << std::hex << ptrToArg << "\n";
   return out.str();
 }
+/*---------------------------------------------------------
+  Demonstrate copy and move operations for various types
+*/
 void demoCopyAndMove() {
 
   showLabel("copy operations for primitives");

@@ -1,0 +1,75 @@
+/*-- convert scalar to string ---------------------------*/
+template <typename T>
+std::string scalarToString(const T& scalar) {
+  /* format in-memory stringstream so formats are temporary */
+  std::ostringstream out;
+  out.precision(3);
+  out << std::showpoint;
+  out << std::boolalpha;
+  out << scalar;
+  return out.str();
+}
+/*-- convert sequential collection to string ------------*/
+template <typename C>
+std::string seq_collectionToString(const C& coll) {
+  /* format in-memory stringstream so formats are temporary */
+  std::ostringstream out;
+  out.precision(3);
+  out << std::showpoint;
+  out << std::boolalpha;
+  out << "[ ";
+  /*-- show comma only in interior of sequence --*/
+  bool first = true;
+  for(auto item : coll) {
+    if(first) {
+      out << item;
+      first = false;
+    }
+    else {
+      out << ", " << item;
+    }
+  }
+  out << " ]";
+  return out.str();
+}
+
+/*-- several conversion functions elided --*/
+
+/*-- format output --------------------------------------
+  - fourth argument is the lambda (aka closure) std::function
+  - intent is to pass in formatting customized for type T
+  - lots of examples of that below
+*/
+template <typename T>
+std::string formatOutput(
+  const T& t,                               // variable being formatted
+  const std::string& nm,                    // caller name
+  std::function<std::string(const T&)> f,   // convert to formatted string
+  bool showtype = true                      // default to show type
+){
+  std::stringstream out;
+  out << "  " << nm + ": "
+      << f(t) << "\n";
+  if(showtype) {
+    out << getType(t, nm);
+    out << "  " << nm + ": size = " << sizeof(t) << "\n";
+  }
+  return out.str();
+}
+/*---------------------------------------------------------
+  return formatted address as string
+*/
+static const size_t WIDTH = 8;
+
+/*-- return address of t --*/
+template<typename T>
+std::string formatAddress(const T& t, const std::string& nm) {
+  const T* ptrToArg = &t;
+  std::stringstream out;
+  out.precision(7);
+  out << "  " << std::showpoint;
+  out << std::boolalpha;
+  out << std::setw(WIDTH) << std::left << nm + ": " << "address: ";
+  out << std::showbase << std::hex << ptrToArg << "\n";
+  return out.str();
+}
