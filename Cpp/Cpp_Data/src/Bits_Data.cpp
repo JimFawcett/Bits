@@ -135,9 +135,9 @@ std::string assoc_collectionToString(const C& coll) {
   return out.str();
 }
 /*-- format output --------------------------------------
-  - fourth argument is the lambda (aka closure) std::function
+  - Third argument is a lambda (aka closure) std::function
   - intent is to pass in formatting customized for type T
-  - lots of examples of that below
+  - examples of that are shown below
 */
 template <typename T>
 std::string formatOutput(
