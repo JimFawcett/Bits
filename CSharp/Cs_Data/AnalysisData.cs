@@ -13,9 +13,9 @@ namespace Analysis
     {
       #pragma warning disable CS8602  // possibly null reference warning
       Type tt = t.GetType();
-      Console.WriteLine("{0}, {1}", nm, tt.Name);
+      Console.WriteLine("{0}: Type: {1}", nm, tt.Name);
       int size = Utils.GetManagedSize(tt);
-      Console.WriteLine("value: {0}, size: {1}{2}", t, size, suffix);
+      Console.WriteLine("value: {0}\nsize: {1}{2}", t, size, suffix);
     }
     /*-- beware, two distinct objects may have same hashcode --*/
     public static void showIdent<T>(T t, String n, string suffix = "") {
@@ -68,7 +68,7 @@ namespace Analysis
       string line = new string('-', length);
       Console.WriteLine(line);
       Console.WriteLine("  {0}", s);  
-      Console.WriteLine(line);
+      Console.WriteLine(line + suffix);
     }
   }
   /*-- 

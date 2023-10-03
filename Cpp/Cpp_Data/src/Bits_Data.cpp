@@ -204,8 +204,7 @@ void initialize_primitives() {
   std::cout << formatOutput<const char*>(
     lst, "lst", quotedString<const char*>
   );
-  std::cout << "  lst: char count = " << std::strlen(lst);
-  nl();
+  std::cout << "  lst: char count = " << std::strlen(lst) << "\n\n";
 
   showOp("aggregate types");
   nl();
@@ -594,6 +593,10 @@ void pass_by_value_and_ref() {
   demonstration starts here
 */
 int main() {
+
+    // std::cout << std::showbase << std::hex << short int(-42) << "\n";
+    std::cout << std::setprecision(12) << double(3.141592653589793) << "\n";
+
     showLabel("Demonstrate C++ types");
     nl();
 
