@@ -1,4 +1,8 @@
-﻿using System;
+﻿/*---------------------------------------------------------
+  Cs_Data::Program.cs
+  - demonstrate C# type system
+---------------------------------------------------------*/
+using System;
 using System.Reflection;
 using System.Reflection.Emit;
 using System.Text;
@@ -24,10 +28,11 @@ using Analysis;
 // 
 namespace CSharpData
 {
+  using System;
+  using System.Runtime.InteropServices;
   using Dict = Dictionary<string,int>;
   using KVPair = KeyValuePair<string,int>;
 
-//  using AnalysisData
   /*-- 
     Svt is a value type used for type demo example.
     It consists of three public properties.
@@ -62,8 +67,17 @@ namespace CSharpData
   {
     /*-- demonstration begins here --*/
   
-    const string nl = "\n";
+    /*-- emit count newlines to stdout --*/
+    static void nl(int count = 1) {
+      for(int i=0; i<count; ++i) {
+        Console.Write("\n");
+      }
+    }
 
+    /*-----------------------------------------------------
+      User-defined value type used in Aggregate Types 
+      demo.
+    -----------------------------------------------------*/
     public struct S {
       public int I {get;}
       public double D {get;}
@@ -75,7 +89,10 @@ namespace CSharpData
         return String.Format("S {{ {0}, {1} }}", this.I, this.D);
       }
     }
-
+    /*-----------------------------------------------------
+      User-defined reference type used in Language Defined
+      Reference Types demo.
+    -----------------------------------------------------*/
     public class X {
       public X(int ia, double da) {
         i = ia;
@@ -87,7 +104,9 @@ namespace CSharpData
         return String.Format("X {{ {0}, {1} }}", this.i, this.d);
       }
     }
-
+    /*-----------------------------------------------------
+      Not used in this demo
+    -----------------------------------------------------*/
     public interface Foo {
       void Bar(int i);
     }
@@ -100,6 +119,7 @@ namespace CSharpData
     where T:Foo {
       t.Bar(i);
     }
+    /*-- Demonstrate Value Types Initialization --*/
     static void DemoValueTypes() {
 
       // Display.Print();
@@ -130,6 +150,9 @@ namespace CSharpData
       decimal dec = 100_000_000.00m;
       Display.ShowType(dec, "dec", "\n");
     }
+    /*-----------------------------------------------------
+      Build string representation of array of type T
+    -----------------------------------------------------*/
     static string ToStringRepArray<T>(T[] arr) {
       StringBuilder sb = new StringBuilder();
       sb.Append("{ ");
@@ -149,6 +172,10 @@ namespace CSharpData
       sb.Append(" }\n");
       return sb.ToString();
     }
+    /*-----------------------------------------------------
+      Build string representation of IEnumerable 
+      collection T<U>. Works for array too.
+    -----------------------------------------------------*/
     static string ToStringRepIEnumerable<T,U>(T enu) 
       where T:IEnumerable<U>
     {
@@ -170,6 +197,11 @@ namespace CSharpData
       sb.Append(" }\n");
       return sb.ToString();
     }
+    /*-----------------------------------------------------
+      Direct implementation of enumerating associative
+      collection.  Code below illustrates that this can also
+      be done with ToStringRepIEnumerable<Dict,KVPair>(dict).
+    -----------------------------------------------------*/
     // static string ToStringRepAssocCont<T,K,V>(T assoc) 
     //   where T:IEnumerable<K,V>
     // {
@@ -191,6 +223,9 @@ namespace CSharpData
     //   sb.Append(" }\n");
     //   return sb.ToString();
     // }
+    /*-----------------------------------------------------
+      Demonstrate initialization of aggregate types
+    -----------------------------------------------------*/
     static void DemoAggregateTypes() {
       
       Display.ShowNote("Aggregate Types", "\n", 25);
@@ -206,7 +241,10 @@ namespace CSharpData
       Display.ShowOp("(int, double, char)tup = (42, 3.14159, 'z');");
       (int, double, char)tup = (42, 3.14159, 'z');
       double second = tup.Item2;
-      Display.ShowType(tup, "tup", "\n");
+      Display.ShowType(tup, "tup");
+      Display.ShowType(42, "first arg");
+      Display.ShowType(3.1415927, "second arg");
+      Display.ShowType('z', "third arg", "\n");
 
       /*-- struct --*/
       Display.ShowOp("S s = new S(42, 3.1415927);");
@@ -215,6 +253,9 @@ namespace CSharpData
       Display.ShowType(s, "s");
       Display.Print(s.ToStringRep() + "\n");
     }
+    /*-----------------------------------------------------
+      Demonstrate initialization of reference types
+    -----------------------------------------------------*/
     static void DemoRefTypes() {
 
       Display.ShowNote("Language Defined Reference Types", "\n", 40);
@@ -240,6 +281,9 @@ namespace CSharpData
       Display.ShowType(x, "x");
       Console.WriteLine(x.ToStringRep() + "\n");
     }
+    /*-----------------------------------------------------
+      Demonstrate initialization of library types
+    -----------------------------------------------------*/
     static void DemoLibTypes() {
 
       Display.ShowNote("Library Defined Reference Types", "\n", 40);
@@ -248,6 +292,12 @@ namespace CSharpData
       List<int> li = new List<int> { 1, 2, 3, 2, 1 };
       int lfirst = li[0];
       Display.ShowType(li, "li");
+      Console.Write(
+        "List<int> " +
+        ToStringRepIEnumerable<List<int>, int>(li)
+      );
+      li.Insert(5, 0);
+      Display.ShowOp("li.Insert(5, 0);");
       Display.Print(
         "List<int> " +
         ToStringRepIEnumerable<List<int>, int>(li)
@@ -255,7 +305,7 @@ namespace CSharpData
 
       /*---------------------------------------------------
         These declarations must immediately follow 
-        namespace declaration
+        namespace declaration (see top of file)
         - using Dict = Dictionary<string,int>;
         - using KVPair = KeyValuePair<string,int>;
       */
@@ -269,6 +319,8 @@ namespace CSharpData
       int oneval = dict["one"];
       /*---------------------------------------------------
         Find first key and value
+        - this is here just to show how to retrieve
+          an element from an associative collection
       */
       IDictionaryEnumerator enumr = dict.GetEnumerator();
       if(enumr.MoveNext()) {  // returns false at end
@@ -290,27 +342,73 @@ namespace CSharpData
       string rep = ToStringRepIEnumerable<Dict,KVPair>(dict);
       Display.Print("dict: " + rep);
     }
-    static unsafe string ToStringAddress<T>(T t) {
-      T* ptr = &t;
+    #pragma warning disable 8500
+    /*
+      Suppresses warning about taking address of managed type.
+      The pointer is used only to show the address of ptr
+      as part of analysis of copy operations.
+    */
+    static unsafe string ToStringAddress<T>(T* ptr) {
+      if(ptr == null) {
+        return "";
+      }
       IntPtr addr = (IntPtr)ptr;
-      string addrstr = string.Format("address of i: 0x" + addr.ToString("x"));
+      string addrstr = string.Format("address: 0x" + addr.ToString("x"));
       return addrstr;
     }
+    #pragma warning restore 8500
+    /*-----------------------------------------------------
+      Evaluate address of reference type
+      - needs pragma warning
+    -----------------------------------------------------*/
+    static string AddressStringFromRef<T>(T t) {
+      GCHandle handle = GCHandle.Alloc(t, GCHandleType.Pinned);
+      IntPtr address = handle.AddrOfPinnedObject();
+      string addr = address.ToString("h");
+      handle.Free();
+      return addr;
+    }
     static unsafe void DemoCopy() {
+
+      nl();
+      Display.ShowNote(
+        "Demonstrate Copy Operations", "\n"
+      );
+      Display.ShowOp("int i = 42;");
       int i = 42;
-      int* ptr = &i;
-      IntPtr addr = (IntPtr)ptr;
-      Console.WriteLine("address of i: 0x" + addr.ToString("x"));
+      string addri = ToStringAddress<int>(&i);
+      Console.WriteLine("i: " + addri);
+      Display.ShowOp("int j = i; // copy of value");
+      int j = i;  // copy
+      string addrj = ToStringAddress<int>(&j);
+      Console.WriteLine("j: " + addrj);
+      Display.ShowNote(
+        "Addresses of i and j are unique, demonstrating\n" +
+        "  value of i was copied to new j location.", "\n", 50
+      );
+    
+      Display.ShowOp("List<int> li = new List<int> { 1, 2, 3, 2, 1 }");
       List<int> li = new List<int> { 1, 2, 3, 2, 1 };
-      List<int>* ptrli = &li;
-      IntPtr addrli = (IntPtr)ptrli;
-      Console.WriteLine("address if li: 0x" + addrli.ToString("x"));
-      int li0 = li[0];
-      int* ptrli0= &li0;
-      IntPtr addrli0 = (IntPtr)ptrli0;
-      Console.WriteLine("address 0f li[0]: 0x" + addrli0.ToString("x"));
-      // Console.WriteLine(addr.ToString("addr: {0:X}", addr));
-      // Console.WriteLine(&i.ToString("x"));
+    #pragma warning disable 8500
+    /*
+      Suppresses warning about taking address of managed type.
+      The pointer is used only to show the address of ptr
+      as part of analysis of copy operations.
+    */
+      string addrli = ToStringAddress<List<int>>(&li);
+      Console.WriteLine("li: " + addrli);
+
+      Display.ShowOp("List<int> lj = lj  // copy of reference");
+      List<int> lj = li;  // copy of ref
+      string addrlj = ToStringAddress<List<int>>(&lj);
+      Console.WriteLine("lj: " + addrli);
+      #pragma warning restore 8500
+      Display.ShowNote(
+        "Addresses of li and lj are the same, demonstrating\n" +
+        "  reference of li was copied to new reference lj.\n" +
+        "  Both references point to the same managed heap-based\n" +
+        "  instance.", "\n", 55
+      );
     }
     static void Main(string[] args)
     {
@@ -323,113 +421,3 @@ namespace CSharpData
     }
   }
 }
-
-//       Display.Print(" Demonstrate C# types");
-  
-//       Display.ShowNote("int - value type");
-      
-//       Display.ShowOp("int t1 = 42");
-//       int t1 = 42;
-//       Display.ShowType(t1, "t1", nl);
-      
-//       Display.ShowOp("interate over val type members using reflection");
-//       Display.Iterate(t1);
-//       Display.Print();
-
-//       Display.ShowOp("int t1a = t1 : copy of value type");
-//       int t1a = t1;
-//       Display.IsSameObj(t1a, "t1a", t1, "t1", nl);
-
-//       // reference behavior - copy on write
-//       Display.ShowNote("string - reference type");
-
-//       Display.ShowOp("string t2 = \"a string\"");
-//       string t2 = "a string";
-//       Display.ShowType(t2, "t2");
-
-//       Display.ShowNote("string has many methods - uncomment next line to see them", "", 60);
-//       //Display.Iterate(t2);
-
-//       Display.ShowOp("string t3 = t2 : copy handle of ref type");
-//       string t3 = t2;
-//       Display.ShowType(t3, "t3");
-//       Display.IsSameObj(t3,"t3",t2,"t2");
-
-//       Display.ShowOp("t3 += \" is here\" : copy on write");
-//       t3 += " is here";
-//       Display.ShowType(t2, "t2");
-//       Display.ShowType(t3, "t3");
-//       Display.IsSameObj(t3,"t3",t2,"t2");
-//       Display.ShowNote("t2 not modified by change in t3 due to copy on write", nl, 55);
-//       Console.WriteLine();
-
-//       Display.ShowNote("Object - base reference type");
-
-//       Display.ShowOp("Object obj1 - new Object()");
-//       Object obj1 = new Object();
-//       Display.ShowType(obj1, "obj");
-
-//       Display.ShowOp("interate over ref type members using reflection");
-//       Display.Iterate(obj1);
-//       Display.Print();
-
-//       Display.ShowOp("Object obj2 = obj1");
-//       Object obj2 = obj1;
-//       Display.IsSameObj(obj2, "obj2", obj1, "obj1", nl);
-
-//       Display.ShowNote("Svt Struct value type");
-
-//       Display.ShowOp("Svt t4 = new Svt()");
-//       Svt t4 = new() { I=3, D=3.1415927, C='z' };
-//       t4.PrintSelf("t4");
-//       Display.ShowType(t4, "t4");
-//       Display.ShowNote("value type: size of object in stackframe", nl, 45);
-
-//       /* Iterate over val type members using reflection */
-//       Display.ShowOp("Iterate over val type members using reflection");
-//       Display.Iterate(t4);
-//       Display.Print();
-
-//       /* copy of value type */
-//       Display.ShowOp("Svt t4a = t4 : copy of val type");
-//       Svt t4a = t4;
-//       t4a.PrintSelf("t4a");
-//       t4.PrintSelf("t4");
-//       Display.IsSameObj(t4a,"t4a",t4,"t4");
-//       Display.ShowType(t4a, "t4a");
-
-//       Display.ShowOp("t4a.C = 'q'");
-//       t4a.C = 'q';
-//       t4a.PrintSelf("t4a");
-//       t4.PrintSelf("t4");
-//       Display.IsSameObj(t4, "t4", t4a, "t4a", nl);
-
-//       Display.ShowNote("Crt - ref type with ref member");
-
-//       Display.ShowOp("Crt t5 = new Crt()");
-//       Crt t5 = new() { S = "SomeString" };
-//       // using default values for I and D
-//       t5.PrintSelf("t5");
-//       Display.ShowType(t5, "t5");
-//       Display.ShowNote("ref type: size of handle to object in heap", nl, 45);
-
-//       /* copy handle of reference type */
-//       Display.ShowOp("Crt t5a = t5 : copy handle of ref type");
-//       Crt t5a = t5;
-//       t5a.PrintSelf("t5a");
-//       Display.IsSameObj(t5a, "t5a", t5, "t5");
-//       Display.IsSameObj(t5a.S, "t5a.S", t5.S, "t5.S");
-
-//       /* literal strings are not immutable */
-//       Display.ShowOp("t5a.S = \"new literal string\" : no copy on write");
-//       t5a.S = "new string";
-//       t5a.PrintSelf("t5a");
-//       t5a.PrintSelf("t5");
-//       Display.IsSameObj(t5a, "t5a", t5, "t5");
-//       Display.IsSameObj(t5a.S, "t5a.S", t5.S, "t5.S");
-//       Display.ShowNote("source t5 was altered!");
-
-//       Console.WriteLine("\nThat's all Folks!\n");
-//     }
-//   }
-// }
