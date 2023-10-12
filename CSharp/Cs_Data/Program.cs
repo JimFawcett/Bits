@@ -28,8 +28,8 @@ using Analysis;
 // 
 namespace CSharpData
 {
-  using System;
-  using System.Runtime.InteropServices;
+  // using System;
+  // using System.Runtime.InteropServices;
   using Dict = Dictionary<string,int>;
   using KVPair = KeyValuePair<string,int>;
 
@@ -128,101 +128,28 @@ namespace CSharpData
       /*-- bool --*/
       Display.ShowOp("bool b = true;");
       bool b = true;
-      Display.ShowType(b, "b", "\n");
+      Anal.ShowType(b, "b", "\n");
 
       /*-- int --*/
       Display.ShowOp("int i = 42");
       int i = 42;
-      Display.ShowType(i, "i", "\n");
+      Anal.ShowType(i, "i", "\n");
 
       /*-- char --*/
       Display.ShowOp("char c = 'z'");
       char c = 'z';
-      Display.ShowType(c, "c", "\n");
+      Anal.ShowType(c, "c", "\n");
 
       /*-- double --*/
       Display.ShowOp("double d = 3.1415927;");
       double d = 3.1415927;
-      Display.ShowType(d, "d", "\n");
+      Anal.ShowType(d, "d", "\n");
 
       /*-- decimal --*/
       Display.ShowOp("decimal dc = 100_000_000.00m;");
       decimal dec = 100_000_000.00m;
-      Display.ShowType(dec, "dec", "\n");
+      Anal.ShowType(dec, "dec", "\n");
     }
-    /*-----------------------------------------------------
-      Build string representation of array of type T
-    -----------------------------------------------------*/
-    static string ToStringRepArray<T>(T[] arr) {
-      StringBuilder sb = new StringBuilder();
-      sb.Append("{ ");
-      bool first = true;
-      foreach(T item in arr) {
-        if(item == null) {
-          break;
-        }
-        if(first) {
-          sb.Append(item.ToString());
-          first = false;
-        }
-        else {
-          sb.AppendFormat(", {0}", item);
-        }
-      }
-      sb.Append(" }\n");
-      return sb.ToString();
-    }
-    /*-----------------------------------------------------
-      Build string representation of IEnumerable 
-      collection T<U>. Works for array too.
-    -----------------------------------------------------*/
-    static string ToStringRepIEnumerable<T,U>(T enu) 
-      where T:IEnumerable<U>
-    {
-      StringBuilder sb = new StringBuilder();
-      sb.Append("{ ");
-      bool first = true;
-      foreach(U item in enu) {
-        if(item == null) {
-          break;
-        }
-        if(first) {
-          sb.Append(item.ToString());
-          first = false;
-        }
-        else {
-          sb.AppendFormat(", {0}", item);
-        }
-      }
-      sb.Append(" }\n");
-      return sb.ToString();
-    }
-    /*-----------------------------------------------------
-      Direct implementation of enumerating associative
-      collection.  Code below illustrates that this can also
-      be done with ToStringRepIEnumerable<Dict,KVPair>(dict).
-    -----------------------------------------------------*/
-    // static string ToStringRepAssocCont<T,K,V>(T assoc) 
-    //   where T:IEnumerable<K,V>
-    // {
-    //   StringBuilder sb = new StringBuilder();
-    //   sb.Append("{ ");
-    //   bool first = true;
-    //   foreach(U item in enu) {
-    //     if(item == null) {
-    //       break;
-    //     }
-    //     if(first) {
-    //       sb.Append(item.ToString());
-    //       first = false;
-    //     }
-    //     else {
-    //       sb.AppendFormat(", {0}", item);
-    //     }
-    //   }
-    //   sb.Append(" }\n");
-    //   return sb.ToString();
-    // }
     /*-----------------------------------------------------
       Demonstrate initialization of aggregate types
     -----------------------------------------------------*/
@@ -234,23 +161,23 @@ namespace CSharpData
       Display.ShowOp("int[]array = { 1, 2, 3, 2, 1}");
       int[]?array = { 1, 2, 3, 2, 1 };
       int first = array[0];
-      Display.ShowType(array, "array");
-      Display.Print(ToStringRepIEnumerable<int[], int>(array));
+      Anal.ShowType(array, "array");
+      Display.Print(Display.ToStringRepIEnumerable<int[], int>(array));
 
       /*-- tuple --*/
       Display.ShowOp("(int, double, char)tup = (42, 3.14159, 'z');");
       (int, double, char)tup = (42, 3.14159, 'z');
       double second = tup.Item2;
-      Display.ShowType(tup, "tup");
-      Display.ShowType(42, "first arg");
-      Display.ShowType(3.1415927, "second arg");
-      Display.ShowType('z', "third arg", "\n");
+      Anal.ShowType(tup, "tup");
+      Anal.ShowType(42, "first arg");
+      Anal.ShowType(3.1415927, "second arg");
+      Anal.ShowType('z', "third arg", "\n");
 
       /*-- struct --*/
       Display.ShowOp("S s = new S(42, 3.1415927);");
       S s = new S(42, 3.1415927);
       int sfirst = s.I;
-      Display.ShowType(s, "s");
+      Anal.ShowType(s, "s");
       Display.Print(s.ToStringRep() + "\n");
     }
     /*-----------------------------------------------------
@@ -262,23 +189,23 @@ namespace CSharpData
       
       Display.ShowOp("object o = new object();");
       object o = new object();
-      Display.ShowType(o, "o", "\n");
+      Anal.ShowType(o, "o", "\n");
 
       Display.ShowOp("string str = \"astring\"");
       string str = "a string";
       string str_alt = new("another string");
-      Display.ShowType(str, "str", "\n");
+      Anal.ShowType(str, "str", "\n");
 
       Display.ShowOp("dynamic dyn = 42;");
       dynamic dyn = 42;
-      Display.ShowType(dyn, "dyn");
+      Anal.ShowType(dyn, "dyn");
       dyn = 3.1415927;
-      Display.ShowType(dyn, "dyn", "\n");
+      Anal.ShowType(dyn, "dyn", "\n");
       
       Display.ShowOp("X x = new X(42, 3.1415927);");
       X x = new X(42, 3.1415927);
       int xFirst = x.i;
-      Display.ShowType(x, "x");
+      Anal.ShowType(x, "x");
       Console.WriteLine(x.ToStringRep() + "\n");
     }
     /*-----------------------------------------------------
@@ -291,16 +218,16 @@ namespace CSharpData
       Display.ShowOp("List<int> li = new List<int> { 1, 2, 3, 2, 1 };");
       List<int> li = new List<int> { 1, 2, 3, 2, 1 };
       int lfirst = li[0];
-      Display.ShowType(li, "li");
+      Anal.ShowType(li, "li");
       Console.Write(
         "List<int> " +
-        ToStringRepIEnumerable<List<int>, int>(li)
+        Display.ToStringRepIEnumerable<List<int>, int>(li)
       );
       li.Insert(5, 0);
       Display.ShowOp("li.Insert(5, 0);");
       Display.Print(
         "List<int> " +
-        ToStringRepIEnumerable<List<int>, int>(li)
+        Display.ToStringRepIEnumerable<List<int>, int>(li)
       );
 
       /*---------------------------------------------------
@@ -338,35 +265,14 @@ namespace CSharpData
         int valfirst = dict[keyfirst];
         // do something with key and value
       }
-      Display.ShowType(dict, "dict");
-      string rep = ToStringRepIEnumerable<Dict,KVPair>(dict);
+      Anal.ShowType(dict, "dict");
+      string rep = Display.ToStringRepAssocCont<Dict,string,int>(dict);
       Display.Print("dict: " + rep);
-    }
-    #pragma warning disable 8500
-    /*
-      Suppresses warning about taking address of managed type.
-      The pointer is used only to show the address of ptr
-      as part of analysis of copy operations.
-    */
-    static unsafe string ToStringAddress<T>(T* ptr) {
-      if(ptr == null) {
-        return "";
-      }
-      IntPtr addr = (IntPtr)ptr;
-      string addrstr = string.Format("address: 0x" + addr.ToString("x"));
-      return addrstr;
-    }
-    #pragma warning restore 8500
-    /*-----------------------------------------------------
-      Evaluate address of reference type
-      - needs pragma warning
-    -----------------------------------------------------*/
-    static string AddressStringFromRef<T>(T t) {
-      GCHandle handle = GCHandle.Alloc(t, GCHandleType.Pinned);
-      IntPtr address = handle.AddrOfPinnedObject();
-      string addr = address.ToString("h");
-      handle.Free();
-      return addr;
+      /*---------------------------------------------------
+        Can also use alternate display: 
+        string rep = 
+          Display.ToStringRepIEnumerable<Dict,KVPair>(dict);
+      */
     }
     static unsafe void DemoCopy() {
 
@@ -376,11 +282,11 @@ namespace CSharpData
       );
       Display.ShowOp("int i = 42;");
       int i = 42;
-      string addri = ToStringAddress<int>(&i);
+      string addri = Anal.ToStringAddress<int>(&i);
       Console.WriteLine("i: " + addri);
       Display.ShowOp("int j = i; // copy of value");
       int j = i;  // copy
-      string addrj = ToStringAddress<int>(&j);
+      string addrj = Anal.ToStringAddress<int>(&j);
       Console.WriteLine("j: " + addrj);
       Display.ShowNote(
         "Addresses of i and j are unique, demonstrating\n" +
@@ -395,12 +301,12 @@ namespace CSharpData
       The pointer is used only to show the address of ptr
       as part of analysis of copy operations.
     */
-      string addrli = ToStringAddress<List<int>>(&li);
+      string addrli = Anal.ToStringAddress<List<int>>(&li);
       Console.WriteLine("li: " + addrli);
 
       Display.ShowOp("List<int> lj = lj  // copy of reference");
       List<int> lj = li;  // copy of ref
-      string addrlj = ToStringAddress<List<int>>(&lj);
+      string addrlj = Anal.ToStringAddress<List<int>>(&lj);
       Console.WriteLine("lj: " + addrli);
       #pragma warning restore 8500
       Display.ShowNote(
