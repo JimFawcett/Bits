@@ -1,136 +1,39 @@
-C:\github\JimFawcett\Bits\CSharp\Cs_Data
-> dotnet run
- Demonstrate C# types
 -----------------------------------
-  int - value type
------------------------------------
---- int t1 = 42 ---
-t1, Int32
-value: 42, size: 4
-
---- interate over val type members using reflection ---
-fields:
-  m_value = 42
-methods:
-  CompareTo
-  CompareTo
-  Equals
-  Equals
-  GetHashCode
-  ToString
-  ToString
-  ToString
-  ToString
-  TryFormat
-  GetTypeCode
-  GetType
-
---- int t1a = t1 : copy of value type ---
-t1a is not same object as t1
-
------------------------------------
-  string - reference type
------------------------------------
---- string t2 = "a string" ---
-t2, String
-value: a string, size: 8
-------------------------------------------------------------    
-  string has many methods - uncomment next line to see them     
-------------------------------------------------------------    
---- string t3 = t2 : copy handle of ref type ---
-t3, String
-value: a string, size: 8
-t3 is same object as t2
---- t3 += " is here" : copy on write ---
-t2, String
-value: a string, size: 8
-t3, String
-value: a string is here, size: 8
-t3 is not same object as t2
--------------------------------------------------------
-  t2 not modified by change in t3 due to copy on write
--------------------------------------------------------
-
------------------------------------
-  Object - base reference type
------------------------------------
---- Object obj1 - new Object() ---
-obj, Object
-value: System.Object, size: 8
---- interate over ref type members using reflection ---
-fields:
-methods:
-  GetType
-  ToString
-  Equals
-  GetHashCode
-
---- Object obj2 = obj1 ---
-obj2 is same object as obj1
-
------------------------------------
-  Svt Struct value type
------------------------------------
---- Svt t4 = new Svt() ---
-t4  { I:3, D:3.1415927, C:z }
-t4, Svt
-value: HelloData.Svt, size: 24
----------------------------------------------
-  value type: size of object in stackframe
----------------------------------------------
---- Iterate over val type members using reflection ---
-fields:
-  <I>k__BackingField = 3
-  <D>k__BackingField = 3.1415927
-  <C>k__BackingField = z
-methods:
-  get_I
-  set_I
-  get_D
-  set_D
-  get_C
-  set_C
-  PrintSelf
-  Equals
-  GetHashCode
-  ToString
-  GetType
-
---- Svt t4a = t4 : copy of val type ---
-t4a  { I:3, D:3.1415927, C:z }
-t4  { I:3, D:3.1415927, C:z }
-t4a is not same object as t4
-t4a, Svt
-value: HelloData.Svt, size: 24
---- t4a.C = 'q' ---
-t4a  { I:3, D:3.1415927, C:q }
-t4  { I:3, D:3.1415927, C:z }
-t4 is not same object as t4a
-
------------------------------------
-  Crt - ref type with ref member
------------------------------------
---- Crt t5 = new Crt() ---
-t5  { I:0, D:1, S:SomeString }
-t5, Crt
-value: HelloData.Crt, size: 8
----------------------------------------------
-  ref type: size of handle to object in heap
----------------------------------------------
---- Crt t5a = t5 : copy handle of ref type ---
-t5a  { I:0, D:1, S:SomeString }
-t5a is same object as t5
-t5a.S is same object as t5.S
---- t5a.S = "new literal string" : no copy on write ---
-t5a  { I:0, D:1, S:new string }
-t5  { I:0, D:1, S:new string }
-t5a is same object as t5
-t5a.S is same object as t5.S
------------------------------------
-  source t5 was altered!
+  Demonstrate Copy Operations
 -----------------------------------
 
-That's all Folks!
+--- int i = 42; ---
+i: address: 0xb2f397e958
+--- int j = i; // copy of value ---
+j: address: 0xb2f397e948
+--------------------------------------------------
+  Addresses of i and j are unique, demonstrating
+  value of i was copied to new j location.
+--------------------------------------------------
 
-C:\github\JimFawcett\Bits\CSharp\Cs_Data
->
+--- List<int> li = new List<int> { 1, 2, 3, 2, 1 } ---       
+li: address: 0xb2f397e938
+--- List<int> lj = li  // copy of reference ---
+lj: address: 0xb2f397e928
+-------------------------------------------------------      
+  Addresses of li and lj are adjacent, and adjacent to       
+  addresses of i and j in the stack frame.
+
+  That demonstrates that lj is a copy of the handle li       
+  both of which point to the managed heap-based list
+  instance.
+-------------------------------------------------------      
+
+--- lj.Add(-1) ---
+lj: { 1, 2, 3, 2, 1, -1 }
+li: { 1, 2, 3, 2, 1, -1 }
+-------------------------------------------------------      
+  Note: changing lj results in the same change to li.        
+  This demonstrates that both variables refer to the
+  same List<int> instance in the managed heap.
+-------------------------------------------------------      
+
+Using ReferenceEquals(li, lj) we find:
+
+  li is same object as lj
+

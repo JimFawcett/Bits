@@ -28,8 +28,8 @@ using Analysis;
 // 
 namespace CSharpData
 {
-  // using System;
-  // using System.Runtime.InteropServices;
+  using System;
+  using System.Runtime.InteropServices;
   using Dict = Dictionary<string,int>;
   using KVPair = KeyValuePair<string,int>;
 
@@ -304,17 +304,66 @@ namespace CSharpData
       string addrli = Anal.ToStringAddress<List<int>>(&li);
       Console.WriteLine("li: " + addrli);
 
-      Display.ShowOp("List<int> lj = lj  // copy of reference");
+      Display.ShowOp("List<int> lj = li  // copy of reference");
       List<int> lj = li;  // copy of ref
       string addrlj = Anal.ToStringAddress<List<int>>(&lj);
-      Console.WriteLine("lj: " + addrli);
+      Console.WriteLine("lj: " + addrlj);
       #pragma warning restore 8500
+      
+      // GCHandle handle = GCHandle.Alloc(li[0], GCHandleType.Pinned);
+      // IntPtr address = handle.AddrOfPinnedObject();
+      // string handleAddri = "address: " + String.Format("0x" + address.ToString("x"));
+      // Console.Write("li[0]: {0}\n", handleAddri);
+
+      // handle = GCHandle.Alloc(lj[0], GCHandleType.Pinned);
+      // address = handle.AddrOfPinnedObject();
+      // string handleAddrj = "address: " + String.Format("0x" + address.ToString("x"));
+      // Console.Write("lj[0]: {0}\n", handleAddrj);
+
+ 
+      // string handleAddr = Anal.ToStringAdddressFromHandle<int>(li[0]);
+      // Console.Write("li[0]: {0}", handleAddr);
+      // handleAddr = Anal.ToStringAdddressFromHandle<int>(lj[0]);
+      // Console.Write("lj[0]: {0}", handleAddr);
+
       Display.ShowNote(
-        "Addresses of li and lj are the same, demonstrating\n" +
-        "  reference of li was copied to new reference lj.\n" +
-        "  Both references point to the same managed heap-based\n" +
-        "  instance.", "\n", 55
+        "Addresses of li and lj are adjacent, and adjacent to\n" +
+        "  addresses of i and j in the stack frame.\n\n" +
+        "  That demonstrates that lj is a copy of the handle li\n" +
+        "  both of which point to the managed heap-based list\n" +
+        "  instance.", 
+        "\n", 55
       );
+
+      Display.ShowOp("lj.Add(-1)");
+      lj.Add(-1);
+      Console.Write(
+        "lj: " +
+        Display.ToStringRepIEnumerable<List<int>, int>(lj)
+      );
+      Console.Write(
+        "li: " +
+        Display.ToStringRepIEnumerable<List<int>, int>(li)
+      );
+      Display.ShowNote(
+        "Note: changing lj results in the same change to li.\n" +
+        "  This demonstrates that both variables refer to the\n" +
+        "  same List<int> instance in the managed heap.", "\n", 55
+      );
+
+      Console.Write(
+        "Using ReferenceEquals(li, lj) we find:\n\n  "
+      );
+      if(ReferenceEquals(li, lj)) {
+        Console.WriteLine(
+          "{0} is same object as {1}{2}", "li", "lj", "\n"
+        );
+      }
+      else {
+        Console.WriteLine(
+          "{0} is not same object as {1}{2}", "li", "lj", "\n");
+      }
+
     }
     static void Main(string[] args)
     {
