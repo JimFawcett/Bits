@@ -43,7 +43,6 @@
     garbage collection is needed. Resources are returned at end 
     of their declaration scope.
 */
-#pragma warning(disable: 4984)  // warns about C++17 extension
 
 /*-----------------------------------------------
   alias type name 
@@ -53,23 +52,12 @@
 template<typename T>
 using pU = std::unique_ptr<T>;
 
-// void testFormats();  // declare function for testing formats (see below)
-
 /*-------------------------------------------------------------------
   Demonstration starts here 
 */
 int main() {
 
     print("Demonstrate C++ Objects\n");
-
-    showNote("primitive C++ types size_t and double");
-    size_t st = 42;
-    std::cout << "\n  size_t st = " << st;
-    showType(st, "st", nl);
-
-    double d = 3.1415927;
-    std::cout << "\n  double d = " << d;
-    showType(d, "ld", nl);
 
     showNote("std library types string and vector<T>");
 

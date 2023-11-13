@@ -74,95 +74,74 @@ fn create_initialize() {
   show_note("create and initialize");
   nl();
 
-  show_op("initialize primitive values");
+  show_op("initialize language-defined types");
   nl();
   /*-- integer --------------------------------*/
   let int = 42i8;
   show_formatted(&int, "int");
-  // show_op("i8");
-  // show_type(&int, "int");
   /*-- bool -----------------------------------*/
   let b = true;
   show_formatted(&b, "b");
-  // show_op("bool");
-  // show_type(&b, "b");
   /*-- float ----------------------------------*/
   let double:f32 = 3.15927;
   show_formatted(&double, "double");
-  // show_op("f32");
-  // show_type(&double, "double");
   /*-- character ------------------------------*/
   let c = 'z';
   show_formatted(&c, "c");
-  // show_op("char");
-  // show_type(&c, "c");
   /*-- literal string -------------------------*/
   let ls = "literal string";
   show_formatted(&ls, "ls");
-  // show_op("&str");
-  // show_type(&ls, "ls");
   let second = ls.chars().nth(1);
   show_type(&second, "second");
   /*-- string ---------------------------------*/
   let st = "an owned string".to_string();
   show_formatted(&st, "st");
-  // show_op("String");
-  // show_type(&st, "st");
   let fourth = st.chars().nth(3);
   show_type(&fourth, "fourth");
   /*-- array ----------------------------------*/
   let arr = [1, 2, 3];
   show_formatted(&arr, "arr");
-  // show_op("[i32; 3]");
-  // show_type(&arr, "arr");
   let first = arr[0];
   show_type(&first, "first");
   /*-- tuple ----------------------------------*/
   let tp: (i32, f64, char) = (1, 2.5, 'a');
   show_formatted(&tp, "tp");
-  // show_op("(i32, f64, char)");
-  // show_type(&tp, "tp");
   let second = tp.1;
-  show_type(&second, "second");
+  show_type(&second, "tp.1");
   /*-- reference: integer ---------------------*/
   let iref: &i8 = &int;
   show_formatted(&iref, "iref");
-  // show_op("&i8");
-  // show_type(&iref, "iref");
   /*-- reference: array -----------------------*/
   let aref: &[i32; 3] = &arr;
   show_formatted(&aref, "aref");
-  // show_op("&[i32; 3]");
-  // show_type(&aref, "aref");
   let second = aref[1];
   show_type(&second, "second");
   /*-- reference: slice of literal string -----*/
   let lscs = &ls[1..5];
   show_formatted(&lscs, "lscs");
-  // show_op("&ls[1..5]");
-  // show_type(&lscs, "lscs");
   let second = lscs.chars().nth(1);
   show_type(&second, "second");
   /*-- reference: slice of array --------------*/
   let sla = &arr[1..3];
   show_formatted(&sla, "sla");
-  // show_op("&[i32]");
-  // show_type(&sla, "sla");
   let second = sla[1];
   show_type(&second, "second");
   nl();
 
-  show_op("initialize primitive values and locations");
+  show_op("initialize in specific locations");
   nl();
+  /*-- static memory --------------------------*/
   static PI:f64 = 3.1415927;
   show_type(&PI, "PI in static memory");
   println!("  address: {:p}\n", &PI);
+  /*-- stack memory ---------------------------*/
   let f:f64 = 3.1415927;
   show_type(&f, "f in stack memory");
   println!("  address: {:p}\n", &f);
   let s:&str = "a literal string";
   show_type(&s, "s in stack memory");
   println!("  address: {:p}\n", &s);
+  /*-- heap memory ----------------------------*/
   let g = Box::new(3.1415927f64);
   show_type(&g, "g in heap memory");
   println!("  address: {:p}", &*g);
@@ -170,12 +149,13 @@ fn create_initialize() {
 
   show_op("initialize std::lib types");
   nl();
-  let tu = (42i32, 3.14159f64, 'z');
-  show_type(&tu, "tu");
+  /*-- Vec ------------------------------------*/
   let vec = vec![1, 2, 3, 2, 1];
   show_type(&vec, "vec");
+  /*-- String ---------------------------------*/
   let st = "an owned string".to_string();
   show_type(&st, "st");
+  /*-- mut VecDeque ---------------------------*/
   let mut vecdeq = VecDeque::<f64>::new();
   vecdeq.push_front(1.0);
   vecdeq.push_front(1.5);
@@ -183,6 +163,7 @@ fn create_initialize() {
   vecdeq.push_front(1.5);
   vecdeq.push_front(1.0);
   show_type(&vecdeq, "vecdeq");
+  /* */
   let mut map = HashMap::<&str,i32>::new();
   map.insert("zero", 0);
   map.insert("one", 1);

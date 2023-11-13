@@ -1,8 +1,6 @@
-import sys
-from ctypes import c_int, addressof
-
 # Python/Py_Data::Py_DataAnalysis.py
 # 
+import sys
 
 nl = "\n"
 
