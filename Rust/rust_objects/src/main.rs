@@ -77,7 +77,20 @@ fn demo_user_defined_objects() {
   /*-- show one of its operations ---*/
   show_op("let p1a = p1.clone()");
   let p1a = p1.clone();
-  p1a.show("p1.clone()");    
+  p1a.show("p1.clone()");   
+
+  let rx = p1.coor_x(); 
+  *rx = 84.0;
+  p1.show("p1");
+
+  /*-- delay 5 secs for update_time demo --*/
+  println!("delaying 5 seconds before time update");
+  use std::time::Duration;
+  let dur:Duration = Duration::from_secs(5);
+  std::thread::sleep(dur);
+
+  p1.update_time();
+  p1.show("p1");
 }
 
 fn demo_formats() {
@@ -125,5 +138,5 @@ fn main() {
     if TEST {
       demo_formats();
     }
-    print!("\n\n  That's all Folks!\n\n");
+    print!("\n\nThat's all Folks!\n\n");
 }

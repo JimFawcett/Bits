@@ -3,12 +3,8 @@
   - defines type Point4D representing points in space-time
 -------------------------------------------------------------------*/
 
-// use std::default::*;
 use std::fmt::*;
-use chrono::{DateTime, Local};
-
-// use crate::analysis;    // identify source code
-// use analysis::*;        // import public functions and types
+use chrono::prelude::*;
 
 /*---------------------------------------------------------
   - Declare Point4D struct, like a C++ class
@@ -21,15 +17,37 @@ pub struct Point4D {
     z: f64,
     t: DateTime<Local>,
 }
-/*-- implement function new --*/
+/*-- implement constructor function new --*/
 impl Point4D {
     pub fn new() -> Point4D {
         Point4D { x: 0.0, y: 0.0, z: 0.0, t: Local::now() }
     }
-    /*
-      For simple types like this it would be reasonable to
-      make x, y, z public and remove the getter and setter
-      functions.
+    /*------------------------------------------------
+      These methods can be used to set or retrieve 
+      values of Point4D instance coordinates, as they 
+      return a mutable reference. Note similarity with
+      C++ code.
+    */
+    pub fn coor_x(&mut self) -> &mut f64 {
+      &mut self.x
+    }
+    pub fn coor_y(&mut self) -> &mut f64 {
+      &mut self.y
+    }
+    pub fn coor_z(&mut self) -> &mut f64 {
+      &mut self.z
+    }
+    pub fn time(&self) -> String {
+      self.t.format("%a %b %e %Y, %T").to_string()
+    }
+    pub fn update_time(&mut self) {
+      self.t = Utc::now().with_timezone(&Local);
+    }
+    /*------------------------------------------------
+      An alternate design for mutating coordinates.
+      This set has twice as many methods, but may 
+      make access and mutation more obvious when
+      reading source code.
     */
     pub fn get_x(&self) -> &f64 {
         &self.x
@@ -49,6 +67,11 @@ impl Point4D {
     pub fn set_z(&mut self, z: f64) {
         self.z = z
     }
+    /*
+      For simple types like this it would be reasonable to
+      make x, y, z public and remove the getter and setter
+      functions.
+    */
     pub fn show(&self, nm:&str) {
         print!("{nm}: Point4D {{\n  ");
         print!("{0}, ", self.x);
