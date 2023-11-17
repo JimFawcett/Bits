@@ -162,6 +162,16 @@ fn demo_user_defined_generic_types() {
   *p.coors() = vec![1, 0, -1, 0, 1];
   p.show("p", 2, 12);
 
+  println!("\n  using immutable indexer:");
+  println!("  value of p[0] is {}", p[0]);
+  println!("  using mutable indexer:");
+  show_op("p[0] = 3");
+  p[0] = 3;
+  p.show("p", 2, 12);
+  show_op("p[1] = 4");
+  p[1] = 4;
+  p.show("p", 2, 12);
+
 }
 /*---------------------------------------------------------
   generic functions

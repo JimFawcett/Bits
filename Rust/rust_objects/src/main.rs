@@ -79,10 +79,22 @@ fn demo_user_defined_objects() {
   let p1a = p1.clone();
   p1a.show("p1.clone()");   
 
+  println!("\nusing PointN<f64>::coor_x function:");
   let rx = p1.coor_x(); 
   *rx = 84.0;
   p1.show("p1");
 
+  println!("\nusing PointN<f64>::coor_y function:");
+  let ry = p1.coor_y(); 
+  *ry = 84.0;
+  p1.show("p1");
+
+  println!("\nusing PointN<f64>::coor_z function:");
+  let rz = p1.coor_z(); 
+  *rz = 84.0;
+  p1.show("p1");
+
+  println!("\nupdating time value:");
   /*-- delay 5 secs for update_time demo --*/
   println!("delaying 5 seconds before time update");
   use std::time::Duration;

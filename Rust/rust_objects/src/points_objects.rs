@@ -68,6 +68,10 @@ impl Point4D {
         self.z = z
     }
     /*
+      A different strategy is used in the Generic Bit to
+      access an arbitrary number of coordinate values.
+    */
+    /*
       For simple types like this it would be reasonable to
       make x, y, z public and remove the getter and setter
       functions.
