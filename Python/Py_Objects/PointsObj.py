@@ -3,11 +3,10 @@
 # - User-defined space-time Point class
 #------------------------------------------------
 
-import AnalysisObj
 import datetime
 import time
 
-# point class with three coordinates
+# point class with three spatial coordinates
 class Point4D:
     x = 0.0
     y = 0.0

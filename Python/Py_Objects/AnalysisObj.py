@@ -6,9 +6,6 @@
 import sys
 
 # Python requires definition before use ordering
-#  - no link phase to find definitions
-import copy
-nl = "\n"
 
 # show name, type, value, and size of a Python instance
 def showType(t, nm: str, suffix: str = "") :
@@ -16,9 +13,9 @@ def showType(t, nm: str, suffix: str = "") :
     print("value: ", t, ', size: ', sys.getsizeof(t), suffix)
 
 # generate indent string with n spaces
-def indent(n):
+def indent(i):
     tmpStr = ""
-    for i in range(n):
+    for i in range(i):
         tmpStr += ' '
     return tmpStr
 
@@ -35,13 +32,21 @@ def fold(enum, left, width):
     return tmpStr
 
 # show name, type, value, and size of a Python instance
-def showTypeEnum(enum, nm, left = 2, width = 7, suffix = "") :
+def showTypeEnum(enum, nm, left = 0, width = 7, suffix = "") :
     # topStr = indent(left) + nm + type(enum) + "dynamic"
     print(indent(left),nm, ' ', type(enum), ' ', "dynamic", sep='')
     print(indent(left), "{", sep='')
     print(fold(enum, left+2, width))
     print(indent(left), "}", sep = '')
     print(indent(left), "size: ", sys.getsizeof(enum), suffix, sep='')
+
+# show value of an enumerable Python instance
+def showValueEnum(enum, nm, left = 0, width = 7, suffix = "") :
+    # topStr = indent(left) + nm + type(enum) + "dynamic"
+    print(indent(left),nm, ' ', sep='', end='')
+    print("{", sep='')
+    print(fold(enum, left+2, width))
+    print(indent(left), "}", sep = '')
 
 # same as showType except uses class method to show value
 def showTypeShowable(t, nm, suffix = ""):
