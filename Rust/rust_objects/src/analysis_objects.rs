@@ -10,10 +10,36 @@
 use std::fmt::*;
 
 /*---------------------------------------------------------
+  show string wrapped with long dotted lines above and below 
+*/
+pub fn show_note(note: &str, n:usize) {
+  let mut line = String::new();
+  for _i in 0..n {
+    line.push('-');
+  }
+  print!("\n{line}\n");
+  print!("  {note}");
+  print!("\n{line}\n");
+}
+/*---------------------------------------------------------
+  label with default length 
+  - Rust does not support default argument values
+*/
+pub fn show_label(note:&str) {
+  show_note(note, 50);
+}
+/*---------------------------------------------------------
+  show string wrapped in short lines
+*/
+pub fn show_op(opt: &str) {
+  println!("--- {opt} ---");
+}
+/*---------------------------------------------------------
   Show input's call name and type
   - doesn't consume input
   - show_type is generic function with Debug bound.
     Using format "{:?}" requires Debug.
+  - used in show_type_scalar
 */
 pub fn show_type<T:Debug>(_t: &T, nm: &str) {
     let typename = std::any::type_name::<T>();
@@ -61,35 +87,6 @@ fn find_last_utf8(s: &str, chr: char) -> Option<usize> {
      .map(|rev_pos| s.chars().count() - rev_pos - 1)
 }
 /*---------------------------------------------------------
-  show string wrapped with long dotted lines above and below 
-*/
-pub fn show_label(note: &str, n:usize) {
-  let mut line = String::new();
-  for _i in 0..n {
-    line.push('-');
-  }
-  print!("\n{line}\n");
-  print!("  {note}");
-  print!("\n{line}\n");
-}
-pub fn show_label_def(note:&str) {
-  show_label(note, 50);
-}
-/*---------------------------------------------------------
-  show string wrapped with dotted lines above and below 
-*/
-pub fn show_note(note: &str) {
-  print!("\n-------------------------\n");
-  print!(" {note}");
-  print!("\n-------------------------\n");
-}
-/*---------------------------------------------------------
-  show string wrapped in short lines
-*/
-pub fn show_op(opt: &str) {
-  println!("--- {opt} ---");
-}
-/*---------------------------------------------------------
   fold an enumerable's elements into rows of w elements
   - indent by left spaces
   - does not consume t since passed as reference
@@ -104,6 +101,13 @@ pub fn fold<T, I:Debug>(
   let mut accum = String::new();
   accum += &offset(left);
 
+  for (i, item) in t.into_iter().enumerate() {
+    accum += &format!("{item:?}, ");
+    if ((i + 1) % width) == 0 && i != 0 {
+        accum += "\n";
+        accum += &offset(left);
+    }
+  }
   /*-- Alternate direct implementation --*/
   //let mut i = 0usize;
   // for item in t {
@@ -114,14 +118,8 @@ pub fn fold<T, I:Debug>(
   //   }
   //   i += 1;
   // }
-  
-  for (i, item) in t.into_iter().enumerate() {
-    accum += &format!("{item:?}, ");
-    if ((i + 1) % width) == 0 && i != 0 {
-        accum += "\n";
-        accum += &offset(left);
-    }
-  }
+
+  /*-- strip off trailing comma --*/
   let opt = find_last_utf8(&accum, ',');
   if let Some(index) = opt {
     accum.truncate(index);

@@ -1,79 +1,21 @@
---------------------------------------------------
+﻿--------------------------------------------------
   demonstrate object creation
 --------------------------------------------------
 
-----------------------------------------------
-  std::library objects: string and vector<T>
-----------------------------------------------
+----------------------------------------
+  std library objects in heap
+----------------------------------------
+"h_str", type: "alloc::boxed::Box<alloc::vec::Vec<i32>>"
+h_str: [1, 2, 3, 2, 1]
+--- h_str[1] = -1 ---
+h_str: [1, -1, -2, 2, 1]
 
---- let mut s1 = "a string".to_string() ---
-  s1:String - "a string"
-
---- show_type_scalar(&s1, "&s1") ---
-"&s1", type: "alloc::string::String"
-value: "a string", size: 24
-
---- s1.push_str(" and more"); ---
-  s1:String - "a string and more"
-
---- let mut v:Vec<i32> = vec![1, 2, 3, 2, 1]; ---
-  v:Vec<i32> - [1, 2, 3, 2, 1]
-
---- show_type_scalar(&v, "&v") ---
-"&v", type: "alloc::vec::Vec<i32>"
-value: [1, 2, 3, 2, 1], size: 24
-
---- v.push(42); ---
-  v:Vec<i32> - [1, 2, 3, 2, 1, 42]
-
------------------------------------
-  instances of user-defined type
------------------------------------
-
---- let mut p1 = Point4D::new() ---
-p1: Point4D {
-  0, 0, 0,
-  Fri Nov 17 2023, 09:09:15
+----------------------------------------
+  user-defined objects in heap
+----------------------------------------
+"h_point", type: "alloc::boxed::Box<rust_objects::points_objects::Point4D>"
+h_point : Point4D {
+  2, 1, 0,
+  Mon Dec 11 2023, 14:53:31
 }
-p1: Point4D {
-  42, -3, 2,
-  Fri Nov 17 2023, 09:09:15
-}
-"p1", type: "rust_objects::points_objects::Point4D"
-value: Point4D { x: 42.0, y: -3.0, z: 2.0, t: 2023-11-17T09:09:15.936911500-06:00 }, size: 40
-
---- let p1a = p1.clone() ---
-p1.clone(): Point4D {
-  42, -3, 2,
-  Fri Nov 17 2023, 09:09:15
-}
-
-using PointN<f64>::coor_x function:
-p1: Point4D {
-  84, -3, 2,
-  Fri Nov 17 2023, 09:09:15
-}
-
-using PointN<f64>::coor_y function:
-p1: Point4D {
-  84, 84, 2,
-  Fri Nov 17 2023, 09:09:15
-}
-
-using PointN<f64>::coor_z function:
-p1: Point4D {
-  84, 84, 84,
-  Fri Nov 17 2023, 09:09:15
-}
-
-updating time value:
-delaying 5 seconds before time update
-p1: Point4D {
-  84, 84, 84,
-  Fri Nov 17 2023, 09:09:20
-}
-
-
-That's all Folks!
-
 

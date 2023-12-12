@@ -33,6 +33,8 @@ namespace CSharpObjects
     - St is a value type because it is implemented with
       a struct and all its data members are value types. 
   */
+  using Anal = Analysis;
+
   public struct St { 
     public St(int ai, double bi, char ci) {
       a=ai; b=bi; c=ci;
@@ -56,7 +58,7 @@ namespace CSharpObjects
   class Program
   {
     const string nl = "\n";
-        static unsafe void Pass_by_value<T>(T? t, string nm) {
+    static unsafe void Pass_by_value<T>(T? t, string nm) {
       string ts = Anal.GetTypeString(t, nm);
       Console.WriteLine(ts);
       /*

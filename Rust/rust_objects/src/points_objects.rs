@@ -77,7 +77,7 @@ impl Point4D {
       functions.
     */
     pub fn show(&self, nm:&str) {
-        print!("{nm}: Point4D {{\n  ");
+        print!("{nm} : Point4D {{\n  ");
         print!("{0}, ", self.x);
         print!("{0}, ", self.y);
         println!("{0},", self.z);

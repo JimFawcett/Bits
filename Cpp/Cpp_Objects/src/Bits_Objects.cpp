@@ -73,6 +73,9 @@ int main() {
     showOp("showType(vec, \"vec\");");
     showType(vec, "vec");
     std::cout << "\n  vec:" << vec;
+    // equivalent to:
+    // operator<<(operator<<(std::cout, "\n  vec:"), vec);
+    // uncomment the preceeding line to see the output repeated
 
     showOp("vec[2] = -2.5;");
     vec[2] = -2.5;
@@ -91,8 +94,15 @@ int main() {
     showNote(
       "Copy construction, auto vec2 = vec, creates\n    " 
       "independent instance. So changing target vec2\n    "
-      "has no affect on source vec.", nl
+      "has no affect on source vec."
     );
+
+    showOp("vec = vec2: assignment");
+    vec = vec2;
+    // equivalent to:
+    // vec.operator=(vec2);
+    // uncomment the preceeding line and observe no change
+    std::cout << "\n  vec: " << vec << "\n";
 
     showNote("user-defined type Point4D");
     Point4D p1;
@@ -102,12 +112,26 @@ int main() {
     /*- t contains time of construction -*/
     p1.show();
     print();
-    
+
     print("--- showType(p1, \"p1\", nl) ---");
     showType(p1, "p1", nl);
     std::cout << "  p1.xCoor() returns value " 
               << p1.xCoor() << "\n";
 
+    showOp("Point4D p2 = p1 : copy construction");
+    Point4D p2 = p1;  // copy construction
+    p2.show();
+
+    showOp("p2.xCoor() *= 2");
+    p2.xCoor() *= 2;
+    p2.show();
+
+    showOp("p1 = p2 : assignment");
+    p1 = p2;  // assignment
+    // equivalent to:
+    // p1.operator=(p2);
+    p1.show();
+    
     showNote("heap-based string instance");
   
     /* standard library type std::string */
