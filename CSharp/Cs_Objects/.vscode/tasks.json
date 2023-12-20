@@ -9,7 +9,8 @@
                 "build",
                 "${workspaceFolder}/Cs_Objects.csproj",
                 "/property:GenerateFullPaths=true",
-                "/consoleloggerparameters:NoSummary"
+                "/consoleloggerparameters:NoSummary",
+                "/unsafe"
             ],
             "problemMatcher": "$msCompile"
         },

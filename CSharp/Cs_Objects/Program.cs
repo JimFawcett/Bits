@@ -33,7 +33,7 @@ namespace CSharpObjects
     - St is a value type because it is implemented with
       a struct and all its data members are value types. 
   */
-  using Anal = Analysis;
+  //using Anal = Analysis;
 
   public struct St { 
     public St(int ai, double bi, char ci) {
@@ -101,7 +101,7 @@ namespace CSharpObjects
       // https://www.pluralsight.com/guides/csharp-passing-reference-vs-value-objective
       DemoPassValAndRef();
 
-      Display.ShowLabel(" Demonstrate C# objects");
+      Display.ShowNote(" Demonstrate C# objects");
 
       Display.ShowNote(
         "Examples of creation and display of Primitive Types"

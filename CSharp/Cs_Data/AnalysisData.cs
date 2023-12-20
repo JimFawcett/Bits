@@ -104,20 +104,20 @@ namespace Analysis
       return addrstr;
     }
     #pragma warning restore 8500
-    public static unsafe string ToStringAdddressFromHandle<T>(T t) {
-      string addrstr = "for handle\n";
-      try {
-        GCHandle handle = GCHandle.Alloc(t, GCHandleType.Pinned);
-        IntPtr address = handle.AddrOfPinnedObject();
-        addrstr = "address: " + String.Format("0x" + address.ToString("x"));
-        handle.Free();
-        return addrstr + "\n";
-      }
-      catch {
-        Console.WriteLine("GCHandle exception thrown");
-      }
-      return addrstr;
-    }
+    // public static unsafe string ToStringAdddressFromHandle<T>(T t) {
+    //   string addrstr = "for handle\n";
+    //   try {
+    //     GCHandle handle = GCHandle.Alloc(t, GCHandleType.Pinned);
+    //     IntPtr address = handle.AddrOfPinnedObject();
+    //     addrstr = "address: " + String.Format("0x" + address.ToString("x"));
+    //     handle.Free();
+    //     return addrstr + "\n";
+    //   }
+    //   catch {
+    //     Console.WriteLine("GCHandle exception thrown");
+    //   }
+    //   return addrstr;
+    // }
   }
   class Display
   {
