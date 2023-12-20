@@ -7,8 +7,9 @@ use std::fmt::*;
 use chrono::prelude::*;
 
 /*---------------------------------------------------------
-  - Declare Point4D struct, like a C++ class
-  - Request compiler implement traits Debug, Copy & Clone
+  Declare Point4D struct
+  - similar in function to a C++ class
+  - Request compiler to implement traits: Debug, Copy & Clone
   - Can be Copy since all members are copy
   - So, construction and assignment are copy operations
   - Demos two types of member access, only one needed
@@ -82,12 +83,12 @@ impl Point4D {
     pub fn indent(ch:char, n:usize) -> String {
       (0..n).map(|_i| ch).collect::<String>()
       // equivalent to:
-      // let ind = (0..n).map(|_i| ch).collect::<String>();
-      // ind
+      //   let ind = (0..n).map(|_i| ch).collect::<String>();
+      //   ind
       // - (0..n) is an iterator yielding values 0 through n-1
       // - map sets each iterator item to same char ch
       // - collect appends each char to temporary String
-      // ind defines return value
+      // ind defines return value, the collected String
     }
     pub fn show(&self, nm:&str, ind:usize) {
         let indstr = Point4D::indent(' ', ind);
