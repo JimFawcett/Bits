@@ -173,6 +173,7 @@ fn demo_user_defined_point4d() {
 
   p1.update_time();
   p1.show("p1", 2);
+  println!();
 
   show_op("let p2 = p1 : copy construction");
   let mut p2 = p1;
@@ -266,12 +267,12 @@ fn demo_user_defined_pointnprototype() {
   Demo object instances in action
 */
 fn main() {
-    show_note("demonstrate object creation", 50);
+    show_note("demonstrate object creation and use", 50);
 
     demo_string_objects();
     demo_vector_objects();
     demo_user_defined_point4d();
     demo_user_defined_pointnprototype();
     
-    print!("\n\nThat's all Folks!\n\n");
+    print!("\nThat's all Folks!\n\n");
 }
