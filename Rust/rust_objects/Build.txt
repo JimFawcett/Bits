@@ -1,8 +1,14 @@
-C:\github\JimFawcett\Bits\Rust\rust_hello_objects
+﻿C:\github\JimFawcett\Bits\Rust\rust_objects
 > cargo build
-   Compiling rust_hello_objects v0.1.0 (C:\github\JimFawcett\Bits\Rust\rust_hello_objects)
-    Finished dev [unoptimized + debuginfo] target(s) in 0.42s
-C:\github\JimFawcett\Bits\Rust\rust_hello_objects
-> 
+   Compiling autocfg v1.1.0
+   Compiling winapi v0.3.9
+   Compiling libc v0.2.144
+   Compiling num-traits v0.2.15                                       
+   Compiling num-integer v0.1.45
+   Compiling time v0.1.45                                             
+   Compiling chrono v0.4.24                                           
+   Compiling rust_objects v0.1.0 (C:\github\JimFawcett\Bits\Rust\rust_objects)
+    Finished dev [unoptimized + debuginfo] target(s) in 3.36s         
+C:\github\JimFawcett\Bits\Rust\rust_objects
 
 

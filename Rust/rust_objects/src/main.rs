@@ -26,7 +26,7 @@ fn demo_string_objects() {
   - move assignment
   - selected operations
 */
-  show_note("demo std vector", 40);
+  show_note("demo std String", 40);
   let mut s:String = "a string".to_string();
   println!("  s: {:?}\n", s);
   

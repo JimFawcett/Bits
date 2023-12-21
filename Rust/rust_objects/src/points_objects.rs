@@ -1,6 +1,7 @@
 /*-------------------------------------------------------------------
   points.rs
   - defines type Point4D representing points in space-time
+  - defines type PointNPrototype representing system states
 -------------------------------------------------------------------*/
 
 use std::fmt::*;
@@ -121,7 +122,11 @@ impl PointNPrototype {
   /*-- initialize from elements of array slice --*/
   pub fn init(&mut self, arr: &[f64]) -> &mut PointNPrototype {
     self.coords = (0..arr.len()).map(|i| arr[i]).collect::<Vec<f64>>();
-    self
+    // arr is an array slice, e.g., a view into an array
+    // (0..arr.len()) is an iterator returning items from the slice
+    // map(|i| arr[i]) returns arr[i] for each iterator item i
+    // collect::&lt;Vec<f64&gt;&gt;() collects Vec of those arr values.
+    self // returns mutable reference to modified PointNPrototype instance
   }
   /*-- make coordinates accessible for reading and writing --*/
   pub fn coors(&mut self) -> &mut Vec<f64> {
