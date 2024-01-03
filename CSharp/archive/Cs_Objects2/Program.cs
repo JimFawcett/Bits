@@ -58,17 +58,6 @@ namespace CSharpObjects
   class Program
   {
     const string nl = "\n";
-    /*-- move this to functions --*/
-    static void DemoPassValAndRef() {
-      Display.ShowNote("Pass by value", "\n");
-      double d = 3.1415927;
-      Pass_by_value<double>(d, "d");
-      TestForNullValue(d, "d");
-
-      List<int> li = new List<int>{ 1, 2, 3, 2, 1 };
-      Pass_by_value<List<int>>(li, "li");
-      TestForNullValue(li, "li");
-    }
     static unsafe void Pass_by_value<T>(T? t, string nm) {
       string ts = Anal.GetTypeString(t, nm);
       Console.WriteLine(ts);
@@ -95,10 +84,27 @@ namespace CSharpObjects
         Console.WriteLine(nm + " is {0}", t);
       }
     }
-    static void DemoPrimitives() {
+    static void DemoPassValAndRef() {
+      Display.ShowNote("Pass by value", "\n");
+      double d = 3.1415927;
+      Pass_by_value<double>(d, "d");
+      TestForNullValue(d, "d");
+
+      List<int> li = new List<int>{ 1, 2, 3, 2, 1 };
+      Pass_by_value<List<int>>(li, "li");
+      TestForNullValue(li, "li");
+    }
+
+    static void Main(string[] args)
+    {
+      // https://www.pluralsight.com/guides/csharp-in-out-ref-parameters
+      // https://www.pluralsight.com/guides/csharp-passing-reference-vs-value-objective
+      DemoPassValAndRef();
+
+      Display.ShowNote(" Demonstrate C# objects");
+
       Display.ShowNote(
-        "Examples of creation and display of Primitive Types",
-        "", 60
+        "Examples of creation and display of Primitive Types"
       );
       short s = 123;
       Display.ShowTypeScalar(s, "s", nl);
@@ -111,12 +117,10 @@ namespace CSharpObjects
       int[] arr = new int[]{ 4, 3, 2, 1, 0, -1};
       Display.ShowTypeScalar(arr, "arr");
       Display.ShowIntArray(arr, nl);
-    }
-    static void DemoLibraryTypes() {
+
       Display.ShowNote(
-        "Examples of creation and display of Library Types\n  " + 
-        "- size is the size of reference, not instance",
-        "", 60
+        "Examples of creation and display of Library Types\n" + 
+        "- size is the size of reference, not instance"
       );
       string aString = "a string";  // hides construction
       Display.ShowTypeScalar(aString, "aString", nl);
@@ -138,13 +142,10 @@ namespace CSharpObjects
       Display.ShowTypeScalar(d1, "d1");
       Display.ShowDictionary(d1, nl);
       // Display.ShowTypeEnum(d1, "d1", 5, nl);
-      Console.WriteLine();
-    }
-    static void DemoPoint4D() {
+  
       Display.ShowNote(
-        "Example of user-defined reference type Point4D:\n  " + 
-        "- a point with x,y,z,t coordinates",
-        "", 50
+        "Examples of user-defined type:\n" + 
+        "- Point4D, a point with x,y,z,t coordinates"
       );
       Point4D p1 = new Point4D();
       p1.x = 3;
@@ -155,13 +156,12 @@ namespace CSharpObjects
       Display.ShowTypeShowable(p1, "p1");
 
       Display.ShowLabel(
-        "Differences between value and reference types", "", 55
+        "Differences between value and reference types"
       );
       Display.ShowNote(
-        "Assignment of reference types assigns their references,\n  " +
-        "creating two references to the same instance in managed\n  " +
-        "heap, so variables are coupled through single instance.",
-        "\n", 60
+        "Assignment of reference types assigns their references,\n" +
+        "creating two references to the same instance in managed\n" +
+        "heap, so variables are coupled through single instance."
       );
 
       Display.ShowOp("Point4D val1 = new Point4D(), then initialize", "\n");
@@ -184,18 +184,15 @@ namespace CSharpObjects
       Display.ShowLabeledObject(val2, "val2");
       Display.ShowLabeledObject(val1, "val1");
       Display.ShowNote(
-        "Note! Source of assignment, val1, changed when val2\n  " +
-        "changed. Point4D is ref type, so assignment just assigns\n  " +
-        "references.",
-        "", 60
+        "Note! Source of assignment, val1, changed when val2 changed.\n" +
+        "Point4D is ref type, so assignment just assigns references."
       );
-    }
-    static void DemoSt() {
+      Display.println();
+
       Display.ShowNote(
-        "Example of user-defined value type, St:\n  " +
-        "- Value types can be independently assigned and copied.",
-        "", 60
+        "Value types can be independently assigned and copied."
       );
+      Console.WriteLine();
 
       Display.ShowOp("var s1 = new St(1, -0.5, 'z');");
       var s1 = new St(1, -0.5, 'z');
@@ -211,18 +208,16 @@ namespace CSharpObjects
       s2.Show("s2");
       s1.Show("s1");
       Display.ShowNote(
-        "Change in destination, s2, did not alter source, s1.\n  " +
-        "Assignment of value types creates independent objects.",
-        "\n", 60
+        "Change in destination, s2, did not alter source, s1.\n" +
+        "Assignment of value types creates independent objects."
       );
-    }
-    static void DemoString() {
+
       Display.ShowLabel(
-        "Instances of string are reference types, but simulate\n  " +
-        "some value behaviors.  String objects are immutable.\n  " +
-        "To modify an instance, a new string is created with\n  " +
-        "copies of the source string characters inclucing any\n  " +
-        "modifications.", "", 60
+        "Instances of string are reference types, but simulate\n" +
+        "some value behaviors.  String objects are immutable.\n" +
+        "To modify an instance, a new string is created with\n" +
+        "copies of the source string characters inclucing any\n" +
+        "modifications."
       );
       var str1 = "An immutable string";
       var str2 = str1;  // copy handle not instance
@@ -235,23 +230,9 @@ namespace CSharpObjects
       Display.DisplayLabeledObject(str1, "str1");
       Display.DisplayLabeledObject(str2, "str2");
       Display.ShowNote(
-        "There is no way for change in str2 to affect str1.", "", 60
+        "There is no way for change in str2 to affect str1."
       );
-    }
-    static void Main(string[] args)
-    {
-      // https://www.pluralsight.com/guides/csharp-in-out-ref-parameters
-      // https://www.pluralsight.com/guides/csharp-passing-reference-vs-value-objective
-      //DemoPassValAndRef();
-
-      Display.ShowNote(" Demonstrate C# objects");
-
-      //DemoPrimitives();
-      DemoLibraryTypes();
-      DemoSt();
-      DemoPoint4D();
-      DemoString();
-
+      
       Console.WriteLine("\nThat's all Folks!\n");
     }
   }

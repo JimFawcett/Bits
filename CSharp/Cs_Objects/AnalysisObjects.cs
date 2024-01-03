@@ -321,9 +321,9 @@ namespace Analysis
     /*-------------------------------------------------
       Surround note with empty lines
     */
-    public static void ShowLabel(string s) {
+    public static void ShowLabel(string s, string suffix="", int len=35) {
       Console.WriteLine();
-      ShowNote(s);
+      ShowNote(s, suffix, len);
       Console.WriteLine();
     }
     /*-------------------------------------------------

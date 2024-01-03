@@ -53,11 +53,9 @@ template<typename T>
 using pU = std::unique_ptr<T>;
 
 /*-------------------------------------------------------------------
-  Demonstration starts here 
+  Demonstrate std::string and std::vector&lt;T&gt;
 */
-int main() {
-
-    print("Demonstrate C++ Objects\n");
+void demo_stdlib() {
 
     showNote("std library types string and vector<T>");
 
@@ -103,7 +101,11 @@ int main() {
     // vec.operator=(vec2);
     // uncomment the preceeding line and observe no change
     std::cout << "\n  vec: " << vec << "\n";
-
+}
+/*
+  Demonstrate user defined Point4D
+*/
+void demo_Point4D() {
     showNote("user-defined type Point4D");
     Point4D p1;
     p1.show();
@@ -131,7 +133,12 @@ int main() {
     // equivalent to:
     // p1.operator=(p2);
     p1.show();
-    
+}
+/*
+  Demonstrate std::string stored in heap
+*/
+void demo_heap_string() {
+
     showNote("heap-based string instance");
   
     /* standard library type std::string */
@@ -149,7 +156,11 @@ int main() {
     /* std::unique_ptr<T> cannot be copied but can be moved */
     showOp("showType(move(pStr), \"pStr\")");
     showType(move(pStr), "pStr", nl);
-
+}
+/*
+  Demonstrate std::vector&lt;T&gt; stored in heap
+*/
+void demo_heap_vector() {
     /* standard library type std::vector<T> */
     showNote("heap-based vector instance");
     showOp(
@@ -163,7 +174,11 @@ int main() {
     showType(*pVec, "*pVec", nl);
     std::cout << "\n  pVec = " << pVec;
     showType(move(pVec), "move(pVec)", nl);
-
+}
+/*
+  Demonstrate user defined Point4D stored in heap
+*/
+void demo_heap_Point4D() {
     /* custom point types */
     showNote("heap-based Point4D instance");
     showOp("pU<Point4D> pPoint4D(new Point4D())");
@@ -181,6 +196,16 @@ int main() {
     showOp("showType(std::move(pPoint4D), \"pPoint4D\");");
     showType(std::move(pPoint4D), "pPoint4D", nl);
     /* pPoint4D moved, so now invalid */
+}
+int main() {
 
+    print("Demonstrate C++ Objects\n");
+
+    demo_stdlib();
+    demo_Point4D();
+    demo_heap_string();
+    demo_heap_vector();
+    demo_heap_Point4D();
+    
     print("\n  That's all Folks!\n\n");
 }
