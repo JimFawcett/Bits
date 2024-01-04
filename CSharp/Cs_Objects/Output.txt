@@ -1,33 +1,10 @@
-C:\github\JimFawcett\Bits\CSharp\Cs_Objects
-> dotnet run
-
---------------------------------------------------
- Demonstrate C# objects
---------------------------------------------------
-
---------------------------------------------------
-Examples of creation and display of Primitive Types
---------------------------------------------------
-s: Int16, size: 2, value type
-value: "123"
-
-l: Int64, size: 8, value type
-value: "12345"
-
-f: Single, size: 4, value type
-value: "3.1415927"
-
-d: Double, size: 8, value type
-value: "3.1415927"
-
-arr: Int32[], size: 8, reference type
-value: "System.Int32[]"
-[ 4, 3 , 2 , 1 , 0 , -1 ]
-
---------------------------------------------------
-Examples of creation and display of Library Types
-- size is the size of reference, not instance
---------------------------------------------------
+﻿-----------------------------------
+   Demonstrate C# objects
+-----------------------------------
+------------------------------------------------------------
+  Examples of creation and display of Library Types
+  - size is the size of reference, not instance
+------------------------------------------------------------
 aString: String, size: 8, reference type
 value: "a string"
 
@@ -39,16 +16,34 @@ value: "System.Collections.Generic.List`1[System.Double]"
 [ 1, 1.5 , 2 , 2.5 , 3 , 3.5 , 4 ]
 
 d1: Dictionary<T>, size: 8, reference type
-value: "System.Collections.Generic.Dictionary`2[System.Int32,System.String]"       
+value: "System.Collections.Generic.Dictionary`2[System.Int32,System.String]"
 [ {0,zero} {1,one} {2,two} ]
 
+
+------------------------------------------------------------
+  Example of user-defined value type, St:
+  - Value types can be independently assigned and copied.
+------------------------------------------------------------
+--- var s1 = new St(1, -0.5, 'z'); ---
+--- var s2 = s1 ---
+s2 is not same object as s1
+  s2 { a:1, b:-0.5, c:z }
+  s1 { a:1, b:-0.5, c:z }
+--- s2.c = 'q' ---
+  s2 { a:1, b:-0.5, c:q }
+  s1 { a:1, b:-0.5, c:z }
+------------------------------------------------------------
+  Change in destination, s2, did not alter source, s1.
+  Assignment of value types creates independent objects.
+------------------------------------------------------------
+
 --------------------------------------------------
-Examples of user-defined type:
-- Point4D, a point with x,y,z,t coordinates
+  Example of user-defined reference type Point4D:
+  - a point with x,y,z,t coordinates
 --------------------------------------------------
   p1 {
     x:3, y:-42, z:1,
-    5/29/2023 7:49:53 PM
+    1/3/2024 6:31:33 PM
   }
 
 --- ShowTypeShowable(p1, "p1") ---
@@ -56,30 +51,31 @@ p1: Point4D, size: 8, reference type
 value:
   p1 {
     x:3, y:-42, z:1,
-    5/29/2023 7:49:53 PM
+    1/3/2024 6:31:33 PM
   }
 
 
---------------------------------------------------
-Differences between value and reference types
---------------------------------------------------
+-------------------------------------------------------
+  Differences between value and reference types
+-------------------------------------------------------
 
---------------------------------------------------
-Assignment of reference types assigns their references,
-creating two references to the same instance in managed
-heap, so variables are coupled through single instance.
---------------------------------------------------
+------------------------------------------------------------
+  Assignment of reference types assigns their references,
+  creating two references to the same instance in managed
+  heap, so variables are coupled through single instance.
+------------------------------------------------------------
+
 --- Point4D val1 = new Point4D(), then initialize ---
 
   val1 {
     x:1, y:2, z:3,
-    5/29/2023 7:49:53 PM
+    1/3/2024 6:31:33 PM
   }
 
 --- Point4D val2 = val1 ---
   val2 {
     x:1, y:2, z:3,
-    5/29/2023 7:49:53 PM
+    1/3/2024 6:31:33 PM
   }
 
 val2 is same object as val1
@@ -89,43 +85,27 @@ val2 is same object as val1
 val2 is same object as val1
   val2 {
     x:1, y:2, z:42,
-    5/29/2023 7:49:53 PM
+    1/3/2024 6:31:33 PM
   }
 
   val1 {
     x:1, y:2, z:42,
-    5/29/2023 7:49:53 PM
+    1/3/2024 6:31:33 PM
   }
 
---------------------------------------------------
-Note! Source of assignment, val1, changed when val2 changed.
-Point4D is ref type, so assignment just assigns references.
---------------------------------------------------
+------------------------------------------------------------
+  Note! Source of assignment, val1, changed when val2
+  changed. Point4D is ref type, so assignment just assigns
+  references.
+------------------------------------------------------------
 
---------------------------------------------------
-Value types can be independently assigned and copied.
---------------------------------------------------
-
---- var s1 = new St(1, -0.5, 'z'); ---
---- var s2 = s1 ---
-s2 is not same object as s1
-  s2 { a:1, b:-0.5, c:z }
-  s1 { a:1, b:-0.5, c:z }
---- s2.c = 'q' ---
-  s2 { a:1, b:-0.5, c:q }
-  s1 { a:1, b:-0.5, c:z }
---------------------------------------------------
-Change in destination, s2, did not alter source, s1.
-Assignment of value types creates independent objects.
---------------------------------------------------
-
---------------------------------------------------
-Instances of string are reference types, but simulate
-some value behaviors.  String objects are immutable.
-To modify an instance, a new string is created with
-copies of the source string characters inclucing any
-modifications.
---------------------------------------------------
+------------------------------------------------------------
+  Instances of string are reference types, but simulate
+  some value behaviors.  String objects are immutable.
+  To modify an instance, a new string is created with
+  copies of the source string characters inclucing any
+  modifications.
+------------------------------------------------------------
 
 str2 is same object as str1
 str1: An immutable string
@@ -133,11 +113,11 @@ str2: An immutable string
 str2 is not same object as str1
 str1: An immutable string
 str2: immutable string
---------------------------------------------------
-There is no way for change in str2 to affect str1.
---------------------------------------------------
+------------------------------------------------------------
+  There is no way for change in str2 to affect str1.
+------------------------------------------------------------
 
 That's all Folks!
 
-C:\github\JimFawcett\Bits\CSharp\Cs_Objects
->>
+
+

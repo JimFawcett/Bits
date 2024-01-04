@@ -59,42 +59,42 @@ namespace CSharpObjects
   {
     const string nl = "\n";
     /*-- move this to functions --*/
-    static void DemoPassValAndRef() {
-      Display.ShowNote("Pass by value", "\n");
-      double d = 3.1415927;
-      Pass_by_value<double>(d, "d");
-      TestForNullValue(d, "d");
+    // static void DemoPassValAndRef() {
+    //   Display.ShowNote("Pass by value", "\n");
+    //   double d = 3.1415927;
+    //   Pass_by_value<double>(d, "d");
+    //   TestForNullValue(d, "d");
 
-      List<int> li = new List<int>{ 1, 2, 3, 2, 1 };
-      Pass_by_value<List<int>>(li, "li");
-      TestForNullValue(li, "li");
-    }
-    static unsafe void Pass_by_value<T>(T? t, string nm) {
-      string ts = Anal.GetTypeString(t, nm);
-      Console.WriteLine(ts);
-      /*
-        Suppresses warning about taking address of managed type.
-        The pointer is used only to show the address of ptr
-        as part of analysis of copy operations.
-      */
-      #pragma warning disable 8500
-      string addrd = Anal.ToStringAddress<T>(&t);
-      #pragma warning restore 8500
-      Console.WriteLine("{0}: {1}", nm, addrd);
-      t = default(T);
-      /*
-        caller sees this change if and only if T is a reference type
-        in which case t is null.
-      */
-    }
-    static void TestForNullValue<T>(T? t, string nm) {
-      if(t == null) {
-        Console.WriteLine(nm + " is null");
-      }
-      else {
-        Console.WriteLine(nm + " is {0}", t);
-      }
-    }
+    //   List<int> li = new List<int>{ 1, 2, 3, 2, 1 };
+    //   Pass_by_value<List<int>>(li, "li");
+    //   TestForNullValue(li, "li");
+    // }
+    // static unsafe void Pass_by_value<T>(T? t, string nm) {
+    //   string ts = Anal.GetTypeString(t, nm);
+    //   Console.WriteLine(ts);
+    //   /*
+    //     Suppresses warning about taking address of managed type.
+    //     The pointer is used only to show the address of ptr
+    //     as part of analysis of copy operations.
+    //   */
+    //   #pragma warning disable 8500
+    //   string addrd = Anal.ToStringAddress<T>(&t);
+    //   #pragma warning restore 8500
+    //   Console.WriteLine("{0}: {1}", nm, addrd);
+    //   t = default(T);
+    //   /*
+    //     caller sees this change if and only if T is a reference type
+    //     in which case t is null.
+    //   */
+    // }
+    // static void TestForNullValue<T>(T? t, string nm) {
+    //   if(t == null) {
+    //     Console.WriteLine(nm + " is null");
+    //   }
+    //   else {
+    //     Console.WriteLine(nm + " is {0}", t);
+    //   }
+    // }
     static void DemoPrimitives() {
       Display.ShowNote(
         "Examples of creation and display of Primitive Types",
