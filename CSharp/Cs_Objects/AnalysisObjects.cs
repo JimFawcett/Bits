@@ -198,7 +198,7 @@ namespace Analysis
       where T:IEnumerable<U>
     {
       StringBuilder sb = new StringBuilder();
-      sb.Append("{ ");
+      sb.Append("[ ");
       bool first = true;
       foreach(U item in enu) {
         if(item == null) {
@@ -212,13 +212,13 @@ namespace Analysis
           sb.AppendFormat(", {0}", item);
         }
       }
-      sb.Append(" }\n");
+      sb.Append(" ]\n");
       return sb.ToString();
     }
     /*-----------------------------------------------------
       Direct implementation of enumerating associative
-      collection.  Code below illustrates that this can also
-      be done with ToStringRepIEnumerable<Dict,KVPair>(dict).
+      collection.  This can also be done with
+      ToStringRepIEnumerable<Dict,KVPair>(dict).
     -----------------------------------------------------*/
     public static string ToStringRepAssocCont<Dict,Key,Value>(Dict assoc) 
       where Dict:IDictionary<Key,Value>
@@ -228,12 +228,12 @@ namespace Analysis
       bool first = true;
       foreach(var item in assoc) {
         if(first) {
-          var sf = String.Format("{{ {0}, {1} }}", item.Key, item.Value);
+          var sf = String.Format("{{{0}, {1}}}", item.Key, item.Value);
           sb.Append(sf);
           first = false;
         }
         else {
-          sb.AppendFormat(", {{ {0}, {1} }}", item.Key, item.Value);
+          sb.AppendFormat(", {{{0}, {1}}}", item.Key, item.Value);
         }
       }
       sb.Append(" }\n");
@@ -297,9 +297,9 @@ namespace Analysis
       }
       Console.Write("]\n" + suffix);
     }
-    public static void ShowDoubleList(List<double> list, string suffix="")
+    public static void ShowDoubleList(string nm, List<double> list, string suffix="")
     {
-      Console.Write("[ {0}", list[0]);
+      Console.Write("{0}: [ {1}", nm, list[0]);
       for (int i = 1; i < list.Count; i++)
       {
         Console.Write(", " + list[i] + " ");
@@ -307,11 +307,12 @@ namespace Analysis
       Console.Write("]\n" + suffix);
     }
     public static void ShowDictionary(
+      string nm, 
       Dictionary<int, string> dict, string suffix=""
     )
     {
       Dictionary<int, string>.KeyCollection keyColl = dict.Keys;
-      Console.Write("[ ");
+      Console.Write("{0}: [ ");
       foreach(KeyValuePair<int, string> entry in dict)
       {
         Console.Write("{{{0},{1}}} ", entry.Key, entry.Value);

@@ -95,51 +95,76 @@ namespace CSharpObjects
     //     Console.WriteLine(nm + " is {0}", t);
     //   }
     // }
-    static void DemoPrimitives() {
-      Display.ShowNote(
-        "Examples of creation and display of Primitive Types",
-        "", 60
-      );
-      short s = 123;
-      Display.ShowTypeScalar(s, "s", nl);
-      long l = 12345;
-      Display.ShowTypeScalar(l, "l", nl);
-      float f = 3.1415927f;
-      Display.ShowTypeScalar(f, "f", nl);
-      double d = 3.1415927;
-      Display.ShowTypeScalar(d, "d", nl);
-      int[] arr = new int[]{ 4, 3, 2, 1, 0, -1};
-      Display.ShowTypeScalar(arr, "arr");
-      Display.ShowIntArray(arr, nl);
-    }
+    // static void DemoPrimitives() {
+    //   Display.ShowNote(
+    //     "Examples of creation and display of Primitive Types",
+    //     "", 60
+    //   );
+    //   short s = 123;
+    //   Display.ShowTypeScalar(s, "s", nl);
+    //   long l = 12345;
+    //   Display.ShowTypeScalar(l, "l", nl);
+    //   float f = 3.1415927f;
+    //   Display.ShowTypeScalar(f, "f", nl);
+    //   double d = 3.1415927;
+    //   Display.ShowTypeScalar(d, "d", nl);
+    //   int[] arr = new int[]{ 4, 3, 2, 1, 0, -1};
+    //   Display.ShowTypeScalar(arr, "arr");
+    //   Display.ShowIntArray(arr, nl);
+    // }
+    /*-- standard library collection types --*/
     static void DemoLibraryTypes() {
       Display.ShowNote(
         "Examples of creation and display of Library Types\n  " + 
         "- size is the size of reference, not instance",
         "", 60
       );
+      /*-- Strings --*/
       string aString = "a string";  // hides construction
       Display.ShowTypeScalar(aString, "aString", nl);
 
       string another = new string("another string");
-      Display.ShowTypeScalar(another, "another", nl);
+      Console.WriteLine("another: \"{0}\"\n", another);
 
+      aString += " and " + another;
+      Console.WriteLine("modified aString: \"{0}\"\n", aString);
+      
+      /*-- List<T> --*/
       List<double> aList = 
         new List<double>{ 1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0 };
     
       Display.ShowTypeScalar(aList, "aList");
-      Display.ShowDoubleList(aList, nl);
-      // Display.ShowTypeEnum(aList, "aList", 5, nl);
+      Console.WriteLine();
+      Display.ShowDoubleList("aList", aList, nl);
 
+      aList.Insert(1, -1.5);
+      Display.ShowDoubleList("aList", aList, nl);
+      // String temp = 
+      //   Display.ToStringRepIEnumerable<List<double>, double>(aList);
+      // Console.WriteLine("aList: {0}", temp);
+
+      /*-- Dictionary --*/
       var d1 = new Dictionary<int, string>
       {
         { 0, "zero"}, {1, "one"}, {2, "two"}
       };
+
       Display.ShowTypeScalar(d1, "d1");
-      Display.ShowDictionary(d1, nl);
-      // Display.ShowTypeEnum(d1, "d1", 5, nl);
       Console.WriteLine();
+      Display.ShowDictionary("d1", d1, nl);
+
+      d1.Add(3, "three");
+      string temp = Display.ToStringRepIEnumerable<
+        Dictionary<int, string>, KeyValuePair<int, string>
+      >(d1);
+      Console.WriteLine("d1: {0}", temp);
+
+      temp = Display.ToStringRepAssocCont<
+        Dictionary<int, string>, int, string
+      >(d1);
+      Console.WriteLine("d1: {0}", temp);
     }
+    /*-- user-defined reference type --*/
     static void DemoPoint4D() {
       Display.ShowNote(
         "Example of user-defined reference type Point4D:\n  " + 
@@ -164,25 +189,29 @@ namespace CSharpObjects
         "\n", 60
       );
 
-      Display.ShowOp("Point4D val1 = new Point4D(), then initialize", "\n");
-      Point4D val1 = new Point4D();
-      val1.x = 1;
-      val1.y = 2;
-      val1.z = 3;
+      Display.ShowOp("Point4D val1 = new Point4D(): ref construction", "\n");
+      Point4D val1 = new Point4D(1, 2, 3);
       Display.ShowLabeledObject(val1, "val1");
 
-      Display.ShowOp("Point4D val2 = val1");
-      Point4D val2 = val1;
+      Point4D val2 = new Point4D(3, 2, 1);
+
+      Display.ShowOp("Point4D val2 = new Point4D(3, 2, 1)", "\n");
       Display.ShowLabeledObject(val2, "val2");
+
+      Display.ShowOp("val1 = val2: ref assignment");
+      val1 = val2;
+
       Display.IsSameObj(val2, "val2", val1, "val1");
+      Display.println();
       
-      Display.println();
       Display.ShowOp("val2.z = 42;");
-      Display.println();
       val2.z = 42;
+      Display.println();
+
       Display.IsSameObj(val2, "val2", val1, "val1");
       Display.ShowLabeledObject(val2, "val2");
       Display.ShowLabeledObject(val1, "val1");
+      
       Display.ShowNote(
         "Note! Source of assignment, val1, changed when val2\n  " +
         "changed. Point4D is ref type, so assignment just assigns\n  " +

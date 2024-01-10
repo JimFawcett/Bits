@@ -24,6 +24,11 @@ namespace Points {
         default values
       */
     }
+    public Point4D(double xarg, double yarg, double zarg) {
+      x = xarg;
+      y = yarg;
+      z = zarg;
+    }
     public double x { get; set; } = 0.0;
     public double y { get; set; } = 0.0;
     public double z { get; set; } = 0.0;
