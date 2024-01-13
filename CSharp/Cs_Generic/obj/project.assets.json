@@ -14,9 +14,9 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\github\\JimFawcett\\Bits\\CSharp\\Cs_Generic\\Cs_Objects.csproj",
-      "projectName": "Cs_Objects",
-      "projectPath": "C:\\github\\JimFawcett\\Bits\\CSharp\\Cs_Generic\\Cs_Objects.csproj",
+      "projectUniqueName": "C:\\github\\JimFawcett\\Bits\\CSharp\\Cs_Generic\\Cs_Generic.csproj",
+      "projectName": "Cs_Generic",
+      "projectPath": "C:\\github\\JimFawcett\\Bits\\CSharp\\Cs_Generic\\Cs_Generic.csproj",
       "packagesPath": "C:\\Users\\fawce\\.nuget\\packages\\",
       "outputPath": "C:\\github\\JimFawcett\\Bits\\CSharp\\Cs_Generic\\obj\\",
       "projectStyle": "PackageReference",

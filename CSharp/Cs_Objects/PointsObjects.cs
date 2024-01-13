@@ -13,8 +13,7 @@ namespace Points {
     time coordinate.
     - It is a reference type because it's instances are created
       from a class
-    - That affects the way assignments work - see demo near the
-      end of main.
+    - That affects the way assignments work - see demo in Program.cs
   */
   public class Point4D : Analysis.IShow  // reference type with value type members
   { 

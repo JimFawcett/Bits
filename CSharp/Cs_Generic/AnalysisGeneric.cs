@@ -269,7 +269,132 @@ namespace Analysis {
                 );
             }
         }
-        /*-------------------------------------------------
+    // /*-----------------------------------------------------
+    //   Build string representation of array of type T
+    // -----------------------------------------------------*/
+    // public static string ToStringRepArray<T>(T[] arr) {
+    //   StringBuilder sb = new StringBuilder();
+    //   sb.Append("{ ");
+    //   bool first = true;
+    //   foreach(T item in arr) {
+    //     if(item == null) {
+    //       break;
+    //     }
+    //     if(first) {
+    //       sb.Append(item.ToString());
+    //       first = false;
+    //     }
+    //     else {
+    //       sb.AppendFormat(", {0}", item);
+    //     }
+    //   }
+    //   sb.Append(" }\n");
+    //   return sb.ToString();
+    // }
+    /*-----------------------------------------------------
+      Build string representation of IEnumerable 
+      collection T<U>. Works for array too.
+    -----------------------------------------------------*/
+    // public static string ToStringRepIEnumerable<T,U>(T enu) 
+    //   where T:IEnumerable<U>
+    // {
+    //   StringBuilder sb = new StringBuilder();
+    //   sb.Append("[ ");
+    //   bool first = true;
+    //   foreach(U item in enu) {
+    //     if(item == null) {
+    //       break;
+    //     }
+    //     if(first) {
+    //       sb.Append(item.ToString());
+    //       first = false;
+    //     }
+    //     else {
+    //       sb.AppendFormat(", {0}", item);
+    //     }
+    //   }
+    //   sb.Append(" ]\n");
+    //   return sb.ToString();
+    // }
+    /*-----------------------------------------------------
+      Direct implementation of enumerating associative
+      collection.  This can also be done with
+      ToStringRepIEnumerable<Dict,KVPair>(dict).
+    -----------------------------------------------------*/
+    // public static string ToStringRepAssocCont<Dict,Key,Value>(Dict assoc) 
+    //   where Dict:IDictionary<Key,Value>
+    // {
+    //   StringBuilder sb = new StringBuilder();
+    //   sb.Append("{ ");
+    //   bool first = true;
+    //   foreach(var item in assoc) {
+    //     if(first) {
+    //       var sf = String.Format("{{{0}, {1}}}", item.Key, item.Value);
+    //       sb.Append(sf);
+    //       first = false;
+    //     }
+    //     else {
+    //       sb.AppendFormat(", {{{0}, {1}}}", item.Key, item.Value);
+    //     }
+    //   }
+    //   sb.Append(" }\n");
+    //   return sb.ToString();
+    // }
+    /*-- move this to functions --*/
+    // static void DemoPassValAndRef() {
+    //   Display.ShowNote("Pass by value", "\n");
+    //   double d = 3.1415927;
+    //   Pass_by_value<double>(d, "d");
+    //   TestForNullValue(d, "d");
+
+    //   List<int> li = new List<int>{ 1, 2, 3, 2, 1 };
+    //   Pass_by_value<List<int>>(li, "li");
+    //   TestForNullValue(li, "li");
+    // }
+    // static unsafe void Pass_by_value<T>(T? t, string nm) {
+    //   string ts = Anal.GetTypeString(t, nm);
+    //   Console.WriteLine(ts);
+    //   /*
+    //     Suppresses warning about taking address of managed type.
+    //     The pointer is used only to show the address of ptr
+    //     as part of analysis of copy operations.
+    //   */
+    //   #pragma warning disable 8500
+    //   string addrd = Anal.ToStringAddress<T>(&t);
+    //   #pragma warning restore 8500
+    //   Console.WriteLine("{0}: {1}", nm, addrd);
+    //   t = default(T);
+    //   /*
+    //     caller sees this change if and only if T is a reference type
+    //     in which case t is null.
+    //   */
+    // }
+    // static void TestForNullValue<T>(T? t, string nm) {
+    //   if(t == null) {
+    //     Console.WriteLine(nm + " is null");
+    //   }
+    //   else {
+    //     Console.WriteLine(nm + " is {0}", t);
+    //   }
+    // }
+    // static void DemoPrimitives() {
+    //   Display.ShowNote(
+    //     "Examples of creation and display of Primitive Types",
+    //     "", 60
+    //   );
+    //   short s = 123;
+    //   Display.ShowTypeScalar(s, "s", nl);
+    //   long l = 12345;
+    //   Display.ShowTypeScalar(l, "l", nl);
+    //   float f = 3.1415927f;
+    //   Display.ShowTypeScalar(f, "f", nl);
+    //   double d = 3.1415927;
+    //   Display.ShowTypeScalar(d, "d", nl);
+    //   int[] arr = new int[]{ 4, 3, 2, 1, 0, -1};
+    //   Display.ShowTypeScalar(arr, "arr");
+    //   Display.ShowIntArray(arr, nl);
+    // }
+  /*-------------------------------------------------
         Build string of comma separated values from 
         Enumerable collection
         - no longer used here, but will be useful so kept

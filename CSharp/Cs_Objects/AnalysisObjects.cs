@@ -33,30 +33,28 @@ namespace Analysis
     /*-- simple reflection --*/
     public static void ShowType<T>(T t, String nm, String suffix = "")
     {
-      #pragma warning disable CS8602  // possibly null reference warning
-      Type tt = t.GetType();
+      /*-- t! asserts that t is not null --*/
+      Type tt = t!.GetType();
       Console.WriteLine("{0}: Type: {1}", nm, tt.Name);
       int size = Anal.GetManagedSize(tt);
       Console.WriteLine("value: {0}\nsize: {1}{2}", t, size, suffix);
-      #pragma warning restore CS8602
     }
-    public static string GetTypeString<T>(T t, String nm, String suffix = "")
-    {
-      #pragma warning disable CS8602  // possibly null reference warning
-      Type tt = t.GetType();
-      string typeInfo = String.Format("{0}: Type: {1}\n", nm, tt.Name);
-      int size = Anal.GetManagedSize(tt);
-      string instanceInfo = String.Format("value: {0}\nsize: {1}{2}", t, size, suffix);
-      return typeInfo + instanceInfo;
-      #pragma warning restore CS8602
-    }
+    // public static string GetTypeString<T>(T t, String nm, String suffix = "")
+    // {
+    //   /*-- t! asserts that t is not null --*/
+    //   Type tt = t!.GetType();
+    //   string typeInfo = String.Format("{0}: Type: {1}\n", nm, tt.Name);
+    //   int size = Anal.GetManagedSize(tt);
+    //   string instanceInfo = String.Format("value: {0}\nsize: {1}{2}", t, size, suffix);
+    //   return typeInfo + instanceInfo;
+    // }
     /*-- beware, two distinct objects may have same hashcode --*/
-    public static void showIdent<T>(T t, String n, string suffix = "") {
-      #pragma warning disable CS8602  // possibly null reference warning
-      int id = t.GetHashCode();
-      #pragma warning restore CS8602
-      Console.WriteLine("{0}, {1}{2}", n, id, suffix);
-    }
+    // public static void showIdent<T>(T t, String n, string suffix = "") {
+    //   /*-- t! asserts that t is not null --*/
+    //   int id = t!.GetHashCode();
+    //   Console.WriteLine("{0}, {1}{2}", n, id, suffix);
+    // }
+    /*-- are references equal? --*/
     public static void IsSameObj<T>(
       T t1, String n1, T t2, String n2, string suffix = ""
     ) {
@@ -71,7 +69,7 @@ namespace Analysis
       }
     }
     /*-- 
-      uses advanced relection 
+      uses advanced reflection 
       - GetMangedSize(Type type) is function that returns the size of 
         value types and handles.
         It is used to help discover how things work.
@@ -97,35 +95,35 @@ namespace Analysis
       return checked((int)func());
     }
 
-    #pragma warning disable 8500
+    // #pragma warning disable 8500
     /*
       Suppresses warning about taking address of managed type.
       The pointer is used only to show the address of ptr
       as part of analysis of copy operations.
     */
-    public static unsafe string ToStringAddress<T>(T* ptr) {
-      if(ptr == null) {
-        return "";
-      }
-      IntPtr addr = (IntPtr)ptr;
-      string addrstr = string.Format("address: 0x" + addr.ToString("x"));
-      return addrstr;
-    }
-    #pragma warning restore 8500
-    // public static unsafe string ToStringAdddressFromHandle<T>(T t) {
-    //   string addrstr = "for handle\n";
-    //   try {
-    //     GCHandle handle = GCHandle.Alloc(t, GCHandleType.Pinned);
-    //     IntPtr address = handle.AddrOfPinnedObject();
-    //     addrstr = "address: " + String.Format("0x" + address.ToString("x"));
-    //     handle.Free();
-    //     return addrstr + "\n";
+    // public static unsafe string ToStringAddress<T>(T* ptr) {
+    //   if(ptr == null) {
+    //     return "";
     //   }
-    //   catch {
-    //     Console.WriteLine("GCHandle exception thrown");
-    //   }
+    //   IntPtr addr = (IntPtr)ptr;
+    //   string addrstr = string.Format("address: 0x" + addr.ToString("x"));
     //   return addrstr;
     // }
+    // #pragma warning restore 8500
+    public static unsafe string ToStringAdddressFromHandle<T>(T t) {
+      string addrstr = "for handle\n";
+      try {
+        GCHandle handle = GCHandle.Alloc(t, GCHandleType.Pinned);
+        IntPtr address = handle.AddrOfPinnedObject();
+        addrstr = "address: " + String.Format("0x" + address.ToString("x"));
+        handle.Free();
+        return addrstr + "\n";
+      }
+      catch {
+        Console.WriteLine("GCHandle exception thrown");
+      }
+      return addrstr;
+    }
   }
   class Display
   {
@@ -159,86 +157,13 @@ namespace Analysis
         );
       }
     }
-    public static void Print(String s = "") {
-      Console.WriteLine(s);
-    }
     public static void ShowNote(string s, string suffix = "", int length = 35) {
       string line = new string('-', length);
       Console.WriteLine(line);
       Console.WriteLine("  {0}", s);  
       Console.WriteLine(line + suffix);
     }
-    /*-----------------------------------------------------
-      Build string representation of array of type T
-    -----------------------------------------------------*/
-    public static string ToStringRepArray<T>(T[] arr) {
-      StringBuilder sb = new StringBuilder();
-      sb.Append("{ ");
-      bool first = true;
-      foreach(T item in arr) {
-        if(item == null) {
-          break;
-        }
-        if(first) {
-          sb.Append(item.ToString());
-          first = false;
-        }
-        else {
-          sb.AppendFormat(", {0}", item);
-        }
-      }
-      sb.Append(" }\n");
-      return sb.ToString();
-    }
-    /*-----------------------------------------------------
-      Build string representation of IEnumerable 
-      collection T<U>. Works for array too.
-    -----------------------------------------------------*/
-    public static string ToStringRepIEnumerable<T,U>(T enu) 
-      where T:IEnumerable<U>
-    {
-      StringBuilder sb = new StringBuilder();
-      sb.Append("[ ");
-      bool first = true;
-      foreach(U item in enu) {
-        if(item == null) {
-          break;
-        }
-        if(first) {
-          sb.Append(item.ToString());
-          first = false;
-        }
-        else {
-          sb.AppendFormat(", {0}", item);
-        }
-      }
-      sb.Append(" ]\n");
-      return sb.ToString();
-    }
-    /*-----------------------------------------------------
-      Direct implementation of enumerating associative
-      collection.  This can also be done with
-      ToStringRepIEnumerable<Dict,KVPair>(dict).
-    -----------------------------------------------------*/
-    public static string ToStringRepAssocCont<Dict,Key,Value>(Dict assoc) 
-      where Dict:IDictionary<Key,Value>
-    {
-      StringBuilder sb = new StringBuilder();
-      sb.Append("{ ");
-      bool first = true;
-      foreach(var item in assoc) {
-        if(first) {
-          var sf = String.Format("{{{0}, {1}}}", item.Key, item.Value);
-          sb.Append(sf);
-          first = false;
-        }
-        else {
-          sb.AppendFormat(", {{{0}, {1}}}", item.Key, item.Value);
-        }
-      }
-      sb.Append(" }\n");
-      return sb.ToString();
-    }
+    /*-- Anal.ShowType with additional output --*/
     public static void ShowType<T>(T t, string nm) {
       Type tt = t!.GetType();
       string tnm = tt.Name;
@@ -261,7 +186,6 @@ namespace Analysis
     Display information about the type of any scalar type.
     - scalar types are those with a single value like:
       int, double, string, ...
-    - This function directly uses only simple reflection
     */
     public static void ShowTypeScalar<T>(
       T t, string nm, string suffix = ""
@@ -312,7 +236,7 @@ namespace Analysis
     )
     {
       Dictionary<int, string>.KeyCollection keyColl = dict.Keys;
-      Console.Write("{0}: [ ");
+      Console.Write("{0}: [ ", nm);
       foreach(KeyValuePair<int, string> entry in dict)
       {
         Console.Write("{{{0},{1}}} ", entry.Key, entry.Value);
@@ -346,29 +270,29 @@ namespace Analysis
     /*-------------------------------------------------
       do t1 and t2 share the same address?
     */
-    public static void IsSameObj<T>(
-      T t1, String n1, T t2, String n2, string suffix = ""
-    ) {
-      if(ReferenceEquals(t1, t2)) {
-        Console.WriteLine(
-        "{0} is same object as {1}{2}", n1, n2, suffix
-        );
-      }
-      else {
-          Console.WriteLine(
-          "{0} is not same object as {1}{2}", n1, n2, suffix);
-      }
-    }
+    // public static void IsSameObj<T>(
+    //   T t1, String n1, T t2, String n2, string suffix = ""
+    // ) {
+    //   if(ReferenceEquals(t1, t2)) {
+    //     Console.WriteLine(
+    //     "{0} is same object as {1}{2}", n1, n2, suffix
+    //     );
+    //   }
+    //   else {
+    //       Console.WriteLine(
+    //       "{0} is not same object as {1}{2}", n1, n2, suffix);
+    //   }
+    // }
     /*-------------------------------------------------
       Beware, two distinct objects may have same hashcode.
       - Not used in this demo for that reason.
     */
-    public static void showIdent<T>(
-      T t, String n, string suffix = ""
-    ) {
-      int id = t!.GetHashCode();
-      Console.WriteLine("{0}, {1}{2}", n, id, suffix);
-    }
+    // public static void showIdent<T>(
+    //   T t, String n, string suffix = ""
+    // ) {
+    //   int id = t!.GetHashCode();
+    //   Console.WriteLine("{0}, {1}{2}", n, id, suffix);
+    // }
     public static void print(String s = "") {
       Console.Write(s);
     }
