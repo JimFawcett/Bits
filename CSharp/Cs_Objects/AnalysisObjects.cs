@@ -94,23 +94,24 @@ namespace Analysis
       var func = (Func<uint>)method.CreateDelegate(typeof(Func<uint>));
       return checked((int)func());
     }
-
-    // #pragma warning disable 8500
+    /*-- unsafe cast pointer to address of value type --*/
+    #pragma warning disable 8500
     /*
       Suppresses warning about taking address of managed type.
       The pointer is used only to show the address of ptr
       as part of analysis of copy operations.
     */
-    // public static unsafe string ToStringAddress<T>(T* ptr) {
-    //   if(ptr == null) {
-    //     return "";
-    //   }
-    //   IntPtr addr = (IntPtr)ptr;
-    //   string addrstr = string.Format("address: 0x" + addr.ToString("x"));
-    //   return addrstr;
-    // }
-    // #pragma warning restore 8500
-    public static unsafe string ToStringAdddressFromHandle<T>(T t) {
+    public static unsafe string ToStringAddress<T>(T* ptr) {
+      if(ptr == null) {
+        return "";
+      }
+      IntPtr addr = (IntPtr)ptr;
+      string addrstr = string.Format("address: 0x" + addr.ToString("x"));
+      return addrstr;
+    }
+    #pragma warning restore 8500
+    /*-- extract address of reference instance in managed heap --*/
+    public static string ToStringAddressFromHandle<T>(T t) {
       string addrstr = "for handle\n";
       try {
         GCHandle handle = GCHandle.Alloc(t, GCHandleType.Pinned);

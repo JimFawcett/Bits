@@ -14,23 +14,13 @@ import PointsObj
 #   str
 #   NoneType
 
+# define alias shortcut
+anal = AnalysisObj
+
 # # Python requires definition before use ordering
 
-# Demonstration starts here
-def execute() : 
-    print(" Demonstrate Python Objects")
-    print("----------------------------")
-    print()
-
-    # define alias shortcut
-    anal = AnalysisObj
-    
-    anal.showNote(   
-        "  All Python types are reference-based\n"\
-        "  with values in the managed heap. That\n"\
-        "  has consequences we explore in this demo."
-    )
-    print()
+#-- Demonstrate primitive and library types ---------------
+def demolibtypes() :
     anal.showNote("  primitive and library types","\n")
 
     # type of d1 is inferred as float from RHS
@@ -57,8 +47,8 @@ def execute() :
         "  Assignment, in Python, assigns references not\n"\
         "  values.  So s1 and s2 share same heap instance\n"\
         "  But strings are immutable. So when a change is\n"\
-        "  made to one, that creates a new instance without\n"\
-        "  changing the original."
+        "  made to one, that creates a new changed instance\n"\
+        "  without changing the original."
     )
     print()
 
@@ -80,12 +70,16 @@ def execute() :
     print("\nl2 = ", l2)
     print("l1 = ", l1)
     print()
+
     anal.showNote(   
         "  Changes to target of assignment affect source\n"\
         "  except for immutable strings."\
         "  \"caveat emptor\""
     )
     print()
+
+#-- demonstrate user-define type --------------------------
+def demouserdeftype() :
     anal.showNote("  user defined type","\n")
     
     anal.showOp("p1a = Point4D()")
@@ -133,7 +127,9 @@ def execute() :
     )
     print()
 
-    # # reference behavior - new child object
+# -- illustrate reference behavior ------------------------ 
+def demorefbehavior() :
+    # reference behavior - new child object
     anal.showOp("t5 = (1, 2, 3)")
     t5 = (1, 2, 3)
     anal.showIdent(t5, "t5")
@@ -165,7 +161,24 @@ def execute() :
     
     # print("\n-- iterate over t6 methods --")
     # print(dir(t6))
-      
+  
+# -- Demonstration starts here ----------------------------
+def execute() : 
+    print(" Demonstrate Python Objects")
+    print("----------------------------")
+    print()
+
+    anal.showNote(   
+        "  All Python types are reference-based\n"\
+        "  with values in the managed heap. That\n"\
+        "  has consequences we explore in this demo."
+    )
+    print()
+
+    demolibtypes()
+    demouserdeftype()
+    demorefbehavior()
+
     print("\nThat's all folks!\n")
 
 execute()

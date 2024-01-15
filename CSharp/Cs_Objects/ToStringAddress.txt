@@ -1,0 +1,16 @@
+﻿    #pragma warning disable 8500
+    /*
+      Suppresses warning about taking address of managed type.
+      The pointer is used only to show the address of ptr
+      as part of analysis of copy operations.
+    */
+    public static unsafe string ToStringAddress<T>(T* ptr) {
+      if(ptr == null) {
+        return "";
+      }
+      IntPtr addr = (IntPtr)ptr;
+      string addrstr = string.Format("address: 0x" + addr.ToString("x"));
+      return addrstr;
+    }
+    #pragma warning restore 8500
+

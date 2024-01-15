@@ -127,21 +127,21 @@ namespace CSharpObjects
       Display.ShowOp("Point4D val1 = new Point4D(): ref construction", "\n");
       Point4D val1 = new Point4D(1, 2, 3);
       Display.ShowLabeledObject(val1, "val1");
-      string addr1 = Anal.ToStringAdddressFromHandle<Point4D>(val1);
+      string addr1 = Anal.ToStringAddressFromHandle<Point4D>(val1);
       Console.WriteLine("val1 - {0}", addr1);
 
       Point4D val2 = new Point4D(3, 2, 1);
 
       Display.ShowOp("Point4D val2 = new Point4D(3, 2, 1)", "\n");
       Display.ShowLabeledObject(val2, "val2");
-      string addr2 = Anal.ToStringAdddressFromHandle<Point4D>(val2);
+      string addr2 = Anal.ToStringAddressFromHandle<Point4D>(val2);
       Console.WriteLine("val2 - {0}", addr2);
 
       Display.ShowOp("val1 = val2: ref assignment");
       val1 = val2;
-      addr1 = Anal.ToStringAdddressFromHandle<Point4D>(val1);
+      addr1 = Anal.ToStringAddressFromHandle<Point4D>(val1);
       Console.Write("val1 - {0}", addr1);
-      addr2 = Anal.ToStringAdddressFromHandle<Point4D>(val2);
+      addr2 = Anal.ToStringAddressFromHandle<Point4D>(val2);
       Console.WriteLine("val2 - {0}", addr2);
 
       Anal.IsSameObj(val2, "val2", val1, "val1");
