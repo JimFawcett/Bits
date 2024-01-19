@@ -1,87 +1,133 @@
-﻿--------------------------------------------------
-  demonstrate object creation
+ Demonstrate Python Objects
+----------------------------
+
+--------------------------------------------------
+  All Python types are reference-based
+  with values in the managed heap. That
+  has consequences we explore in this demo.
+-------------------------------------------------- 
+
+--------------------------------------------------
+  primitive and library types
+-------------------------------------------------- 
+
+d1 =  3.1415927
+s1 =  'a string'
+--- s2 = s1 ---
+s1 a string 1974941848240 
+s2 a string 1974941848240 
+--- s2 += " and more" ---
+s2 a string and more 1974942127632 
+s1 a string 1974941848240 
+
+--------------------------------------------------
+  Assignment, in Python, assigns references not
+  values.  So s1 and s2 share same heap instance
+  But strings are immutable. So when a change is
+  made to one, that creates a new changed instance
+  without changing the original.
+-------------------------------------------------- 
+
+l1 {
+  you, me, them, us
+}
+
+l1 =  ['you', 'me', 'them', 'us'] 
+
+--- l2 = l1 ---
+--- l2.append("everyone") ---
+
+l2 =  ['you', 'me', 'them', 'us', 'everyone']
+l1 =  ['you', 'me', 'them', 'us', 'everyone'] 
+
+--- l2[1] = "myself" ---
+
+l2 =  ['you', 'myself', 'them', 'us', 'everyone']
+l1 =  ['you', 'myself', 'them', 'us', 'everyone']
+
+--------------------------------------------------
+  Changes to target of assignment affect source
+  except for immutable strings.  "caveat emptor"
 --------------------------------------------------
 
-----------------------------------------------
-  std::library objects: string and vector<T>
-----------------------------------------------
+--------------------------------------------------
+  user defined type
+--------------------------------------------------
 
---- let mut s1 = "a string".to_string() ---
-  s1:String : "a string"
-
---- show_type_scalar(&s1, "&s1") ---
-"&s1", type: "alloc::string::String"
-value: "a string", size: 24
-
---- s1.push_str(" and more"); ---
-  s1:String : "a string and more"
-
---- let s2 = s1 : move construction ---
-  s2:String : "a string and more"
-  s1 now invalid
-
---- s1 = s2 : move assignment ---
-  s1:String : "a string and more"
-  s2 now invalid
-
---- let mut v:Vec<i32> = vec![1, 2, 3, 2, 1]; ---
-  v:Vec<i32> : [1, 2, 3, 2, 1]
-
---- show_type_scalar(&v, "&v") ---
-"&v", type: "alloc::vec::Vec<i32>"
-value: [1, 2, 3, 2, 1], size: 24
-
---- v.push(42); ---
-  v:Vec<i32> : [1, 2, 3, 2, 1, 42]
-
------------------------------------
-  instances of user-defined type
------------------------------------
-
---- let mut p1 = Point4D::new() ---
-p1 : Point4D {
-  0, 0, 0,
-  Sat Dec  9 2023, 18:03:02
-}
-p1 : Point4D {
-  42, -3, 2,
-  Sat Dec  9 2023, 18:03:02
-}
-"p1", type: "rust_objects::points_objects::Point4D"
-value: Point4D { x: 42.0, y: -3.0, z: 2.0, t: 2023-12-09T18:03:02.862125200-06:00 }, size: 40
-
---- let p1a = p1.clone() ---
-p1.clone() : Point4D {
-  42, -3, 2,
-  Sat Dec  9 2023, 18:03:02
+--- p1a = Point4D() ---
+--- AnalysisObj.showTypeShowable(p1a, "p1a", nl) ---
+p1a <class 'PointsObj.Point4D'> dynamic
+p1a {
+  x:0.0, y:0.0, z:0.0
+  t:2024-01-14 18:41:57.225653
 }
 
-using PointN<f64>::coor_x function:
-p1 : Point4D {
-  84, -3, 2,
-  Sat Dec  9 2023, 18:03:02
+p1a {
+  x:2, y:-3.5, z:-42
+  t:2024-01-14 18:41:57.225653
 }
-
-using PointN<f64>::coor_y function:
-p1 : Point4D {
-  84, 84, 2,
-  Sat Dec  9 2023, 18:03:02
+--- p1b = p1a ---
+p1b {
+  x:2, y:-3.5, z:-42
+  t:2024-01-14 18:41:57.225653
 }
-
-using PointN<f64>::coor_z function:
-p1 : Point4D {
-  84, 84, 84,
-  Sat Dec  9 2023, 18:03:02
+--- p1b.y = 13 ---
+p1b {
+  x:2, y:13, z:-42
+  t:2024-01-14 18:41:57.225653
 }
-
-updating time value:
-delaying 5 seconds before time update
-p1 : Point4D {
-  84, 84, 84,
-  Sat Dec  9 2023, 18:03:07
+p1a {
+  x:2, y:13, z:-42
+  t:2024-01-14 18:41:57.225653
 }
+--------------------------------------------------
+  Reference assigned, not value.  So change
+  in P1b changed source p1a.
+--------------------------------------------------
 
+--- p1c = copy.deepcopy(p1b) ---
+p1c {
+  x:2, y:13, z:-42
+  t:2024-01-14 18:41:57.225653
+}
+p1b {
+  x:2, y:13, z:-42
+  t:2024-01-14 18:41:57.225653
+}
+--- p1c.z = 12 ---
+p1c {
+  x:2, y:13, z:12
+  t:2024-01-14 18:41:57.225653
+}
+p1b {
+  x:2, y:13, z:-42
+  t:2024-01-14 18:41:57.225653
+}
+--------------------------------------------------
+  p1c.z reference assigned, not value. But no
+  change in p1b since p1c is deep clone of p1b.
+--------------------------------------------------
 
-That's all Folks!
+--- t5 = (1, 2, 3) ---
+t5 (1, 2, 3) 1974942114176
+--- t6 = [1, t5, "weird"] ---
+t6 [1, (1, 2, 3), 'weird'] 1974941790912
+t6 <class 'list'> dynamic
+value:  [1, (1, 2, 3), 'weird'] , size:  80
+-- t5 = 1 + 1j : new object --
+t5 (1+1j) 1974941491280
+t6 [1, (1, 2, 3), 'weird'] 1974941790912
 
+--------------------------------------------------
+  new object for t5, t6 not affected
+--------------------------------------------------
 
+-- iterate over t6 children --
+elem 1 1974940467440
+elem (1, 2, 3) 1974942114176
+elem weird 1974942119920
+
+That's all folks!
+
+C:\github\JimFawcett\Bits\Python\Py_Objects
+>

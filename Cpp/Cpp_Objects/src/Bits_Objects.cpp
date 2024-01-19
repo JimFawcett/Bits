@@ -36,7 +36,7 @@
     Most library and user-defined types can be copied, moved, 
     and deleted by providing member constructors and destructor.
     Often compiler generation works well, but for classes with 
-    pointer members developers must provide them.
+    pointer members developers must provide those methods.
 
   Processing:
     All types are static, operations run as native code, and no 
