@@ -2,18 +2,19 @@
     Display and Analysis functions
 */
     function print(str) {
-    document.write(str);
+      document.write(str);
     }
     function println(str) {
-    document.write(str + "<br />");
+      document.write(str + "<br />");
     }
     /*--------------------------------------------------------------------
     Display emphasized text
     */
-    function showNote(text) {
-    document.write("-------------------------<br />");
-    document.write(text, "<br />");
-    document.write("-------------------------<br />");
+    function showNote(text, n=20) {
+      let s = '-'.toString().repeat(n);
+      document.write(s + "<br />");
+      document.write("<span>&nbsp;&nbsp;</span>", text, "<br />");
+      document.write(s + "<br />");
     }
     /*--------------------------------------------------------------------
     Show an operation expression surrounded with a few dashes
