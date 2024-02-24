@@ -5,7 +5,7 @@
 
 #---------------------------------------------------
 cmake_minimum_required(VERSION 3.28.0-rc4)
-project(GenericsCMake)
+project(Generics)
 #---------------------------------------------------
 #   Cpp_Objects dir
 #   -- CMakeLists.txt (this file)
@@ -21,7 +21,8 @@ project(GenericsCMake)
 
 #---------------------------------------------------
 
-set(CMake_CXX_STANDARD 23)
+set(CMAKE_CXX_STANDARD 23)
+#set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 #---------------------------------------------------
 # build HelloCMake.obj in folder build/Cpp_Hello.dir/debug

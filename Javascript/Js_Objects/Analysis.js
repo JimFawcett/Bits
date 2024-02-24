@@ -1,7 +1,11 @@
 /*--------------------------------------------------------------------
     Display and Analysis functions
 */
-    function print(str) {
+const nl = "<br />";
+const tab = "&nbsp;&nbsp;"
+const nil = "";
+
+function print(str) {
       document.write(str);
     }
     function println(str) {

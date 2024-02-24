@@ -20,17 +20,19 @@
 #include <map>            // map<K,V> class
 #include <set>            // set<T> class
 #include "AnalysisGen.h"  // Analysis functions
-#include "PointsGen.h"    // PointN<T> class declaration
+#include "PointsGen.h"    // Point<T, N> class declaration
 #include "Stats.h"        // Stats class declaration
 /*
   
 */
 #pragma warning(disable: 4984)  // warns about C++17 extension
 
+using namespace Points;
+
 /*-------------------------------------------------------------------
   Building types and functions for demonstration 
 */
-/*-- user-defined type --*/
+/*-- simple user-defined type --*/
 template<typename T>
 class Demo {
 public:
@@ -39,7 +41,7 @@ public:
   Demo(const Demo<T>& t) = default;
   Demo<T>& operator=(const Demo<T>&t) = default;
   ~Demo() = default;
-  T& value() { return t };
+  T& value() { return t; }
   void show();
 private:
   T t;
@@ -54,6 +56,9 @@ void Demo<T>::show() {
   std::cout << ", value: " << t;
   std::cout << "\n  }\n";
 }
+/*-----------------------------------------------
+  Demonstration functions
+*/
 /*-- showArray function --*/
 template<typename T, int N>
 void showArray(std::array<T,N> &a) {
@@ -108,7 +113,8 @@ void demo_std_generic_types() {
   std::map<std::string, int> m {
     {"zero", 0}, {"one", 1}, {"two", 2}, {"three", 3}
   };
-  showMap(m);
+  showMap(m);  // std::map<K,V> only
+  std::cout << formatColl(m, "m", "\n"); // any STL collection
 }
 /*-- demonstrate use of user-defined types --*/
 void demo_user_defined_generic_types() {
@@ -128,11 +134,18 @@ void demo_user_defined_generic_types() {
   Demo<int> dem(arg);
   dem.show();
 
-  showOp("PointN<double>");
-  std::vector<double> vp{1.0, 1.5, 2.0};
-  PointN<double> p(0);
-  p.init(vp);
-  p.show("p");
+  showOp("Point<double, 3> p1 {1.0, 1.5, 2.0}");
+  Point<double, 3> p1 {1.0, 1.5, 2.0};
+  p1.show("p1");
+  showOp("Point<double, 3> p2 {1.0, 1.5}");
+  Point<double, 3> p2 {1.0, 1.5};
+  p2.show("p2");
+  showOp("Point<double, 3> p3 {1.0, 1.5, 2.0, 2.5}");
+  Point<double, 3> p3 {1.0, 1.5, 2.0, 2.5};
+  p3.show("p3");
+  //auto t = p3.time();
+  std::cout << "\n  p3.timeToString() = \"" << p3.timeToString() << "\"";
+  //std::cout << "\n  p3.time().localtime()."
   println();
 }
 /*-- demonstrate use of generic functions --*/
@@ -154,6 +167,32 @@ showColl(s);
 showOp("showColl for std::vector", nl);
 showColl(v);
 }
+void testtime() {
+  showNote("test Time");
+  Time t;
+  t.getLocalTime();
+  std::cout << "\n  datetime = " << t.toString() << std::endl;
+  std::cout << "\n  epoch in secs = " << t.getTime();
+  std::cout << "\n  year:     " << t.year();
+  std::cout << "\n  month:    " << t.month();
+  std::cout << "\n  day:      " << t.day();
+  std::cout << "\n  hour:     " << t.hour();
+  std::cout << "\n  minutes:  " << t.minutes();
+  std::cout << "\n  seconds:  " << t.seconds();
+  std::cout << "\n  timezone: " << t.getTimeZone();
+  std::cout << std::endl;
+
+  t.getGMTTime();
+  std::cout << "\n  datetime = " << t.toString() << std::endl;
+  std::cout << "\n  epoch in secs = " << t.getTime();
+  std::cout << "\n  year:     " << t.year();
+  std::cout << "\n  month:    " << t.month();
+  std::cout << "\n  day:      " << t.day();
+  std::cout << "\n  hour:     " << t.hour();
+  std::cout << "\n  minutes:  " << t.minutes();
+  std::cout << "\n  seconds:  " << t.seconds();
+  std::cout << "\n  timezone: " << t.getTimeZone();
+}
 /*-----------------------------------------------
   Demo execution starts here
 */
@@ -161,12 +200,12 @@ void testFormats();
 
 int main() {
 
-    showNote("Demonstrate C++ Generic Objects", nl);
+    showNote("Demonstrate C++ Generics", nl);
   
     demo_std_generic_types();
     demo_user_defined_generic_types();
     demo_generic_functions();
-
+    testtime();
     // #define TEST
     #ifdef TEST
       testFormats();
@@ -179,9 +218,9 @@ void testFormats() {
 
     showNote("Test and demonstrate formatting functions");
     
-    showOp("demonstrate PointN show()");
+    showOp("demonstrate Point show()");
     print("default indent = 4 and width = 7:");
-    PointN<int> p1a(15);
+    Point<int, 15> p1a;
     p1a.show("p1a");
     size_t saveLeft = p1a.left();
     size_t saveWidth = p1a.width();
@@ -191,7 +230,7 @@ void testFormats() {
     p1a.show("p1a");
 
     showOp(
-      "demonstrate operator<< overload for PointN ---"
+      "demonstrate operator<< overload for Point ---"
     );
     p1a.left() = saveLeft;
     p1a.width() = saveWidth;
@@ -239,8 +278,8 @@ void testFormats() {
 
     showNote("Using consolidated format function", nl);
     
-    std::cout << format(adouble, "adouble", nl);
-    std::cout << format(astring, "astring", nl);
+    std::cout << format<double>(adouble, "adouble", nl);
+    //std::cout << format<std::string>(astring, "astring", nl);
     std::vector<double> avec{ 1, 2, 3, 4.5, -3.14159 };
     std::cout << format(avec, "avec", nl);
     std::cout << format(amap, "amap", nl);

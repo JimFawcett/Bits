@@ -10,11 +10,15 @@
 /*-------------------------------------------------------------------
   Stats<T> class provides several simple computational services on
   a vector of items who's type provides required arithmetic operations.
+  - This class inhibits compiler generation of default constructor
+    and assignment operator.
 */
 template <typename T>
 class Stats {
 public:
     Stats(const std::vector<T>& v);
+    Stats() = delete;
+    Stats<T>& operator=(Stats<T>& s) = delete;
     size_t size();
     T max();
     T min();
@@ -25,14 +29,22 @@ private:
     bool check();
     const std::vector<T>& items;
 };
-
+/*-------------------------------------------------------------------
+  Constructor initialized with vector of values
+*/
 template<typename T>
 Stats<T>::Stats(const std::vector<T>& v) : items(v) {}
 
+/*-------------------------------------------------------------------
+  check that Stats instance contains at least one value
+*/
 template<typename T>
 bool Stats<T>::check() {
     return items.size() > 0;
 }
+/*-------------------------------------------------------------------
+  returns number of data items
+*/
 template<typename T>
 size_t Stats<T>::size() {
     if(!check()) {
@@ -40,6 +52,9 @@ size_t Stats<T>::size() {
     }
     return items.size();
 }
+/*-------------------------------------------------------------------
+  returns largest value (not necessarily largerst magnitude)
+*/
 template<typename T>
 T Stats<T>::max() {
     if(!check()) {
@@ -53,6 +68,9 @@ T Stats<T>::max() {
     }
     return max;
 }
+/*-------------------------------------------------------------------
+  returns smallest value (not necessarily smallest magnitude)
+*/
 template<typename T>
 T Stats<T>::min() {
     if(!check()) {
@@ -66,6 +84,9 @@ T Stats<T>::min() {
     }
     return min;
 }
+/*-------------------------------------------------------------------
+  returns sum of data values
+*/
 template<typename T>
 T Stats<T>::sum() {
     if(!check()) {
@@ -77,6 +98,9 @@ T Stats<T>::sum() {
     }
     return sum;
 }
+/*-------------------------------------------------------------------
+  returns average of data values
+*/
 template<typename T>
 double Stats<T>::avg() {
     if(!check()) {
@@ -88,6 +112,9 @@ double Stats<T>::avg() {
     }
     return double(sum)/double(items.size());
 }
+/*-------------------------------------------------------------------
+  displays results of all class operations
+*/
 template<typename T>
 void Stats<T>::show(const std::string& name) {
     if(!check()) {

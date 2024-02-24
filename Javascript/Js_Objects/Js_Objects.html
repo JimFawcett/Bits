@@ -17,27 +17,23 @@
 -->
 <head>
     <script src="Analysis.js"></script>
+    <script src="Point.js"></script>
     <script>
 
     /*--------------------------------------------------------------------
       Used as program-wide constants for display
     */
-    const nl = "<br />";
-    const tab = "&nbsp;&nbsp;"
-    const nil = "";
+    // const nl = "<br />";
+    // const tab = "&nbsp;&nbsp;"
+    // const nil = "";
 
     function heading() {
 	    document.getElementById("objects").innerHTML = "<h2>Javascript Objects</h2>";
     }
-    /*--------------------------------------------------------------------
-      Demonstration starts here 
-    */
-    function execute() {
-      showNote("Demo Objects")
-
-      /*------------------------------------------------------------------
-        built in objects
-      ------------------------------------------------------------------*/
+    /*------------------------------------------------------------------
+      built in objects
+    ------------------------------------------------------------------*/
+    function demo_builtin() {
       showNote("Built-in instances", 25);
       let d = 3.1415927;
       showType(d, "d");
@@ -92,10 +88,11 @@
       showOp("showObject(arr, \"arr\")");
       showObject(arr, "arr");
       print(nl);
-
-      /*------------------------------------------------------------------
-         crafting object by hand 
-      ------------------------------------------------------------------*/
+    }
+    /*------------------------------------------------------------------
+        crafting object by hand 
+    ------------------------------------------------------------------*/
+    function demo_Object() {
       showNote("User-defined object literal", 35);
     
       const dev = {
@@ -120,27 +117,13 @@
       showTypeShowable(dev, "dev");
       showOp("showType(dev, \"dev\")");
       showType(dev, "dev", 4, 1);
-
-      /*------------------------------------------------------------------
-        using JavaScript class 
-      ------------------------------------------------------------------*/
+    }
+    /*------------------------------------------------------------------
+      using JavaScript class 
+    ------------------------------------------------------------------*/
+    function demo_Point4D() {
       showNote("Using JavaScript class", 30);
-
-      class Point1 {
-        constructor(x, y, z) {
-          this.x = x;
-          this.y = y;
-          this.z = z;
-        }
-        show(name) {
-          document.write(name, ": Point1 {", nl, tab);
-          document.write(this.x, ", ", this.y, ", ", this.z);
-          document.write(nl, "}", nl);
-        }
-      }
-
-      let p1 = new Point1(1, 2, 3);
-
+      let p1 = new Point4D(1, 2, 3);
       showOp("showObject(p1, \"p1\")");
       showObject(p1, "p1");
       showOp("p1.show(\"p1\")");
@@ -151,15 +134,21 @@
       showType(p1, "p1: Point1");
       println(nil);
 
-      /*------------------------------------------------------------------
-        exploring concequences of JavaScript object model
-      */
+    }
+    /*------------------------------------------------------------------
+      exploring concequences of JavaScript object model
+    */
+    function demo_reftype() {
       showNote(
         "Exploring consequences of JavaScript reference types:", 65
       )
+      let p1 = new Point4D(0, 1, 2);
+      p1.show("p1");
+
       showOp("let p2 = p1");
       let p2 = p1;
       p2.show("p2");
+
       isSameObject(p2, "p2", p1, "p1");
       showOp("p2.z = -42");
       p2.z = -42;
@@ -172,30 +161,44 @@
         85
       )
       print(nl);
-      /*------------------------------------------------------------------
-        Used for testing display functions
-      */
-      showNote(
-        "The displays below are used to test and demonstrate how" + nl +
-        "&nbsp;&nbsp;" + "display and analysis functions work. Those are all defined" + nl +
-        "&nbsp;&nbsp;" + "after the end of the execute() function.", 70
-      )
-      showOp("p1.show(\"p1\")");
-      p1.show("p1");
-      println(nil);
+      // /*------------------------------------------------------------------
+      //   Used for testing display functions
+      // */
+      // showNote(
+      //   "The displays below are used to test and demonstrate how" + nl +
+      //   "&nbsp;&nbsp;" + "display and analysis functions work. Those are all defined" + nl +
+      //   "&nbsp;&nbsp;" + "after the end of the execute() function.", 70
+      // )
+      // showOp("p1.show(\"p1\")");
+      // p1.show("p1");
+      // println(nil);
 
-      showOp("showObject(p1, \"p1\")");
-      showObject(p1, "p1");
-      println(nil);
+      // showOp("showObject(p1, \"p1\")");
+      // showObject(p1, "p1");
+      // println(nil);
 
-      let tst = { "a":"1", "b":["2", "3"] };
-      showType(tst, "test display formatting");
-      println(nil);
+      // let tst = { "a":"1", "b":["2", "3"] };
+      // showType(tst, "test display formatting");
+      // println(nil);
 
-      showOp("let testarr = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]");
-      let testarr = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
-      /* using default values for width=7 and left=4 */
-      showObject(testarr, "testarr");
+      // showOp("let testarr = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]");
+      // let testarr = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+      // /* using default values for width=7 and left=4 */
+      // showObject(testarr, "testarr");
+
+      // print(nl + "That&apos;s all Folks!" + nl);
+    }
+
+    /*--------------------------------------------------------------------
+      Demonstration starts here 
+    */
+    function execute() {
+      showNote("Demo Objects")
+      
+      demo_builtin();
+      demo_Object();
+      demo_Point4D();
+      demo_reftype();
 
       print(nl + "That&apos;s all Folks!" + nl);
     }
