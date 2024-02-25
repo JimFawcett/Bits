@@ -102,6 +102,9 @@ namespace Points {
     }
     return coord[index];
   }
+  /*---------------------------------------------
+    index returns immutable value
+  */
   template<typename T, size_t N>
   const T Point<T, N>::operator[](size_t index) const {
     if (index < 0 || coord.len() <= index) {
@@ -158,7 +161,6 @@ namespace Points {
     std::cout << fold(coord, _left + 2, _width);
     std::cout << indent(_left) << "}";
     std::cout << "\n" << indent(_left) << tm.toString() << std::endl;
-    // std::cout << "\n" << indent(_left) << timeToString() << std::endl;
   }
   /*-----------------------------------------------
     Overload operator<< required for 

@@ -1,5 +1,5 @@
 /*-------------------------------------------------------------------
-  Time.h defines Time class
+  Time.h defines Time class to manage datetime strings
   - Uses chrono to implement class for updateable time instances
 */
 #include <iostream>
@@ -9,6 +9,9 @@
 
 namespace Points {
 
+  /*---------------------------------------------
+    Time manages calendar times
+  */
   class Time {
     public:
       Time();
@@ -71,20 +74,24 @@ namespace Points {
   /*-----------------------------------------------
     tm is structure holding components of calendar
     date and time, e.g., tm_sec, tm_min, ...
+    - member calTime is localtime after calling
+      this function
   */
   tm Time::getLocalTime() {
     time_t tt = getTime();
-    localtime_s(&calTime, &tt);
+    localtime_s(&calTime, &tt);  // save in calTime
     dateTimeSuffix = "local time zone";
     return calTime;
   }
   /*-----------------------------------------------
     tm is structure holding components of calendar
     date and time, e.g., tm_sec, tm_min, ...
+    - member calTime is gmttime after calling
+      this function
   */
   tm Time::getGMTTime() {
     time_t tt = getTime();
-    gmtime_s(&calTime, &tt);
+    gmtime_s(&calTime, &tt);  // save in calTime
     dateTimeSuffix = "GMT";
     return calTime;
   }
@@ -117,5 +124,46 @@ namespace Points {
   size_t Time::seconds() {
     double sec = calTime.tm_sec;
     return sec;
+  }
+
+  /*---------------------------------------------
+    Timer provides elapsed time services
+  */
+  class Timer {
+    public:
+    Timer();
+    void start();
+    void stop();
+    size_t elapsedNanoSec();
+    size_t elapsedMicroSec();
+    size_t elapsedMilliSec();
+    private:
+      std::chrono::time_point<
+        std::chrono::high_resolution_clock
+      > tp;
+      std::chrono::time_point<std::chrono::high_resolution_clock> starttime;
+      std::chrono::time_point<std::chrono::high_resolution_clock> stoptime;
+  };
+  Timer::Timer() {
+    starttime = std::chrono::high_resolution_clock::now();
+    stoptime = std::chrono::high_resolution_clock::now();
+  }
+  void Timer::start() {
+    starttime = std::chrono::high_resolution_clock::now();
+  }
+  void Timer::stop() {
+    stoptime = std::chrono::high_resolution_clock::now();
+  }
+  size_t Timer::elapsedNanoSec() {
+    auto duration = duration_cast<std::chrono::nanoseconds>(stoptime - starttime);
+    return duration.count();
+  }
+  size_t Timer::elapsedMicroSec() {
+    auto duration = duration_cast<std::chrono::microseconds>(stoptime - starttime);
+    return duration.count();
+  }
+  size_t Timer::elapsedMilliSec() {
+    auto duration = duration_cast<std::chrono::milliseconds>(stoptime - starttime);
+    return duration.count();
   }
 }

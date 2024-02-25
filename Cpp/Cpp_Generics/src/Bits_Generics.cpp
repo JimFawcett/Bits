@@ -19,6 +19,8 @@
 #include <array>          // array<T> class
 #include <map>            // map<K,V> class
 #include <set>            // set<T> class
+//#include <function>        // 
+#include <thread>         // this_thread
 #include "AnalysisGen.h"  // Analysis functions
 #include "PointsGen.h"    // Point<T, N> class declaration
 #include "Stats.h"        // Stats class declaration
@@ -95,6 +97,7 @@ void showMap(const std::map<K,V> &m) {
   }
   std::cout << "\n  }\n";
 }
+
 /*-- demonstrate use of std generic types --*/
 void demo_std_generic_types() {
   
@@ -116,6 +119,7 @@ void demo_std_generic_types() {
   showMap(m);  // std::map<K,V> only
   std::cout << formatColl(m, "m", "\n"); // any STL collection
 }
+
 /*-- demonstrate use of user-defined types --*/
 void demo_user_defined_generic_types() {
   
@@ -143,9 +147,7 @@ void demo_user_defined_generic_types() {
   showOp("Point<double, 3> p3 {1.0, 1.5, 2.0, 2.5}");
   Point<double, 3> p3 {1.0, 1.5, 2.0, 2.5};
   p3.show("p3");
-  //auto t = p3.time();
   std::cout << "\n  p3.timeToString() = \"" << p3.timeToString() << "\"";
-  //std::cout << "\n  p3.time().localtime()."
   println();
 }
 /*-- demonstrate use of generic functions --*/
@@ -168,7 +170,7 @@ showOp("showColl for std::vector", nl);
 showColl(v);
 }
 void testtime() {
-  showNote("test Time");
+  showNote("test Time","\n");
   Time t;
   t.getLocalTime();
   std::cout << "\n  datetime = " << t.toString() << std::endl;
@@ -192,6 +194,39 @@ void testtime() {
   std::cout << "\n  minutes:  " << t.minutes();
   std::cout << "\n  seconds:  " << t.seconds();
   std::cout << "\n  timezone: " << t.getTimeZone();
+  std::cout << std::endl;
+}
+void testtimer() {
+
+  showNote("test Timer");
+
+  std::vector<double> v {
+    1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0, 5.5
+  };
+  auto f = [&v]() {
+    for(auto &item : v) { item *= item; }
+  };
+
+  auto g = [f](size_t n) {
+    for(size_t i = 0; i < n; ++i) { f(); }
+  };
+
+  Timer tmr;
+  tmr.start();
+  tmr.stop();
+  std::cout << "\n  noOp elapsed interval in nanosec = " << tmr.elapsedNanoSec();
+
+  tmr.start();
+  g(200);
+  tmr.stop();
+  std::cout << "\n  g(200) elapsed interval in nanosec = " << tmr.elapsedNanoSec();
+  std::cout << "\n  g(200) elapsed interval in microsec = " << tmr.elapsedMicroSec();
+
+  tmr.start();
+  std::this_thread::sleep_for(std::chrono::milliseconds(5));
+  tmr.stop();
+  std::cout << "\n  5 millisec sleep elapsed interval in millisec = " << tmr.elapsedMilliSec();
+  std::cout << std::endl;
 }
 /*-----------------------------------------------
   Demo execution starts here
@@ -206,6 +241,11 @@ int main() {
     demo_user_defined_generic_types();
     demo_generic_functions();
     testtime();
+    for(size_t i=0; i<4; ++i) {
+      testtimer();
+      std::this_thread::sleep_for(std::chrono::seconds(1));
+    }
+
     // #define TEST
     #ifdef TEST
       testFormats();

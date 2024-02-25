@@ -113,7 +113,7 @@ double Stats<T>::avg() {
     return double(sum)/double(items.size());
 }
 /*-------------------------------------------------------------------
-  displays results of all class operations
+  displays current contents
 */
 template<typename T>
 void Stats<T>::show(const std::string& name) {
