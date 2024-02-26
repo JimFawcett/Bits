@@ -1,7 +1,7 @@
 /*-------------------------------------------------------------------
   PointsGen.h defines point classe Point<T, N>
   - Point<T, N> represents points with N coordinates of
-    unspecified type T
+    unspecified type T and a Time t.
 */
 #include <iostream>
 #include <vector>
@@ -15,6 +15,10 @@ namespace Points {
     It uses a template parameter to support a variety of coordinate 
     types, and uses a vector to hold any finite number of 
     coordinates, specified by N.
+
+    It also carries a Time t instance which conceptually is the time
+    at which something was at that point in space. Time is a class
+    defined for this demonstration defined in Time.h.
 
     All its special members, ctors, assignment, ... with the exception 
     of constructor Point(), are declared default to indicate to a maintainer 
@@ -55,7 +59,8 @@ namespace Points {
     size_t _width = 7;  // default display row width
   };
   /*-----------------------------------------------
-    Point<T, N> constructor with size 
+    Point<T, N> constructor with size Template
+    parameter
   */
   template<typename T, size_t N>
   Point<T, N>::Point() 
@@ -134,7 +139,7 @@ namespace Points {
   template<typename T, size_t N>
   std::string Point<T, N>::timeToString() {
     std::string ts = tm.toString();
-    return ts.substr(0, ts.size() - 1);  // remove newline
+    return ts;
   }
   /*---------------------------------------------
     set time to current time

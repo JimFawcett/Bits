@@ -19,84 +19,16 @@
 #include <array>          // array<T> class
 #include <map>            // map<K,V> class
 #include <set>            // set<T> class
-//#include <function>        // 
 #include <thread>         // this_thread
 #include "AnalysisGen.h"  // Analysis functions
 #include "PointsGen.h"    // Point<T, N> class declaration
-#include "Stats.h"        // Stats class declaration
+#include "Demos.h"        // Stats class declaration
 /*
   
 */
 #pragma warning(disable: 4984)  // warns about C++17 extension
 
 using namespace Points;
-
-/*-------------------------------------------------------------------
-  Building types and functions for demonstration 
-*/
-/*-- simple user-defined type --*/
-template<typename T>
-class Demo {
-public:
-  Demo() = default;
-  Demo(T& tin) : t(tin) {};
-  Demo(const Demo<T>& t) = default;
-  Demo<T>& operator=(const Demo<T>&t) = default;
-  ~Demo() = default;
-  T& value() { return t; }
-  void show();
-private:
-  T t;
-};
-
-template<typename T>
-void Demo<T>::show() {
-  std::cout << "  Demo<T> {\n  ";
-  std::cout << "  type: " 
-            << truncate(DisplayParams.trunc,typeid(t).name());  // show type
-  std::cout << ", size: " << sizeof(t);  // show size on stack
-  std::cout << ", value: " << t;
-  std::cout << "\n  }\n";
-}
-/*-----------------------------------------------
-  Demonstration functions
-*/
-/*-- showArray function --*/
-template<typename T, int N>
-void showArray(std::array<T,N> &a) {
-  std::cout << "  array<T,N> [";
-  std::cout << a[0];
-  for(int i=1; i<N; ++i) {
-    std::cout << ", " << a[i];
-  }
-  std::cout << "]" << std::endl;
-}
-/*-- show collection function --*/
-template<typename C>
-void showColl(const C& c) {
-  std::cout << "  Collection [";
-  std::cout << c[0];
-  for(size_t i=1; i<c.size(); ++i) {
-    std::cout << ", " << c[i];
-  }
-  std::cout << "]" << std::endl;
-}
-/*-- showMap function --*/
-template<typename K, typename V>
-void showMap(const std::map<K,V> &m) {
-  std::cout << "  map<K,V> {\n    ";
-  bool first = true;
-  for(const auto& pair : m) {
-    if(first) {
-      std::cout << "{" << pair.first << "," << pair.second << "}";
-      first = false;
-    }
-    else {
-      std::cout << ", {" << pair.first << "," << pair.second << "}";
-    }
-  }
-  std::cout << "\n  }\n";
-}
 
 /*-- demonstrate use of std generic types --*/
 void demo_std_generic_types() {
@@ -124,6 +56,16 @@ void demo_std_generic_types() {
 void demo_user_defined_generic_types() {
   
   showNote("Demo user-defined generic types", nl);
+
+  showOp("Demo<int>", nl);
+  int arg = 42;
+  Demo<int> demi(arg);
+  demi.show();
+  std::cout << std::endl;;
+  double pi = 3.1415927;
+  Demo<double> demd(pi);
+  demd.show();
+
   showOp("Stats<double>", nl);
   std::vector<double> v { 1.0, 2.5, -3.0, 4.5 };
   showColl(v);
@@ -132,11 +74,6 @@ void demo_user_defined_generic_types() {
   std::cout << ", max: " << s.max();
   std::cout << ", sum: " << s.sum();
   std::cout << ", avg: " << s.avg() << std::endl;
-
-  showOp("Demo<int>", nl);
-  int arg = 42;
-  Demo<int> dem(arg);
-  dem.show();
 
   showOp("Point<double, 3> p1 {1.0, 1.5, 2.0}");
   Point<double, 3> p1 {1.0, 1.5, 2.0};
@@ -147,7 +84,7 @@ void demo_user_defined_generic_types() {
   showOp("Point<double, 3> p3 {1.0, 1.5, 2.0, 2.5}");
   Point<double, 3> p3 {1.0, 1.5, 2.0, 2.5};
   p3.show("p3");
-  std::cout << "\n  p3.timeToString() = \"" << p3.timeToString() << "\"";
+  std::cout << "\n  p3.timeToString():\n    \"" << p3.timeToString() << "\"";
   println();
 }
 /*-- demonstrate use of generic functions --*/

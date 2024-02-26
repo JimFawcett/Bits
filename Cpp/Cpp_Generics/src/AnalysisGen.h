@@ -20,6 +20,12 @@
   definitions below may be placed in any order. That's
   needed because C++ requires declaration before use.
 */
+template<typename T, int N>
+void showArray(std::array<T,N> &a);
+template<typename C>
+void showColl(const C& c);
+template<typename K, typename V>
+void showMap(const std::map<K,V> &m);
 template<typename T>
 void showType(T t, const std::string &nm, const std::string& suffix = "");
 void showNote(const std::string& txt, const std::string& suffix = "");
@@ -76,6 +82,46 @@ std::ostream& operator<<(std::ostream& out, std::vector<T>& v) {
   out << format(v, "vector<T>", "", DisplayParams.left, DisplayParams.width);
   return out;
 }
+/*-----------------------------------------------
+  Demonstration functions
+*/
+/*-- showArray function --*/
+template<typename T, int N>
+void showArray(std::array<T,N> &a) {
+  std::cout << "  array<T,N> [";
+  std::cout << a[0];
+  for(int i=1; i<N; ++i) {
+    std::cout << ", " << a[i];
+  }
+  std::cout << "]" << std::endl;
+}
+/*-- show collection function --*/
+template<typename C>
+void showColl(const C& c) {
+  std::cout << "  Collection [";
+  std::cout << c[0];
+  for(size_t i=1; i<c.size(); ++i) {
+    std::cout << ", " << c[i];
+  }
+  std::cout << "]" << std::endl;
+}
+/*-- showMap function --*/
+template<typename K, typename V>
+void showMap(const std::map<K,V> &m) {
+  std::cout << "  map<K,V> {\n    ";
+  bool first = true;
+  for(const auto& pair : m) {
+    if(first) {
+      std::cout << "{" << pair.first << "," << pair.second << "}";
+      first = false;
+    }
+    else {
+      std::cout << ", {" << pair.first << "," << pair.second << "}";
+    }
+  }
+  std::cout << "\n  }\n";
+}
+
 /*-----------------------------------------------
   Display calling name, static class, and size
 */

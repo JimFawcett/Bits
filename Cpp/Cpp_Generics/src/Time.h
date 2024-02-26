@@ -1,6 +1,8 @@
 /*-------------------------------------------------------------------
   Time.h defines Time class to manage datetime strings
   - Uses chrono to implement class for updateable time instances
+
+  Note: Add callable function for end of time period
 */
 #include <iostream>
 #include <string>

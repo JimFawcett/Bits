@@ -1,8 +1,44 @@
 /*-------------------------------------------------------------------
-  Stats.h defines Stats<T> class
+  Demos.h defines Demo<T> and Stats<T> classes
+  - Demo<T> is a simple demonstration of a generic type that
+    does'nt do anything very useful except to explain syntax.
+  - Stats<T> holds a std::vector<T> and provides methods for
+    computing max, min, average of this collection of elements
+    of unspecified type T
+*/
+/*-------------------------------------------------------------------
+  simple user-defined type to demonstrate template syntax
+*/
+template<typename T>
+class Demo {
+public:
+  Demo() = default;
+  Demo(T& tin) : t(tin) {};
+  Demo(const Demo<T>& t) = default;
+  Demo<T>& operator=(const Demo<T>&t) = default;
+  ~Demo() = default;
+  T& value() { return t; }
+  void show();
+private:
+  T t;
+};
+
+template<typename T>
+void Demo<T>::show() {
+  std::cout << "  Demo<T> {\n  ";
+  std::cout << "  type T: " 
+            << truncate(DisplayParams.trunc,typeid(t).name());  // show type
+  std::cout << ", size: " << sizeof(t);  // show size on stack
+  std::cout << ", value: " << t;
+  std::cout << "\n  }\n";
+}
+/*-------------------------------------------------------------------
+  Stats<T>
   - Stats<T> holds a std::vector<T> and provides methods for
     computing max, min, average of this collection
     of unspecified type T
+  - Code builds as a template definition
+  - Will fail to build instantiation if T is not a numeric type
 */
 #include <iostream>
 #include <vector>
