@@ -18,7 +18,7 @@ namespace Points {
 
     It also carries a Time t instance which conceptually is the time
     at which something was at that point in space. Time is a class
-    defined for this demonstration defined in Time.h.
+    defined for this demonstration in Time.h.
 
     All its special members, ctors, assignment, ... with the exception 
     of constructor Point(), are declared default to indicate to a maintainer 

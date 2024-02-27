@@ -23,10 +23,6 @@
 #include "AnalysisGen.h"  // Analysis functions
 #include "PointsGen.h"    // Point<T, N> class declaration
 #include "Demos.h"        // Stats class declaration
-/*
-  
-*/
-#pragma warning(disable: 4984)  // warns about C++17 extension
 
 using namespace Points;
 
