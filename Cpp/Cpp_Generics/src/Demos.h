@@ -32,6 +32,18 @@ void Demo<T>::show() {
   std::cout << ", value: " << t;
   std::cout << "\n  }\n";
 }
+/* template method specialization */
+template<>
+void inline Demo<std::vector<int>>::show() {
+  std::cout << "  Demo<T> {\n  ";
+  std::cout << "  type T: " 
+            << truncate(DisplayParams.trunc,typeid(t).name());  // show type
+  std::cout << ", size: " << sizeof(t) << "\n    value: [ ";
+  for (auto item : t) {
+    std::cout << item << " ";
+  };
+  std::cout << "]\n  }\n";
+}
 /*-------------------------------------------------------------------
   Stats<T>
   - Stats<T> holds a std::vector<T> and provides methods for
@@ -52,9 +64,10 @@ void Demo<T>::show() {
 template <typename T>
 class Stats {
 public:
+    Stats() = default;
     Stats(const std::vector<T>& v);
-    Stats() = delete;
-    Stats<T>& operator=(Stats<T>& s) = delete;
+    Stats(const Stats<T>& s) = default;
+    Stats<T>& operator=(Stats<T>& s) = default;
     size_t size();
     T max();
     T min();

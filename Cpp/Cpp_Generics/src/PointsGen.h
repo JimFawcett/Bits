@@ -42,7 +42,7 @@ namespace Points {
 
     std::string timeToString();
     void updateTime();
-    std::time_t& time();
+    Time& time();
     const size_t size() const;
     T& operator[](size_t index);                  // index oper
     const T operator[](size_t index) const;       // const index oper
@@ -153,7 +153,7 @@ namespace Points {
     epoch
   */
   template<typename T, size_t N>
-  std::time_t& Point<T, N>::time() {
+  Time& Point<T, N>::time() {
     return tm;
   }
   /*-----------------------------------------------

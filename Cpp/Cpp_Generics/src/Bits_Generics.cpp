@@ -53,16 +53,20 @@ void demo_user_defined_generic_types() {
   
   showNote("Demo user-defined generic types", nl);
 
-  showOp("Demo<int>", nl);
+  showOp("Demo<T>", nl);
   int arg = 42;
   Demo<int> demi(arg);
   demi.show();
   std::cout << std::endl;;
+  
   double pi = 3.1415927;
   Demo<double> demd(pi);
   demd.show();
+  auto vs = std::vector<int> { 1, 2, 3 };
+  Demo<std::vector<int>> demv(vs);
+  demv.show();
 
-  showOp("Stats<double>", nl);
+  showOp("Stats<double> s(v)", nl);
   std::vector<double> v { 1.0, 2.5, -3.0, 4.5 };
   showColl(v);
   Stats<double> s(v);
@@ -71,16 +75,30 @@ void demo_user_defined_generic_types() {
   std::cout << ", sum: " << s.sum();
   std::cout << ", avg: " << s.avg() << std::endl;
 
-  showOp("Point<double, 3> p1 {1.0, 1.5, 2.0}");
+  showOp("Stats<double> s2 = s", nl);
+  Stats<double> s2 = s;  // copy construction
+  std::cout << "  min: " << s2.min();
+  std::cout << ", max: " << s2.max();
+  std::cout << ", sum: " << s2.sum();
+  std::cout << ", avg: " << s2.avg() << std::endl;
+
+  /*-- demonstrate Point<double 3> initialization lists --*/
+  showOp("Point<double, 3> p1 {1.0, 1.5, 2.0}");  // equal to N
   Point<double, 3> p1 {1.0, 1.5, 2.0};
   p1.show("p1");
+  std::cout << "\n  p1[1] = " << p1[1];           // indexing
+  std::cout << "\n  p1.time().day() = " 
+            << p1.time().day();
+  std::cout << "\n  p1.time().seconds() = " 
+            << p1.time().seconds() << "\n";
   showOp("Point<double, 3> p2 {1.0, 1.5}");
-  Point<double, 3> p2 {1.0, 1.5};
+  Point<double, 3> p2 {1.0, 1.5};                 // less than N
   p2.show("p2");
   showOp("Point<double, 3> p3 {1.0, 1.5, 2.0, 2.5}");
-  Point<double, 3> p3 {1.0, 1.5, 2.0, 2.5};
+  Point<double, 3> p3 {1.0, 1.5, 2.0, 2.5};       // greater than N
   p3.show("p3");
-  std::cout << "\n  p3.timeToString():\n    \"" << p3.timeToString() << "\"";
+  std::cout << "\n  p3.timeToString():\n    \"" 
+            << p3.timeToString() << "\"";
   println();
 }
 /*-- demonstrate use of generic functions --*/
