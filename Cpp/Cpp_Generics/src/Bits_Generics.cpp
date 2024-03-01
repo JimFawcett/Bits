@@ -104,21 +104,27 @@ void demo_user_defined_generic_types() {
 /*-- demonstrate use of generic functions --*/
 void demo_generic_functions() {
 
-showNote("demo generic functions", nl);
+  showNote("demo generic functions", nl);
 
-showOp("showType for std::string");
-std::string s = "a string";
-showType(s, "s", nl);
+  showOp("showType for std::string");
+  std::string s = "a string";
+  showType(s, "s", nl);
 
-showOp("showType for std::vector");
-std::vector<int> v {1, 2, 3, 2, 1};
-showType(v, "v", nl);
+  showOp("showType for std::vector");
+  std::vector<int> v {1, 2, 3, 2, 1};
+  showType(v, "v", nl);
 
-showOp("showColl for std::string", nl);
-showColl(s);
+  showOp("showColl for std::string", nl);
+  showColl(s);
 
-showOp("showColl for std::vector", nl);
-showColl(v);
+  showOp("showColl for std::vector", nl);
+  showColl(v);
+
+  showOp("showType for std::map","\n");
+  std::map<std::string, int> m { 
+    {"zero", 0}, {"one", 1}, {"two", 2} 
+  };
+  showMap(m);
 }
 void testtime() {
   showNote("test Time","\n");

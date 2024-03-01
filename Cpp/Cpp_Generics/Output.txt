@@ -1,158 +1,157 @@
-C:\github\JimFawcett\Bits\Cpp\Cpp_Generics\build
-> debug/Cpp_Generics
-
-  Demonstrate C++ Generic Objects
+  --------------------------------------------------
+    Demonstrate C++ Generics
+  --------------------------------------------------
 
   --------------------------------------------------
-    std library types string and vector<T>
+    Demo std generic types
   --------------------------------------------------
-  contents of str = "Wile E. Coyote"
-  --- showType(str, "str"); ---
-  str type: class std::basic_string<char,struct std:...
+
+  --- array<int,4> ---
+  array<T,N> [1, 2, 3, 4]
+  Collection [1, 2, 3, 4]
+
+  --- vector<double> ---
+  vector<T>: {
+    1, 1.5, 2, 2.5
+  }
+  Collection [1, 1.5, 2, 2.5]
+
+  --- map<string,int> ---
+  map<K,V> {
+    {one,1}, {three,3}, {two,2}, {zero,0}
+  }
+
+  m: {
+    {one, 1}, {three, 3}, {two, 2}, {zero, 0}
+  }
+
+  --------------------------------------------------
+    Demo user-defined generic types
+  --------------------------------------------------
+
+  --- Demo<T> ---
+  Demo<T> {
+    type T: int, size: 4, value: 42
+  }
+
+  Demo<T> {
+    type T: double, size: 8, value: 3.14159
+  }
+  Demo<T> {
+    type T: class std::vector<int,class std::allocat..., size: 32
+    value: [ 1 2 3 ]
+  }
+
+  --- Stats<double> s(v) ---
+  Collection [1, 2.5, -3, 4.5]
+  min: -3, max: 4.5, sum: 5, avg: 1.25
+
+  --- Stats<double> s2 = s ---
+  min: -3, max: 4.5, sum: 5, avg: 1.25
+
+  --- Point<double, 3> p1 {1.0, 1.5, 2.0} ---
+  p1: Point<T, N> {
+    1, 1.5, 2
+  }
+  Wed Feb 28 20:35:23 2024 local time zone
+
+  p1[1] = 1.5
+  p1.time().day() = 28
+  p1.time().seconds() = 23
+
+  --- Point<double, 3> p2 {1.0, 1.5} ---
+  p2: Point<T, N> {
+    1, 1.5, 0
+  }
+  Wed Feb 28 20:35:23 2024 local time zone
+
+  --- Point<double, 3> p3 {1.0, 1.5, 2.0, 2.5} ---
+  p3: Point<T, N> {
+    1, 1.5, 2
+  }
+  Wed Feb 28 20:35:23 2024 local time zone
+
+  p3.timeToString():
+    "Wed Feb 28 20:35:23 2024 local time zone"
+
+
+  --------------------------------------------------
+    demo generic functions
+  --------------------------------------------------
+
+  --- showType for std::string ---
+  s type: class std::basic_string<char,struct std:...
   size:  40
 
-  vector<T>: {
-    3.5, 3, 2.5, 2
-  }
-  --- showType(vec, "vec"); ---
-  vec type: class std::vector<double,class std::allo...
+  --- showType for std::vector ---
+  v type: class std::vector<int,class std::allocat...
   size:  32
 
-  --- vec[2] = -2.5; ---
-  vec:
-  vector<T>: {
-    3.5, 3, -2.5, 2
-  }
-  --- auto vec2 = vec : copy construction ---
-  vec2:
-  vector<T>: {
-    3.5, 3, -2.5, 2
-  }
-  --- vec2[0] = 42; ---
-  vec2:
-  vector<T>: {
-    42, 3, -2.5, 2
-  }
-  vec:
-  vector<T>: {
-    3.5, 3, -2.5, 2
-  }
-  --------------------------------------------------
-    Copy construction, auto vec2 = vec, creates
-    independent instance. So changing target vec2
-    has no affect on source vec.
-  --------------------------------------------------
+  --- showColl for std::string ---
+  Collection [a,  , s, t, r, i, n, g]
+
+  --- showColl for std::vector ---
+  Collection [1, 2, 3, 2, 1]
 
   --------------------------------------------------
-    User-defined Types
+    test Time
   --------------------------------------------------
 
-  --- statistics for integer types ---
-  s1 {
-    1, 2, 3, 4, 5, 6
-  }
+  datetime = Wed Feb 28 20:35:23 2024 local time zone
 
-  s1.size() = 6
-  s1.max() = 6
-  s1.min() = 1
-  s1.sum() = 21
-  s1.avg() = 3.5
+  epoch in secs = 1709174123
+  year:     2024
+  month:    2
+  day:      28
+  hour:     20
+  minutes:  35
+  seconds:  23
+  timezone: local time zone
 
-  --- statistics for float types ---
-  s2 {
-    1, 2.1, 3.2, 4.3, 5.4, 6.5
-  }
+  datetime = Thu Feb 29 02:35:23 2024 GMT
 
-  s2.size() = 6
-  s2.max() = 6.5
-  s2.min() = 1
-  s2.sum() = 22.5
-  s2.avg() = 3.75
-
-  --- user-defined type PointN<T> ---
-
-  p1: PointN<T> {
-    0, 0, 0, 0, 0
-  }
+  epoch in secs = 1709174123
+  year:     2024
+  month:    2
+  day:      29
+  hour:     2
+  minutes:  35
+  seconds:  23
+  timezone: GMT
 
   --------------------------------------------------
-    p1.coords() = std::vector<double>
-    { 1.0, -2.0, 3.0, 4.5, -42.0 }
+    test Timer
   --------------------------------------------------
-
-  p1: PointN<T> {
-    1, -2, 3, 4.5, -42
-  }
-
-  --- showType(p1, "p1", nl); ---
-  p1 type: class PointN<double>
-  size:  48
-  p1.coords()[2] = 3
-
-  --- auto p2 = p1 ---
-  p2: PointN<T> {
-    1, -2, 3, 4.5, -42
-  }
-  --- p2[1] = 5.5 ---
-  p2: PointN<T> {
-    1, 5.5, 3, 4.5, -42
-  }
-  p1: PointN<T> {
-    1, -2, 3, 4.5, -42
-  }
+  noOp elapsed interval in nanosec = 0
+  g(200) elapsed interval in nanosec = 2300
+  g(200) elapsed interval in microsec = 2
+  5 millisec sleep elapsed interval in millisec = 5
 
   --------------------------------------------------
-    heap-based string instance
+    test Timer
   --------------------------------------------------
-  --- pU<std::basic_string<char>> pStr(new std::basic_string<char>("\"Road Runner\"") ---
-  pStr contents = "Road Runner"
-
-  --- showType(*pStr, "*pStr") ---
-  *pStr type: class std::basic_string<char,struct std:...
-  size:  40
-
-  --- showType(move(pStr), "pStr") ---
-  pStr type: class std::unique_ptr<class std::basic_s...
-  size:  8
+  noOp elapsed interval in nanosec = 200
+  g(200) elapsed interval in nanosec = 10900
+  g(200) elapsed interval in microsec = 10
+  5 millisec sleep elapsed interval in millisec = 12
 
   --------------------------------------------------
-    heap-based vector instance
+    test Timer
   --------------------------------------------------
-  --- pU<std::vector<double>>
-      pVec(new std::vector<double>{ 1.5, 2.5, 3.5 }); ---
-  *pVec =
-  vector<T>: {
-    1.5, 2.5, 3.5
-  }
-  *pVec type: class std::vector<double,class std::allo...
-  size:  32
-
-  pVec = 00000269B47695C0
-  move(pVec) type: class std::unique_ptr<class std::vector<...
-  size:  8
+  noOp elapsed interval in nanosec = 100
+  g(200) elapsed interval in nanosec = 9600
+  g(200) elapsed interval in microsec = 9
+  5 millisec sleep elapsed interval in millisec = 8
 
   --------------------------------------------------
-    heap-based PointN<T> instance
+    test Timer
   --------------------------------------------------
-  --- pU<PointN<double>> pPointN(new PointN<double>(4)) ---
-  *pPointN: PointN<T> {
-    0, 0, 0, 0
-  }
-  --- pPointN->coords() =
-      std::vector<double>{ 1.0, 3.5, -2.0, 42.0 }; ---
-  *pPointN: PointN<T> {
-    1, 3.5, -2, 42
-  }
-  value of pPointN->coords()[1] is 3.5
-  --- showType(*pPointN, "*pPointN"); ---
-  *pPointN type: class PointN<double>
-  size:  48
-  --- showType(std::move(pPointN), "pPointN"); ---
-  pPointN type: class std::unique_ptr<class PointN<doubl...
-  size:  8
+  noOp elapsed interval in nanosec = 100
+  g(200) elapsed interval in nanosec = 7300
+  g(200) elapsed interval in microsec = 7
+  5 millisec sleep elapsed interval in millisec = 11
 
 
   That's all Folks!
 
-C:\github\JimFawcett\Bits\Cpp\Cpp_Generics\build
->
+
