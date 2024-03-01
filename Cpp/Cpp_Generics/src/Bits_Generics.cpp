@@ -120,7 +120,7 @@ void demo_generic_functions() {
   showOp("showColl for std::vector", nl);
   showColl(v);
 
-  showOp("showType for std::map","\n");
+  showOp("showMap for std::map","\n");
   std::map<std::string, int> m { 
     {"zero", 0}, {"one", 1}, {"two", 2} 
   };
