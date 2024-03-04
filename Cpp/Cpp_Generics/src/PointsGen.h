@@ -10,6 +10,9 @@
 #include "Time.h"
 
 namespace Points {
+
+  using namespace Analysis;
+  
   /*-------------------------------------------------------------------
     Point<T, N> class represents a point in an N-Dimensional hyperspace.
     It uses a template parameter to support a variety of coordinate 

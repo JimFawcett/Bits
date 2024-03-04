@@ -9,6 +9,8 @@
 /*-------------------------------------------------------------------
   simple user-defined type to demonstrate template syntax
 */
+using namespace Analysis;
+
 template<typename T>
 class Demo {
 public:
@@ -61,6 +63,7 @@ void inline Demo<std::vector<int>>::show() {
   - This class inhibits compiler generation of default constructor
     and assignment operator.
 */
+
 template <typename T>
 class Stats {
 public:

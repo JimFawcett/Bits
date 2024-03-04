@@ -24,6 +24,7 @@
 #include "PointsGen.h"    // Point<T, N> class declaration
 #include "Demos.h"        // Stats class declaration
 
+using namespace Analysis;
 using namespace Points;
 
 /*-- demonstrate use of std generic types --*/
@@ -33,18 +34,18 @@ void demo_std_generic_types() {
   showOp("array<int,4>",nl);
   auto a = std::array<int, 4> { 1, 2, 3, 4 };
   showArray(a);
-  showColl(a);
+  showSeqColl(a);
 
   showOp("vector<double>");
   std::vector<double> v = { 1.0, 1.5, 2.0, 2.5 };
   std::cout << v << "\n";
-  showColl(v);
+  showSeqColl(v);
 
   showOp("map<string,int>", nl);
   std::map<std::string, int> m {
     {"zero", 0}, {"one", 1}, {"two", 2}, {"three", 3}
   };
-  showMap(m);  // std::map<K,V> only
+  showAssocColl(m);  // std::map<K,V> only
   std::cout << formatColl(m, "m", "\n"); // any STL collection
 }
 
@@ -68,7 +69,7 @@ void demo_user_defined_generic_types() {
 
   showOp("Stats<double> s(v)", nl);
   std::vector<double> v { 1.0, 2.5, -3.0, 4.5 };
-  showColl(v);
+  showSeqColl(v);
   Stats<double> s(v);
   std::cout << "  min: " << s.min();
   std::cout << ", max: " << s.max();
@@ -114,17 +115,30 @@ void demo_generic_functions() {
   std::vector<int> v {1, 2, 3, 2, 1};
   showType(v, "v", nl);
 
-  showOp("showColl for std::string", nl);
-  showColl(s);
+  showOp("showSeqColl for std::string", nl);
+  showSeqColl(s);
 
-  showOp("showColl for std::vector", nl);
-  showColl(v);
+  showOp("Analysis::format for std::string");
+  std::cout << Analysis::format(s, "s", "\n");
+  // need to distinguish Analysis::format from std::format
 
-  showOp("showMap for std::map","\n");
+  showOp("showSeqColl for std::vector", nl);
+  showSeqColl(v);
+
+  showOp("Analysis::format for std::vector", nl);
+  std::cout << Analysis::format(v, "v", "\n");
+
+  showOp("showAssocColl for std::map", "\n");
   std::map<std::string, int> m { 
     {"zero", 0}, {"one", 1}, {"two", 2} 
   };
-  showMap(m);
+  showAssocColl(m);
+
+  showOp("formatColl for std::map", "\n");
+  std::cout << formatColl(m, "m", "\n");
+
+  showOp("Analysis::format for std::map", "\n");
+  std::cout << format(m, "m", "\n");
 }
 void testtime() {
   showNote("test Time","\n");
