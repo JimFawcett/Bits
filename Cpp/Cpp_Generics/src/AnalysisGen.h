@@ -108,25 +108,61 @@ namespace Analysis {
   /*-- show sequential collection --*/
   template<typename C>
   void showSeqColl(const C& c) {
-    std::cout << "  Collection [";
+    std::cout << "  Collection<T> [";
     std::cout << c[0];
     for(size_t i=1; i<c.size(); ++i) {
       std::cout << ", " << c[i];
     }
     std::cout << "]" << std::endl;
   }
+  // /*-- show associative collection --*/
+  // template<typename K, typename V>
+  // void showAssocColl(const std::map<K,V> &m) {
+  //   std::cout << "  Collection<K,V> {\n    ";
+  //   bool first = true;
+  //   for(const auto& pair : m) {
+  //     if(first) {
+  //       std::cout << "{" << pair.first << "," << pair.second << "}";
+  //       first = false;
+  //     }
+  //     else {
+  //       std::cout << ", {" << pair.first << "," << pair.second << "}";
+  //     }
+  //   }
+  //   std::cout << "\n  }\n";
+  // }
   /*-- show associative collection --*/
-  template<typename K, typename V>
-  void showAssocColl(const std::map<K,V> &m) {
-    std::cout << "  map<K,V> {\n    ";
+  // template<typename C>
+  // void showAssocColl(const C &m) {
+  //   // using K = C::key_type;
+  //   // using V = C::value_type;
+  //   std::cout << "  Collection<K,V> {\n    ";
+  //   bool first = true;
+  //   for(const auto& pair : m) {
+  //     if(first) {
+  //       std::cout << "{" << pair.first << "," << pair.second << "}";
+  //       first = false;
+  //     }
+  //     else {
+  //       std::cout << ", {" << pair.first << "," << pair.second << "}";
+  //     }
+  //   }
+  //   std::cout << "\n  }\n";
+  // }
+  /*-- show associative collection --*/
+  template<typename C>
+  void showAssocColl(const C& c) {
+    // using K = C::key_type;
+    // using V = C::value_type;
+    std::cout << "  Collection<K,V> {\n    ";
     bool first = true;
-    for(const auto& pair : m) {
+    for(const auto& pair : c) {
       if(first) {
-        std::cout << "{" << pair.first << "," << pair.second << "}";
+        std::cout << "{" << pair.first << ", " << pair.second << "}";
         first = false;
       }
       else {
-        std::cout << ", {" << pair.first << "," << pair.second << "}";
+        std::cout << ", {" << pair.first << ", " << pair.second << "}";
       }
     }
     std::cout << "\n  }\n";

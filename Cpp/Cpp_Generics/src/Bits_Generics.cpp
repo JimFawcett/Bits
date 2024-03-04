@@ -18,6 +18,7 @@
 #include <vector>         // vector<T> class
 #include <array>          // array<T> class
 #include <map>            // map<K,V> class
+#include <unordered_map>  // unordered_map<k,V> class
 #include <set>            // set<T> class
 #include <thread>         // this_thread
 #include "AnalysisGen.h"  // Analysis functions
@@ -118,15 +119,8 @@ void demo_generic_functions() {
   showOp("showSeqColl for std::string", nl);
   showSeqColl(s);
 
-  showOp("Analysis::format for std::string");
-  std::cout << Analysis::format(s, "s", "\n");
-  // need to distinguish Analysis::format from std::format
-
   showOp("showSeqColl for std::vector", nl);
   showSeqColl(v);
-
-  showOp("Analysis::format for std::vector", nl);
-  std::cout << Analysis::format(v, "v", "\n");
 
   showOp("showAssocColl for std::map", "\n");
   std::map<std::string, int> m { 
@@ -134,11 +128,24 @@ void demo_generic_functions() {
   };
   showAssocColl(m);
 
-  showOp("formatColl for std::map", "\n");
-  std::cout << formatColl(m, "m", "\n");
+  showOp("Analysis::format for int");
+  int mol = 42;
+  std::cout << Analysis::format(42, "mol", "\n");
 
-  showOp("Analysis::format for std::map", "\n");
-  std::cout << format(m, "m", "\n");
+  showOp("Analysis::format for std::string");
+  std::cout << Analysis::format(s, "s", "\n");
+  // need to distinguish Analysis::format from std::format
+
+  showOp("Analysis::format for std::vector");
+  std::cout << Analysis::format(v, "v", "\n");
+
+  showOp("Analysis::format for std::map");
+  std::cout << Analysis::format(m, "m", "\n"); 
+
+  showOp("Analysis::format for std::unordered_map");
+  std::unordered_map<std::string, int> um
+  { {"zero", 0}, {"one", 1}, {"two", 2} };
+  std::cout << Analysis::format(um, "um", "\n");
 }
 void testtime() {
   showNote("test Time","\n");
