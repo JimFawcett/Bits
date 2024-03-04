@@ -1,4 +1,4 @@
-/*-------------------------------------------------------------------
+/*--------------------------------------------------------------
   AnalysisGen.h
   - Provides functions that analyze types, display results
     and other program defined information.
@@ -16,7 +16,7 @@
 #include <vector>       // vector
 
 namespace Analysis {
-  /*-------------------------------------------------------------------
+  /*------------------------------------------------------------
     Analysis function declarations are provided here so that
     definitions below may be placed in any order. That's
     needed because C++ requires declaration before use.
@@ -58,12 +58,13 @@ namespace Analysis {
     size_t left = 2, size_t width = 7
   );
   /*-- end of function declarations --*/
-  /*-------------------------------------------------------------------
+
+  /*------------------------------------------------------------
     Display and Analysis functions and global definitions
-  ---------------------------------------------------------------------
+  --------------------------------------------------------------
   */
   const std::string nl = "\n";
-  /*-------------------------------------------------------------------
+  /*------------------------------------------------------------
     Mutable globals are a common source of bugs.  We try not
     to use them, but will use DisplayParams here to control how
     the insertion operator sends instances to standard output.
@@ -74,28 +75,24 @@ namespace Analysis {
     size_t trunc = 40;  // replace text after trunc with ...
   } DisplayParams;      // global object
 
-  /*-----------------------------------------------
-    Overload operator<< required for 
-    showType(std::vector<T> v, const std::vector<T>& nm) 
-  */
-  template<typename T>
-  std::ostream& operator<<(std::ostream& out, std::vector<T>& v) {
-    out << format(v, "vector<T>", "", DisplayParams.left, DisplayParams.width);
-    return out;
-  }
-  // /*-----------------------------------------------
-  //   Overload operator<< required for 
-  //   showType(std::vector<T> v, const std::vector<T>& nm) 
-  // */
-  // template<typename K, typename V>
-  // std::ostream& operator<<(std::ostream& out, std::pair<K, V>& p) {
-  //   out << format(p, "Map<K, V>", "", DisplayParams.left, DisplayParams.width);
-  //   return out;
-  // }
-  /*-----------------------------------------------
+   /*------------------------------------------------------
     Demonstration functions
   */
-  /*-- showArray function --*/
+  /*-----------------------------------------------
+    Display calling name, static class, and size
+    - requires DisplayParams
+  */
+  template<typename T>
+  void showType(T t, const std::string &callname, const std::string& suffix) {
+    std::cout << "\n  " << callname;          // show name at call site
+    std::cout << " type: " 
+              << truncate(DisplayParams.trunc,typeid(t).name());  // show type
+    std::cout << "\n  size:  " << sizeof(t);  // show size on stack
+    std::cout << suffix;
+  }
+  /*-------------------------------------------------------
+   showArray function -- specific to std::array
+  */
   template<typename T, int N>
   void showArray(std::array<T,N> &a) {
     std::cout << "  array<T,N> [";
@@ -105,7 +102,11 @@ namespace Analysis {
     }
     std::cout << "]" << std::endl;
   }
-  /*-- show sequential collection --*/
+  /*-------------------------------------------------------
+    show sequential collection
+    - requires integer indexer and size() function
+    - works for any sequential STL collection
+  */
   template<typename C>
   void showSeqColl(const C& c) {
     std::cout << "  Collection<T> [";
@@ -115,45 +116,14 @@ namespace Analysis {
     }
     std::cout << "]" << std::endl;
   }
-  // /*-- show associative collection --*/
-  // template<typename K, typename V>
-  // void showAssocColl(const std::map<K,V> &m) {
-  //   std::cout << "  Collection<K,V> {\n    ";
-  //   bool first = true;
-  //   for(const auto& pair : m) {
-  //     if(first) {
-  //       std::cout << "{" << pair.first << "," << pair.second << "}";
-  //       first = false;
-  //     }
-  //     else {
-  //       std::cout << ", {" << pair.first << "," << pair.second << "}";
-  //     }
-  //   }
-  //   std::cout << "\n  }\n";
-  // }
-  /*-- show associative collection --*/
-  // template<typename C>
-  // void showAssocColl(const C &m) {
-  //   // using K = C::key_type;
-  //   // using V = C::value_type;
-  //   std::cout << "  Collection<K,V> {\n    ";
-  //   bool first = true;
-  //   for(const auto& pair : m) {
-  //     if(first) {
-  //       std::cout << "{" << pair.first << "," << pair.second << "}";
-  //       first = false;
-  //     }
-  //     else {
-  //       std::cout << ", {" << pair.first << "," << pair.second << "}";
-  //     }
-  //   }
-  //   std::cout << "\n  }\n";
-  // }
-  /*-- show associative collection --*/
+  /*-------------------------------------------------------
+    show associative collection
+    - requires iterator
+    - elements must be std::pair<Key, Value>
+    - works for any associative STL collection 
+  */
   template<typename C>
   void showAssocColl(const C& c) {
-    // using K = C::key_type;
-    // using V = C::value_type;
     std::cout << "  Collection<K,V> {\n    ";
     bool first = true;
     for(const auto& pair : c) {
@@ -168,32 +138,6 @@ namespace Analysis {
     std::cout << "\n  }\n";
   }
 
-  /*-----------------------------------------------
-    Display calling name, static class, and size
-  */
-  template<typename T>
-  void showType(T t, const std::string &callname, const std::string& suffix) {
-    std::cout << "\n  " << callname;          // show name at call site
-    std::cout << " type: " 
-              << truncate(DisplayParams.trunc,typeid(t).name());  // show type
-    std::cout << "\n  size:  " << sizeof(t);  // show size on stack
-    std::cout << suffix;
-  }
-  /*-----------------------------------------------
-    Display emphasized text
-  */
-  inline void showNote(const std::string& txt, const std::string& suffix) {
-    print("--------------------------------------------------");
-    print("  " + txt);
-    print("--------------------------------------------------");
-    std::cout << suffix;
-  }
-  /*-----------------------------------------------
-    Display emphasized line
-  */
-  inline void showOp(const std::string& opstr, const std::string& suffix) {
-    std::cout << "\n  --- " << opstr << " ---" << suffix;
-  }
   /*-----------------------------------------------
     Helper function for formatting output
     - truncates line to N chars and adds ellipsis
@@ -216,6 +160,7 @@ namespace Analysis {
   /*-----------------------------------------------
     Helper function for formatting output
     - folds lines after width elements
+    - used only in Point<T,N>::show()
   */
   template<typename T>
   std::string fold(std::vector<T>& v, size_t left, size_t width) {
@@ -249,8 +194,13 @@ namespace Analysis {
   }
   /*-----------------------------------------------
     Format output for Collection types
-    - any type with begin() and end() like
-      all the STL containers.
+    - any type with iterator, begin(), and end()
+      like all the STL containers.
+    - elements need overload for operator<< as
+      implemented above
+    - folds into rows with width elements
+      - will replace folding logic with fold(...)
+        eventually
   */
   template<typename Coll>
   std::string formatColl(
@@ -258,7 +208,7 @@ namespace Analysis {
     size_t left, size_t width
   ) {
     std::stringstream out;
-    out << "\n" << indent(left) << nm << ": {\n" << indent(left + 2);
+    out << indent(left) << nm << ": {\n" << indent(left + 2);
     size_t i = 0;
     for(const Coll::value_type& elem : c) {
       if((i % width) == 0 && i != 0 && i != width - 1) {
@@ -303,7 +253,7 @@ namespace Analysis {
   /*-----------------------------------------------
     Defines is_iterable trait
     - uses template metaprogramming, e.g., user code
-      that runs during compilation
+      that evaluates during compilation
     - detects STL containers and user-defined types
       that provide iteration
   https://stackoverflow.com/questions/13830158/check-if-a-variable-type-is-iterable
@@ -341,6 +291,21 @@ namespace Analysis {
     else {
       return formatScalar(t, nm, suffix, left);
     }
+  }
+  /*-----------------------------------------------
+    Display emphasized text
+  */
+  inline void showNote(const std::string& txt, const std::string& suffix) {
+    print("--------------------------------------------------");
+    print("  " + txt);
+    print("--------------------------------------------------");
+    std::cout << suffix;
+  }
+  /*-----------------------------------------------
+    Display emphasized line
+  */
+  inline void showOp(const std::string& opstr, const std::string& suffix) {
+    std::cout << "\n  --- " << opstr << " ---" << suffix;
   }
   /*-----------------------------------------------
     Display text after newline and indentation
