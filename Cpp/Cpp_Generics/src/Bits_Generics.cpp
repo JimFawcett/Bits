@@ -61,10 +61,10 @@ void demo_std_generic_types() {
   std::cout << formatColl(m, "m", "\n"); // any STL collection
 }
 
-/*-- demonstrate use of user-defined types --*/
-void demo_user_defined_generic_types() {
+/*-- demonstrate creation and use of Demo<T> --*/
+void demo_custom_type_Demo() {
   
-  showNote("Demo user-defined generic types", nl);
+  showNote("Demo user-defined Demo<T>", nl);
 
   showOp("Demo<T>", nl);
   int arg = 42;
@@ -75,9 +75,17 @@ void demo_user_defined_generic_types() {
   double pi = 3.1415927;
   Demo<double> demd(pi);
   demd.show();
+
+  /*-- specialization --*/
   auto vs = std::vector<int> { 1, 2, 3 };
   Demo<std::vector<int>> demv(vs);
   demv.show();
+}
+
+/*-- demonstrate custom type Stats<T> --*/
+void demo_custom_type_Stats() {
+
+  showNote("Demo user-defined Stats<T>");
 
   showOp("Stats<double> s(v)", nl);
   std::vector<double> v { 1.0, 2.5, -3.0, 4.5 };
@@ -94,6 +102,12 @@ void demo_user_defined_generic_types() {
   std::cout << ", max: " << s2.max();
   std::cout << ", sum: " << s2.sum();
   std::cout << ", avg: " << s2.avg() << std::endl;
+}
+
+/*-- demonstrate use of user-defined types --*/
+void demo_custom_type_Point() {
+  
+  showNote("Demo user-defined Point<T, N>", nl);
 
   /*-- demonstrate Point<double 3> initialization lists --*/
   showOp("Point<double, 3> p1 {1.0, 1.5, 2.0}");  // equal to N
@@ -181,6 +195,8 @@ void demo_generic_functions() {
   };
   std::cout << Analysis::format(um2, "um", "\n", 2, 4);
 }
+
+/*-- test calendar time Time class --*/
 void testtime() {
   showNote("test Time","\n");
   Time t;
@@ -208,6 +224,8 @@ void testtime() {
   std::cout << "\n  timezone: " << t.getTimeZone();
   std::cout << std::endl;
 }
+
+/*-- test timer Timer class --*/
 void testtimer() {
 
   showNote("test Timer");
@@ -254,9 +272,13 @@ int main() {
     showNote("Demonstrate C++ Generics", nl);
   
     demo_std_generic_types();
-    demo_user_defined_generic_types();
+    demo_custom_type_Demo();
+    demo_custom_type_Stats();
+    demo_custom_type_Point();
     demo_generic_functions();
+
     testtime();
+    
     for(size_t i=0; i<4; ++i) {
       testtimer();
       std::this_thread::sleep_for(std::chrono::seconds(1));
