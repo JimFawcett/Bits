@@ -38,6 +38,7 @@ std::ostream& operator<<(std::ostream& out, std::vector<T>& v) {
   out << format(v, "vector<T>", "", DisplayParams.left, DisplayParams.width);
   return out;
 }
+
 /*-- demonstrate use of std generic types --*/
 void demo_std_generic_types() {
   
@@ -53,12 +54,19 @@ void demo_std_generic_types() {
   showSeqColl(v);         // any sequential collection
   std::cout << formatColl(v, "v", "\n"); // any STL collection
 
-  showOp("map<string,int>", nl);
+  showOp("std::map<string,int>", nl);
   std::map<std::string, int> m {
     {"zero", 0}, {"one", 1}, {"two", 2}, {"three", 3}
   };
-  showAssocColl(m);  // coll elements must be std::pair<K,V>
   std::cout << formatColl(m, "m", "\n"); // any STL collection
+  showAssocColl(m);  // coll elements must be std::pair<K,V>
+
+  showOp("std::unordered_map<string,int>", nl);
+  std::unordered_map<std::string, int> um {
+    {"zero", 0}, {"one", 1}, {"two", 2}, {"three", 3}
+  };
+  std::cout << formatColl(um, "um", "\n"); // any STL collection
+  showAssocColl(um);  // coll elements must be std::pair<K,V>
 }
 
 /*-- demonstrate creation and use of Demo<T> --*/
@@ -76,7 +84,10 @@ void demo_custom_type_Demo() {
   Demo<double> demd(pi);
   demd.show();
 
-  /*-- specialization --*/
+  /*-------------------------------------------------------
+    specialization defined in Demo<T> class header
+    Demo.h and used here
+  */
   auto vs = std::vector<int> { 1, 2, 3 };
   Demo<std::vector<int>> demv(vs);
   demv.show();
@@ -102,6 +113,22 @@ void demo_custom_type_Stats() {
   std::cout << ", max: " << s2.max();
   std::cout << ", sum: " << s2.sum();
   std::cout << ", avg: " << s2.avg() << std::endl;
+
+  showOp("Stats<std::string> ss", nl);
+  std::vector<std::string> vstr { "ab", "cd", "ef" };
+  Stats<std::string> ss(vstr);
+  std::cout << "  min: " << ss.min();
+  std::cout << ", max: " << ss.max();
+  std::cout << ", sum: " << ss.sum();
+  //--------------------------------------------------
+  // first compile phase:
+  //   Stats<T>::avg() passess
+  // second compile phase:
+  //   Stats<std::string>::avg() fails to compile.
+  //   No way to divide sum string by size integer in
+  //   std::cout << ", avg: " << ss.avg() << std::endl; 
+  //   All the other methods compile successfully. 
+  print();
 }
 
 /*-- demonstrate use of user-defined types --*/
@@ -126,6 +153,7 @@ void demo_custom_type_Point() {
   p3.show("p3");
   std::cout << "\n  p3.timeToString():\n    \"" 
             << p3.timeToString() << "\"\n";
+  showOp("Point<int, 10> p3 { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 }");
   Point<int, 10> p4 { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
   p4.show("p4");
 }

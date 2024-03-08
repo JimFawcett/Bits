@@ -1,157 +1,52 @@
   --------------------------------------------------
-    Demonstrate C++ Generics
-  --------------------------------------------------
-
-  --------------------------------------------------
-    Demo std generic types
-  --------------------------------------------------
-
-  --- array<int,4> ---
-  array<T,N> [1, 2, 3, 4]
-  Collection [1, 2, 3, 4]
-
-  --- vector<double> ---
-  vector<T>: {
-    1, 1.5, 2, 2.5
-  }
-  Collection [1, 1.5, 2, 2.5]
-
-  --- map<string,int> ---
-  map<K,V> {
-    {one,1}, {three,3}, {two,2}, {zero,0}
-  }
-
-  m: {
-    {one, 1}, {three, 3}, {two, 2}, {zero, 0}
-  }
-
-  --------------------------------------------------
-    Demo user-defined generic types
-  --------------------------------------------------
-
-  --- Demo<T> ---
-  Demo<T> {
-    type T: int, size: 4, value: 42
-  }
-
-  Demo<T> {
-    type T: double, size: 8, value: 3.14159
-  }
-  Demo<T> {
-    type T: class std::vector<int,class std::allocat..., size: 32
-    value: [ 1 2 3 ]
-  }
-
-  --- Stats<double> s(v) ---
-  Collection [1, 2.5, -3, 4.5]
-  min: -3, max: 4.5, sum: 5, avg: 1.25
-
-  --- Stats<double> s2 = s ---
-  min: -3, max: 4.5, sum: 5, avg: 1.25
-
-  --- Point<double, 3> p1 {1.0, 1.5, 2.0} ---
-  p1: Point<T, N> {
-    1, 1.5, 2
-  }
-  Wed Feb 28 20:35:23 2024 local time zone
-
-  p1[1] = 1.5
-  p1.time().day() = 28
-  p1.time().seconds() = 23
-
-  --- Point<double, 3> p2 {1.0, 1.5} ---
-  p2: Point<T, N> {
-    1, 1.5, 0
-  }
-  Wed Feb 28 20:35:23 2024 local time zone
-
-  --- Point<double, 3> p3 {1.0, 1.5, 2.0, 2.5} ---
-  p3: Point<T, N> {
-    1, 1.5, 2
-  }
-  Wed Feb 28 20:35:23 2024 local time zone
-
-  p3.timeToString():
-    "Wed Feb 28 20:35:23 2024 local time zone"
-
-
-  --------------------------------------------------
     demo generic functions
   --------------------------------------------------
 
   --- showType for std::string ---
   s type: class std::basic_string<char,struct std:...
-  size:  40
+  size:  28
 
   --- showType for std::vector ---
   v type: class std::vector<int,class std::allocat...
-  size:  32
+  size:  16
 
-  --- showColl for std::string ---
-  Collection [a,  , s, t, r, i, n, g]
+  --- showSeqColl for std::string ---
+  Collection<T> [a,  , s, t, r, i, n, g]
 
-  --- showColl for std::vector ---
-  Collection [1, 2, 3, 2, 1]
+  --- showSeqColl for std::vector ---
+  Collection<T> [1, 2, 3, 2, 1, 0, -1, -2]
 
-  --------------------------------------------------
-    test Time
-  --------------------------------------------------
+  --- showAssocColl for std::map ---
+  Collection<K,V> {
+    {five, 5}, {four, 4}, {one, 1}, {three, 3}, {two, 2}, {zero, 0}
+  }
 
-  datetime = Wed Feb 28 20:35:23 2024 local time zone
+  --- showAssocColl for std::unordered_map ---
+  Collection<K,V> {
+    {three, 3}, {zero, 0}, {one, 1}, {two, 2}, {five, 5}, {four, 4}
+  }
 
-  epoch in secs = 1709174123
-  year:     2024
-  month:    2
-  day:      28
-  hour:     20
-  minutes:  35
-  seconds:  23
-  timezone: local time zone
+  --- Analysis::format for int ---
+  mol: 42
 
-  datetime = Thu Feb 29 02:35:23 2024 GMT
+  --- Analysis::format for std::string ---  s: {
+    a,  , s, t, r, i, n,
+    g
+  }
 
-  epoch in secs = 1709174123
-  year:     2024
-  month:    2
-  day:      29
-  hour:     2
-  minutes:  35
-  seconds:  23
-  timezone: GMT
+  --- Analysis::format for std::vector ---  v: {
+    1, 2, 3, 2, 1,
+    0, -1, -2
+  }
 
-  --------------------------------------------------
-    test Timer
-  --------------------------------------------------
-  noOp elapsed interval in nanosec = 0
-  g(200) elapsed interval in nanosec = 2300
-  g(200) elapsed interval in microsec = 2
-  5 millisec sleep elapsed interval in millisec = 5
+  --- Analysis::format for std::map ---  m: {
+    {five, 5}, {four, 4}, {one, 1}, {three, 3},
+    {two, 2}, {zero, 0}
+  }
 
-  --------------------------------------------------
-    test Timer
-  --------------------------------------------------
-  noOp elapsed interval in nanosec = 200
-  g(200) elapsed interval in nanosec = 10900
-  g(200) elapsed interval in microsec = 10
-  5 millisec sleep elapsed interval in millisec = 12
-
-  --------------------------------------------------
-    test Timer
-  --------------------------------------------------
-  noOp elapsed interval in nanosec = 100
-  g(200) elapsed interval in nanosec = 9600
-  g(200) elapsed interval in microsec = 9
-  5 millisec sleep elapsed interval in millisec = 8
-
-  --------------------------------------------------
-    test Timer
-  --------------------------------------------------
-  noOp elapsed interval in nanosec = 100
-  g(200) elapsed interval in nanosec = 7300
-  g(200) elapsed interval in microsec = 7
-  5 millisec sleep elapsed interval in millisec = 11
-
-
-  That's all Folks!
+  --- Analysis::format for std::unordered_map ---  um: {
+    {three, 4}, {zero, 0}, {one, 1}, {two, 2},
+    {five, 5}, {four, 4}
+  }
 
 
