@@ -1,116 +1,87 @@
-C:\github\JimFawcett\Bits\Rust\rust_generics
-> cargo run
-   Compiling rust_hello_objects v0.1.0 (C:\github\JimFawcett\Bits\Rust\rust_generics)
-    Finished dev [unoptimized + debuginfo] target(s) in 0.37s
-     Running `target\debug\rust_hello_objects.exe`
-
 --------------------------------------------------
-  demonstrate generic functions and types
+  generic functions and types
 --------------------------------------------------
 
-----------------------------------------------
-  std::library objects, string and vector<T>
-----------------------------------------------
+-------------------------
+ demo standard generic types
+-------------------------
 
---- let mut s1 = "a string".to_string() ---
---- show_type_scalar(&s1, "&s1") ---
-call name: "&s1", type: "alloc::string::String"
-value: "a string", size: 24
+--- arrays: [T; N] ---
 
---- s1.push_str(" and more"); ---
-call name: "&s1", type: "alloc::string::String"
-value: "a string and more", size: 24
+  [1, 2, 3, 2, 1]
+  [1.0, 1.5, 2.0, 1.5, 1.0]
 
---- let mut v:Vec<i32> = vec![1, 2, 3, 2, 1]; ---
-call name: "&v", type: "alloc::vec::Vec<i32>"
-value: [1, 2, 3, 2, 1], size: 24
+--- slices: &T[m..n] ---
 
---- v.push(42); ---
-call name: "&v", type: "alloc::vec::Vec<i32>"
-value: [1, 2, 3, 2, 1, 42], size: 24
+  [2, 3, 2, 1]
+  [2.0, 1.5]
 
------------------------------------
-  instances of user-defined types
------------------------------------
+--- vectors: Vec<T> ---
 
-s: Stats { items: [1.0, 2.5, -3.5, 4.0, 5.5] }
-s.max() = 5.5
-s.min() = -3.5
-s.sum() = 9.5
-s.avg() = 1.9
+  Vec<i32> [1, 2, 3, 2, 1]
+  Vec<(i32, &str)> [(1, "one"), (2, "two")]
 
-s: Stats { items: [1, -2, 3, -4, 5] }
-s.max() = 5
-s.min() = -4
-s.sum() = 3
-s.avg() = 0.6
+--- maps: HashMap<K,V> ---
 
-"p1": PointN<T> {
-  0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-  0.0, 0.0, 0.0
-}
---- show_type(p1, "p1") ---
-call name: "p1", type: "rust_hello_objects::points_generic::PointN<f64>"
---- show_value_enum(p1.coors(), "p1", 2, 7) ---
-"p1.coors()" {
-  0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-  0.0, 0.0, 0.0
-}
-size: 24
+  maps: HashMap<&str, i32>
+    {"one": 1, "two": 2, "zero": 0, "three": 3}
 
---- p1.coors()[2] = 3.1415 ---
-"p1": PointN<T> {
-  0.0, 0.0, 3.1415, 0.0, 0.0, 0.0, 0.0,
-  0.0, 0.0, 0.0
-}
---- show_value_enum(p1.coors(), "p1.coors()", 2, 7) ---
-"p1.coors()" {
-  0.0, 0.0, 3.1415, 0.0, 0.0, 0.0, 0.0,
-  0.0, 0.0, 0.0
-}
-size: 24
+-------------------------
+ demo user defined generic types
+-------------------------
 
-"p2": PointN<T> {
-  0, 1, 2, 3, 4, 4, 3,
-  2, 1, 0
-}
+--- Stats<T> ---
 
---- show_type_scalar(p2, "p2") ---
-call name: "p2", type: "rust_hello_objects::points_generic::PointN<i32>"
-value: PointN { coor: [0, 1, 2, 3, 4, 4, 3, 2, 1, 0] }, size: 24
-p2.len() = 10
+  Stats { items: [1.5, 2.5, 3.0, -1.25, 0.5] }
+  max: 3.0
+  min: -1.25
+  sum: 6.25
+  avg: 1.25
 
---- p2.show("p2", 2, 7) ---
-"p2": PointN<T> {
-  0, 1, 2, 3, 4, 4, 3,
-  2, 1, 0
-}
+--- Demo<f64> ---
 
------------------------------------
-  Testing formats for collections
------------------------------------
+  Demo { 3.1415927 }
+  Demo { 42.0 }
+  Demo { 42.0 }
 
---- show_type_scalar(&v, "&v") ---
-call name: "&v", type: "alloc::vec::Vec<i32>"
-value: [0, -1, 2, -3, 4, -5, 6, -7, 8, -9, 10, -11, 12, -13, 14], size: 24
+--- PointN<i32> ---
 
---- show_fold(&v, 2, 5) ---
-  0, -1, 2, -3, 4,
-  -5, 6, -7, 8, -9,
-  10, -11, 12, -13, 14
+  "p": PointN<T> {
+    1, 2, 3, 2, 1
+  }
+  "p": PointN<T> {
+    1, 0, -1, 0, 1
+  }
 
---- let v = vec![0i32, ... ]; ---
---- fold(&v, 2, 12) ---
-  0, -1, 2, -3, 4, -5, 6, -7, 8, -9, 10, -11,
-  12, -13, 14
+  using immutable indexer:
+  value of p[0] is 1
 
---- let a = &[f64; 8]; ---
---- show_fold(a, 4, 5) ---
-    1.0, 2.5, -3.1, 4.3, 5.0,
-    6.0, 7.0, -8.0
+  using mutable indexer:
+--- p[0] = 3 ---
+  "p": PointN<T> {
+    3, 0, -1, 0, 1
+  }
+--- p[1] = 4 ---
+  "p": PointN<T> {
+    3, 4, -1, 0, 1
+  }
+
+-------------------------
+ demo_generic_functions
+-------------------------
+
+--- show_type<T:Debug>(_t, "name") ---
+
+  "v", type: "alloc::vec::Vec<i32>"
+  "m", type: "std::collections::hash::map::HashMap<&str, i32>"
+
+--- demo_indexer ---
+
+  [i32; 3]  [ 1, 2, 3 ]
+  Vec<i32>  [ 1, 2, 3 ]
+  PointN<f64>  [ 1.0, 2.0, -0.5 ]
 
 
   That's all Folks!
 
-C:\github\JimFawcett\Bits\Rust\rust_generics
->
+

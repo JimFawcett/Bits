@@ -46,6 +46,36 @@ void inline Demo<std::vector<int>>::show() {
   };
   std::cout << "]\n  }\n";
 }
+/* partial template specialization of Demo class */
+template<template<typename> typename V, typename T>
+class Demo<V<T>> {
+  Demo<V<T>>& operator=(const Demo<V<T>>& v) = default;
+  ~Demo() = default;
+  V<T>& value() { return val; }
+  void show() {
+    std::cout << "  Demo<V<T>> {\n  ";
+    std::cout << "  type V<T>: " 
+              << truncate(DisplayParams.trunc,typeid(val).name());  // show type
+    std::cout << ", size: " << sizeof(val) << "\n    value: [ ";
+    for (auto item : val) {
+      std::cout << item << " ";
+    };
+    std::cout << "]\n  }\n";
+  }
+private:
+  V<T> val;
+};
+// template<template<typename> typename V, typename T>
+// void Demo<V<T>>::show() {
+//   std::cout << "  Demo<V<T>> {\n  ";
+//   std::cout << "  type V<T>: " 
+//             << truncate(DisplayParams.trunc,typeid(val).name());  // show type
+//   std::cout << ", size: " << sizeof(val) << "\n    value: [ ";
+//   for (auto item : val) {
+//     std::cout << item << " ";
+//   };
+//   std::cout << "]\n  }\n";
+// }
 /*-------------------------------------------------------------------
   Stats<T>
   - Stats<T> holds a std::vector<T> and provides methods for

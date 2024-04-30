@@ -41,6 +41,31 @@ pub fn show_value_enum<T:Debug, I:Debug>(
   println!("\nsize: {}", std::mem::size_of::<T>());
 }
 /*---------------------------------------------------------
+  show_indexer<T:Debug>(nm:&str, s:&[T])
+  - accepts any collection that implements Deref to slice
+  - that includes array [T;N], slice T[N], Vec<T>, PointN<T>
+*/
+#[allow(clippy::needless_range_loop)]
+pub fn demo_indexer<T: Debug + Display>(nm:&str, s:&[T]) 
+{
+  print!("  {}", nm);
+  let max = s.len();
+  print!{"  [ {:?}", s[0]};
+  /* 1..max is range iterator */
+  for i in 1..max {
+      print!(", {:?}", s[i]);
+  }
+  println!(" ]");
+  /*---------------------------------------------
+    The code above is not idiomatic Rust.
+    Rust style prefers using iterators over indexing
+    like this:
+    for item in s.iter() {
+      print!("{item} ");
+    }
+  */
+}
+/*---------------------------------------------------------
   Show facts about a type's elements, e.g., name, type,
   value, and size.
   - show_type is generic function with Debug bound.
@@ -49,24 +74,24 @@ pub fn show_value_enum<T:Debug, I:Debug>(
     {:?} knows how to format them, but won't fold long
     sequences of elements. Use show_value_enum for that.
 */
-pub fn show_type_scalar<T:Debug>(t: &T, nm: &str) {
-  show_type(t, nm);
-  println!(
-    "value: {t:?}, size: {}", std::mem::size_of::<T>()
-  );
-}
+// pub fn show_type_scalar<T:Debug>(t: &T, nm: &str) {
+//   show_type(t, nm);
+//   println!(
+//     "value: {t:?}, size: {}", std::mem::size_of::<T>()
+//   );
+// }
 /*---------------------------------------------------------
 Show facts about an enumerable type's elements, e.g., 
 name, type, values, and size.
 - show_type is generic function with Debug bound.
   Using format "{:?} requires Debug."
 */
-pub fn show_type_enum<T:Debug, I:Debug>(t: &T, nm: &str, left:usize, width:usize) 
-  where for<'a> &'a T: IntoIterator<Item = &'a I>
-{
-  show_type(t, nm);
-  show_value_enum(t, nm, left, width);
-}
+// pub fn show_type_enum<T:Debug, I:Debug>(t: &T, nm: &str, left:usize, width:usize) 
+//   where for<'a> &'a T: IntoIterator<Item = &'a I>
+// {
+//   show_type(t, nm);
+//   show_value_enum(t, nm, left, width);
+// }
 /*--------------------------------------------------------- 
   build indent string with "left" spaces 
 */
@@ -146,10 +171,8 @@ pub fn show_fold<T:Debug, I:Debug>(t:&T, left:usize, width:usize)
   show string wrapped with long dotted lines above and below 
 */
 pub fn show_label(note: &str, n:usize) {
-  let mut line = String::new();
-  for _i in 0..n {
-    line.push('-');
-  }
+  let line = 
+    std::iter::repeat('-').take(n).collect::<String>();
   print!("\n{line}\n");
   print!("  {note}");
   print!("\n{line}\n");

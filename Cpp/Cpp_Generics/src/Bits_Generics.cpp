@@ -91,6 +91,16 @@ void demo_custom_type_Demo() {
   auto vs = std::vector<int> { 1, 2, 3 };
   Demo<std::vector<int>> demv(vs);
   demv.show();
+
+  // /*-------------------------------------------------------
+  //   partial specialization defined in Demo<T> class header
+  //   Demo.h and used here
+  // */
+  // auto svs = std::vector<double> { 1.0, 2.0, 3.0 };
+  // Demo<std::vector<double>> sdemv(svs);
+  // sdemv.show();
+  //
+  // compiler thinks that show is unspecialized
 }
 
 /*-- demonstrate custom type Stats<T> --*/

@@ -19,18 +19,18 @@ You can clone the repo from this link.
 
 mod analysis_generic;     // identify module source file
 use analysis_generic::*;  // import public functions and types
-mod points_generic;
-use points_generic::*;
 mod stats;
 use stats::*;
+mod points_generic;
+use points_generic::*;
 
 use std::{fmt::*, collections::HashMap};
 
 /*---------------------------------------------------------
-  Demo: user-defined generic type
+  HelloGeneric: user-defined generic type
   - Not very useful except as a demonstration of how
     to create a generic type.
-  - Demo instances hold a single value of T
+  - HelloGeneric instances hold a single value of T
   - Generic parameter T is required to implement traits
     Debug   - supports using debug format {:?}, 
     Default - supports using a default value, T:default(),
@@ -40,23 +40,23 @@ use std::{fmt::*, collections::HashMap};
     as function and method arguments. 
 */
 #[derive(Debug, Clone)]  // compiler generated code
-struct Demo<T>
+struct HelloGeneric<T>
   where T: Debug + Default + Clone
 {
   datum: T,
 }
-impl<T> Demo<T>
+impl<T> HelloGeneric<T>
   where T: Debug + Default + Clone
 {
   /* construct new instance with datum = d */
   fn new(d:T) -> Self {
-    Demo::<T> {
+    HelloGeneric::<T> {
       datum: d,
     }
   }
   /* construct new instance with default data value */
   fn default_new() -> Self {
-    Demo::<T> {
+    HelloGeneric::<T> {
       datum: T::default(),
     }
   }
@@ -70,7 +70,7 @@ impl<T> Demo<T>
   }
   /* print representation of an instance */
   fn show(&self) {
-    println!("  Demo {{ {:?} }}", self.datum);
+    println!("  HelloGeneric {{ {:?} }}", self.datum);
   }
 }
 
@@ -86,7 +86,7 @@ impl<T> Demo<T>
 
 fn demo_std_generic_types() {
 
-  show_note("demo standard generic types");
+  show_label("demo standard generic types", 32);
   println!();
 
   show_op("arrays: [T; N]");
@@ -128,9 +128,26 @@ fn demo_std_generic_types() {
   println!("    {:?}", m);
 }
 
+#[allow(non_snake_case)]
+fn demo_HelloGeneric() {
+
+  show_label(" demo user defined HelloGeneric type", 40);
+  println!();
+  show_op("HelloGeneric<T>");
+  println!();
+  
+  show_op("let mut h = HelloGeneric::<i32>::new(42)");
+  let mut h = HelloGeneric::<i32>::new(42);
+  h.show();
+  println!();
+
+  show_op("*h.value() = 84");
+  *h.value() = 84;
+  h.show();
+}
 fn demo_user_defined_generic_types() {
   
-  show_note("demo user defined generic types");
+  show_label("demo user defined generic types", 35);
   println!();
 
   show_op("Stats<T>");
@@ -145,7 +162,7 @@ fn demo_user_defined_generic_types() {
 
   show_op("Demo<f64>");
   println!();
-  let mut t = Demo::<f64>::new(3.1415927);
+  let mut t = HelloGeneric::<f64>::new(3.1415927);
   t.show();
   *t.value() = 42.0;
   t.show();
@@ -163,7 +180,7 @@ fn demo_user_defined_generic_types() {
   p.show("p", 2, 12);
 
   println!("\n  using immutable indexer:");
-  println!("  value of p[0] is {}", p[0]);
+  println!("  value of p[0] is {}\n", p[0]);
   println!("  using mutable indexer:");
   show_op("p[0] = 3");
   p[0] = 3;
@@ -172,47 +189,6 @@ fn demo_user_defined_generic_types() {
   p[1] = 4;
   p.show("p", 2, 12);
 
-}
-/*---------------------------------------------------------
-  generic functions
------------------------------------------------------------
-  show_type(_t:&T, nm:&str)
-  - Show input's call name and type
-  - doesn't consume input
-  - show_type is generic function with Debug bound.
-    Using format "{:?}" requires Debug.
-  - Underscore _t used in first argument tells the
-    compiler that _t will not be used and don't warn
-    about that.
-*/
-pub fn show_type<T:Debug>(_t: &T, nm: &str) {
-  let typename = std::any::type_name::<T>();
-  println!("  {nm:?}, type: {typename:?}");
-}
-/*---------------------------------------------------------
-  show_indexer<T:Debug>(nm:&str, s:&[T])
-  - accepts any collection that implements Deref to slice
-  - that includes array [T;N], slice T[N], Vec<T>, PointN<T>
-*/
-#[allow(clippy::needless_range_loop)]
-fn demo_indexer<T: Debug + Display>(nm:&str, s:&[T]) 
-{
-  print!("  {}", nm);
-  let max = s.len();
-  print!{"  [ {:?}", s[0]};
-  /* 1..max is range iterator */
-  for i in 1..max {
-      print!(", {:?}", s[i]);
-  }
-  println!(" ]");
-  /*---------------------------------------------
-    The code above is not idiomatic Rust.
-    Rust style prefers using iterators over indexing
-    like this:
-    for item in s.iter() {
-      print!("{item} ");
-    }
-  */
 }
 
 fn demo_generic_functions() {
@@ -240,126 +216,13 @@ fn demo_generic_functions() {
 */
 fn main() {
 
-  show_label("generic functions and types", 50);
+  show_label("generic functions and types", 35);
 
   demo_std_generic_types();
+  demo_HelloGeneric();
   demo_user_defined_generic_types();
 
   demo_generic_functions();
-  // show_label(
-  //   "std::library objects, string and vector<T>", 46
-  // );
-  // nl();
-
-  // show_op("let mut s1 = \"a string\".to_string()");
-  // let mut s1 = "a string".to_string();
-
-  // show_op("show_type_scalar(&s1, \"&s1\")");
-  // show_type_scalar(&s1, "&s1");
-  // nl();
-
-  // show_op("s1.push_str(\" and more\");");
-  // s1.push_str(" and more");
-  // show_type_scalar(&s1, "&s1");
-  // nl();
-  
-  // show_op("let mut v:Vec<i32> = vec![1, 2, 3, 2, 1];");
-  // let mut v: Vec<i32> = vec![1, 2, 3, 2, 1];
-  // show_type_scalar(&v, "&v");
-  // nl();
-  
-  // show_op("v.push(42);");
-  // v.push(42);
-  // show_type_scalar(&v, "&v");
-
-  // show_label("instances of user-defined types", 35);
-  // nl();
-
-  // /*-----------------------------------------------------
-  //   Type holding primitive arithmetic types, either
-  //   i32 or f64.  Easy to extend to all integer and float
-  //   types.
-  // */
-  // let v = vec![1.0, 2.5, -3.5, 4.0, 5.5];
-  // let s = Stats::<f64>::new(v);
-  // println!("s: {s:?}");
-  // println!("s.max() = {:?}", s.max());
-  // println!("s.min() = {:?}", s.min());
-  // println!("s.sum() = {:?}", s.sum());
-  // println!("s.avg() = {:?}", s.avg());
-  // println!();
-  
-  // let v: Vec<i32> = vec![1, -2, 3, -4, 5];
-  // let s: Stats<i32> = Stats::<i32>::new(v);
-  // println!("s: {s:?}");
-  // println!("s.max() = {:?}", s.max());
-  // println!("s.min() = {:?}", s.min());
-  // println!("s.sum() = {:?}", s.sum());
-  // println!("s.avg() = {:?}", s.avg());
-  // println!();
-
-  // let mut p1 = PointN::<f64>::new(10);
-  // p1.show("p1", 2, 7);
-
-  // show_op("show_type(p1, \"p1\")");
-  // show_type(&p1, "p1");
-
-  // show_op("show_value_enum(p1.coors(), \"p1\", 2, 7)");
-  // show_value_enum(p1.coors(), "p1.coors()", 2, 7);
-  // nl();
-  
-  // show_op("p1.coors()[2] = 3.1415");
-  // p1.coors()[2] = 3.1415;
-  // p1.show("p1", 2, 7);
-
-  // show_op("show_value_enum(p1.coors(), \"p1.coors()\", 2, 7)");
-  // show_value_enum(p1.coors(), "p1.coors()", 2, 7);
-  // nl();
-
-  // let p2 = 
-  //   PointN::<i32>::new(1).init(
-  //     vec![0, 1, 2, 3, 4, 4, 3, 2, 1, 0]
-  //   );
-  // p2.show("p2", 2, 7);
-  // nl();
-
-  // show_op("show_type_scalar(p2, \"p2\")");
-  // show_type_scalar(&p2, "p2");
-  
-  // println!("p2.len() = {:?}", p2.len());
-  // nl();
-
-  // show_op("p2.show(\"p2\", 2, 7)");
-  // p2.show("p2", 2, 7);
-
-  // show_label("Testing formats for collections", 35);
-  // nl();
-
-  // let v = 
-  //   vec![
-  //     0i32, -1, 2, -3, 4, -5, 6, -7, 8, -9, 
-  //     10, -11, 12, -13, 14
-  //   ];
-
-  // show_op("show_type_scalar(&v, \"&v\")");
-  // show_type_scalar(&v, "&v");
-  // nl();
-
-  // show_op("show_fold(&v, 2, 5)");
-  // show_fold(&v, 2, 5);
-  // nl();
-
-  // show_op("let v = vec![0i32, ... ];");
-  // show_op("fold(&v, 2, 12)");
-  // let stmp = fold(&v, 2, 12);
-  // println!("{stmp}");
-  // nl();
-
-  // show_op("let a = &[f64; 8];");
-  // let a = 
-  //   &[1.0, 2.5, -3.1, 4.3, 5.0, 6.0, 7.0, -8.0];
-  // show_op("show_fold(a, 4, 5)");
-  // show_fold(a, 4, 5);
   
   print!("\n\n  That's all Folks!\n\n");
 }
