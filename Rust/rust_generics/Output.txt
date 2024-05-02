@@ -1,10 +1,10 @@
---------------------------------------------------
+-----------------------------------
   generic functions and types
---------------------------------------------------
+-----------------------------------
 
--------------------------
- demo standard generic types
--------------------------
+--------------------------------
+  demo standard generic types
+--------------------------------
 
 --- arrays: [T; N] ---
 
@@ -24,11 +24,29 @@
 --- maps: HashMap<K,V> ---
 
   maps: HashMap<&str, i32>
-    {"one": 1, "two": 2, "zero": 0, "three": 3}
+    {"zero": 0, "two": 2, "three": 3, "one": 1}
 
--------------------------
- demo user defined generic types
--------------------------
+----------------------------------------
+   demo user defined HelloGeneric type
+----------------------------------------
+
+--- HelloGeneric<T> ---
+
+--- let mut h = HelloGeneric::<i32>::new(42) ---
+  HelloGeneric { 42 }
+
+--- *h.value() = 84 ---
+  HelloGeneric { 84 }
+
+--- let c = h.clone() ---
+  HelloGeneric { 84 }
+
+--- let n = h : transfer ownership of datum ---
+  HelloGeneric { 84 }
+
+----------------------------------------
+  demo Arithmetic Trait with Stats<T>
+----------------------------------------
 
 --- Stats<T> ---
 
@@ -38,17 +56,17 @@
   sum: 6.25
   avg: 1.25
 
---- Demo<f64> ---
-
-  Demo { 3.1415927 }
-  Demo { 42.0 }
-  Demo { 42.0 }
+----------------------------------------
+  demo indexing with PointN<T>
+----------------------------------------
 
 --- PointN<i32> ---
 
   "p": PointN<T> {
     1, 2, 3, 2, 1
   }
+
+--- *p.coors() = vec![1, 0, -1, 0, 1] ---
   "p": PointN<T> {
     1, 0, -1, 0, 1
   }
@@ -72,8 +90,8 @@
 
 --- show_type<T:Debug>(_t, "name") ---
 
-  "v", type: "alloc::vec::Vec<i32>"
-  "m", type: "std::collections::hash::map::HashMap<&str, i32>"
+call name: "v", type: "alloc::vec::Vec<i32>"
+call name: "m", type: "std::collections::hash::map::HashMap<&str, i32>"
 
 --- demo_indexer ---
 
@@ -84,4 +102,5 @@
 
   That's all Folks!
 
-
+C:\github\JimFawcett\Bits\Rust\rust_generics
+>

@@ -69,4 +69,16 @@ pub fn demo_HelloGeneric() {
   show_op("*h.value() = 84");
   *h.value() = 84;
   h.show();
+  println!();
+
+  show_op("let c = h.clone()");
+  let c = h.clone();  // h still valid
+  c.show();
+  println!();
+
+  show_op("let n = h : transfer ownership of datum");
+  let n = h;  // move ownership of datum to h
+  n.show();
+  
+  //h.show();  // h invalid, been moved
 }
