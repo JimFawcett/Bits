@@ -94,3 +94,32 @@ impl<T> std::ops::Deref for PointN<T>
     &self.coor
   }
 }
+/*---------------------------------------------------------
+  Demonstrate user-defined PointN<T> type
+*/
+pub fn demo_pointn() {
+
+  show_label("demo indexing with PointN<T>", 40);
+  println!();
+
+  show_op("PointN<i32>");
+  println!();
+  let mut p = PointN::<i32>::new(0)
+         .init(vec![1, 2, 3, 2, 1]);
+  p.show("p", 2, 12);
+  println!();
+  show_op("*p.coors() = vec![1, 0, -1, 0, 1]");
+  *p.coors() = vec![1, 0, -1, 0, 1];
+  p.show("p", 2, 12);
+
+  println!("\n  using immutable indexer:");
+  println!("  value of p[0] is {}\n", p[0]);
+  println!("  using mutable indexer:");
+  show_op("p[0] = 3");
+  p[0] = 3;
+  p.show("p", 2, 12);
+  show_op("p[1] = 4");
+  p[1] = 4;
+  p.show("p", 2, 12);
+
+}

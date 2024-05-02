@@ -9,8 +9,10 @@
 
 use std::ops::*;
 use std::cmp::*;
-use std::convert::{Into};
+use std::convert::Into;
 use std::fmt::Debug;
+use crate::analysis_generic;
+use analysis_generic::*;
 
 pub trait Arithmetic<T = Self>: Add<Output=T> + Sub<Output=T> 
     + Mul<Output=T> + Div<Output=T> + PartialEq + PartialOrd
@@ -69,3 +71,21 @@ impl<T: Arithmetic> Stats<T>
     num/den
   }
 }
+/*---------------------------------------------------------
+  Demonstrate user-defined Stats<T> type
+*/
+pub fn demo_stats() {
+  show_label("demo Arithmetic Trait with Stats<T>", 40);
+  println!();
+
+  show_op("Stats<T>");
+  println!();
+  let s = Stats::<f64>::new(vec![1.5, 2.5, 3.0, -1.25, 0.5]);
+  println!("  {:?}", s);
+  println!("  max: {:?}", s.max());
+  println!("  min: {:?}", s.min());
+  println!("  sum: {:?}", s.sum());
+  println!("  avg: {:?}", s.avg());
+  // println!();
+}
+

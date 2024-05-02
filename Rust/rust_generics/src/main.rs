@@ -19,60 +19,83 @@ You can clone the repo from this link.
 
 mod analysis_generic;     // identify module source file
 use analysis_generic::*;  // import public functions and types
+mod hello_generic;
+use hello_generic::*;
 mod stats;
 use stats::*;
 mod points_generic;
 use points_generic::*;
 
-use std::{fmt::*, collections::HashMap};
+use std::collections::HashMap;
 
-/*---------------------------------------------------------
-  HelloGeneric: user-defined generic type
-  - Not very useful except as a demonstration of how
-    to create a generic type.
-  - HelloGeneric instances hold a single value of T
-  - Generic parameter T is required to implement traits
-    Debug   - supports using debug format {:?}, 
-    Default - supports using a default value, T:default(),
-    Clone   - implements a copy of the physical type
-  - Specified traits, like those above, are often called
-    bounds because they limit the types that can be used
-    as function and method arguments. 
-*/
-#[derive(Debug, Clone)]  // compiler generated code
-struct HelloGeneric<T>
-  where T: Debug + Default + Clone
-{
-  datum: T,
-}
-impl<T> HelloGeneric<T>
-  where T: Debug + Default + Clone
-{
-  /* construct new instance with datum = d */
-  fn new(d:T) -> Self {
-    HelloGeneric::<T> {
-      datum: d,
-    }
-  }
-  /* construct new instance with default data value */
-  fn default_new() -> Self {
-    HelloGeneric::<T> {
-      datum: T::default(),
-    }
-  }
-  /*  
-    As shown, value() is equivalent to making datum public.
-    However value method supports adding code to modify the
-    return value.
-  */
-  fn value(&mut self) -> &mut T {
-    &mut self.datum
-  }
-  /* print representation of an instance */
-  fn show(&self) {
-    println!("  HelloGeneric {{ {:?} }}", self.datum);
-  }
-}
+// /*---------------------------------------------------------
+//   HelloGeneric: user-defined generic type
+//   - Not very useful except as a demonstration of how
+//     to create a generic type.
+//   - HelloGeneric instances hold a single value of T
+//   - Generic parameter T is required to implement traits
+//     Debug   - supports using debug format {:?}, 
+//     Default - supports using a default value, T:default(),
+//     Clone   - implements a copy of the physical type
+//   - Specified traits, like those above, are often called
+//     bounds because they limit the types that can be used
+//     as function and method arguments. 
+// */
+// #[derive(Debug, Clone)]  // compiler generated code
+// struct HelloGeneric<T>
+//   where T: Debug + Default + Clone
+// {
+//   datum: T,
+// }
+// impl<T> HelloGeneric<T>
+//   where T: Debug + Default + Clone
+// {
+//   /* construct new instance with datum = d */
+//   fn new(d:T) -> Self {
+//     HelloGeneric::<T> {
+//       datum: d,
+//     }
+//   }
+//   /* construct new instance with default data value */
+//   fn default_new() -> Self {
+//     HelloGeneric::<T> {
+//       datum: T::default(),
+//     }
+//   }
+//   /*  
+//     As shown, value() is equivalent to making datum public.
+//     However value method supports adding code to modify the
+//     return value.
+//   */
+//   fn value(&mut self) -> &mut T {
+//     &mut self.datum
+//   }
+//   /* print representation of an instance */
+//   fn show(&self) {
+//     println!("  HelloGeneric {{ {:?} }}", self.datum);
+//   }
+// }
+// /*---------------------------------------------------------
+//   Demonstrate creation of HelloGeneric type and use
+//   of its methods.
+// */
+// #[allow(non_snake_case)]
+// fn demo_HelloGeneric() {
+
+//   show_label(" demo user defined HelloGeneric type", 40);
+//   println!();
+//   show_op("HelloGeneric<T>");
+//   println!();
+  
+//   show_op("let mut h = HelloGeneric::<i32>::new(42)");
+//   let mut h = HelloGeneric::<i32>::new(42);
+//   h.show();
+//   println!();
+
+//   show_op("*h.value() = 84");
+//   *h.value() = 84;
+//   h.show();
+// }
 
 /*---------------------------------------------------------
   We will demonstrate a generic type PointN<T>, defined
@@ -128,67 +151,11 @@ fn demo_std_generic_types() {
   println!("    {:?}", m);
 }
 
-#[allow(non_snake_case)]
-fn demo_HelloGeneric() {
-
-  show_label(" demo user defined HelloGeneric type", 40);
-  println!();
-  show_op("HelloGeneric<T>");
-  println!();
-  
-  show_op("let mut h = HelloGeneric::<i32>::new(42)");
-  let mut h = HelloGeneric::<i32>::new(42);
-  h.show();
-  println!();
-
-  show_op("*h.value() = 84");
-  *h.value() = 84;
-  h.show();
-}
 fn demo_user_defined_generic_types() {
   
-  show_label("demo user defined generic types", 35);
-  println!();
-
-  show_op("Stats<T>");
-  println!();
-  let s = Stats::<f64>::new(vec![1.5, 2.5, 3.0, -1.25, 0.5]);
-  println!("  {:?}", s);
-  println!("  max: {:?}", s.max());
-  println!("  min: {:?}", s.min());
-  println!("  sum: {:?}", s.sum());
-  println!("  avg: {:?}", s.avg());
-  println!();
-
-  show_op("Demo<f64>");
-  println!();
-  let mut t = HelloGeneric::<f64>::new(3.1415927);
-  t.show();
-  *t.value() = 42.0;
-  t.show();
-  let tc = t.clone();
-  tc.show();
-  println!();
-
-  show_op("PointN<i32>");
-  println!();
-
-  let mut p = PointN::<i32>::new(0)
-         .init(vec![1, 2, 3, 2, 1]);
-  p.show("p", 2, 12);
-  *p.coors() = vec![1, 0, -1, 0, 1];
-  p.show("p", 2, 12);
-
-  println!("\n  using immutable indexer:");
-  println!("  value of p[0] is {}\n", p[0]);
-  println!("  using mutable indexer:");
-  show_op("p[0] = 3");
-  p[0] = 3;
-  p.show("p", 2, 12);
-  show_op("p[1] = 4");
-  p[1] = 4;
-  p.show("p", 2, 12);
-
+  demo_HelloGeneric();
+  demo_stats();
+  demo_pointn();
 }
 
 fn demo_generic_functions() {
@@ -219,9 +186,7 @@ fn main() {
   show_label("generic functions and types", 35);
 
   demo_std_generic_types();
-  demo_HelloGeneric();
   demo_user_defined_generic_types();
-
   demo_generic_functions();
   
   print!("\n\n  That's all Folks!\n\n");
