@@ -28,18 +28,18 @@ pub fn show_type<T:Debug>(_t: &T, nm: &str) {
     satisfy Debug trait.
   - Does not consume input t since passed by reference.
 */
-pub fn show_value_enum<T:Debug, I:Debug>(
-  t: &T, nm: &str, left:usize, width:usize
-) 
-  where for<'a> &'a T: IntoIterator<Item = &'a I>
-{
-  println!("{nm:?} {{");
-  // print!("{nm:?} {{\n");
-  //show_fold(&t, left, width);
-  show_fold(t, left, width);
-  print!("}}");
-  println!("\nsize: {}", std::mem::size_of::<T>());
-}
+// pub fn show_value_enum<T:Debug, I:Debug>(
+//   t: &T, nm: &str, left:usize, width:usize
+// ) 
+//   where for<'a> &'a T: IntoIterator<Item = &'a I>
+// {
+//   println!("{nm:?} {{");
+//   // print!("{nm:?} {{\n");
+//   //show_fold(&t, left, width);
+//   show_fold(t, left, width);
+//   print!("}}");
+//   println!("\nsize: {}", std::mem::size_of::<T>());
+// }
 /*---------------------------------------------------------
   show_indexer<T:Debug>(nm:&str, s:&[T])
   - accepts any collection that implements Deref to slice
@@ -167,7 +167,7 @@ pub fn show_fold<T:Debug, I:Debug>(t:&T, left:usize, width:usize)
 {
   println!("{}",fold(t, left, width));
 }
-/*---------------------------------------------------------
+/*------------------------------------------------------------
   show string wrapped with long dotted lines above and below 
 */
 pub fn show_label(note: &str, n:usize) {
