@@ -1,0 +1,7 @@
+C:\github\JimFawcett\Bits\Rust\rust_generics
+> cargo build
+   Compiling rust_hello_objects v0.1.0 (C:\github\JimFawcett\Bits\Rust\rust_generics)
+    Finished dev [unoptimized + debuginfo] target(s) in 0.41s
+C:\github\JimFawcett\Bits\Rust\rust_generics
+> 
+

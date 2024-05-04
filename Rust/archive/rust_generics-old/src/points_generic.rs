@@ -14,36 +14,28 @@ use analysis_generic::*;        // import public functions and types
   - Request compiler implement traits Debug & Clone
 */
 #[derive(Debug, Clone)]
-pub struct Point<T, const N: usize>
+pub struct PointN<T>
 where
   T: Debug + Default + Clone
 {
   coor: Vec<T>,
 }
-impl<T, const N: usize> Point<T, N>
+impl<T> PointN<T>
 where
 T: Debug + Default + Clone
 {
   /*-- constructor --*/
-  pub fn new() -> Point<T, N> {
-    Point::<T, N> {
-      coor: vec![T::default(); N],
+  pub fn new(n: usize) -> PointN<T> {
+    PointN::<T> {
+      coor: vec![T::default(); n],
     }
   }
   /*------------------------------------------------------- 
-    Point<T, N>::init(&self, v:Vec<T>) fills coor with 
-    first N values from v and sets any remainder to
-    T::default(). 
+    init(...) moves new coordinate vector into coor and
+    overrides any specified n supplied in new(n: usize) 
   -------------------------------------------------------*/
-  pub fn init(mut self, coord: &Vec<T>) -> Point<T, N> {
-    for i in 1..N {
-      if i < coord.len() {
-        self.coor[i] = coord[i].clone();
-      }
-      else {
-        self.coor[i] = T::default();
-      }
-    }
+  pub fn init(mut self, coord: Vec<T>) -> PointN<T> {
+    self.coor = coord;
     self
   }
   pub fn len(&self) -> usize {
@@ -55,13 +47,13 @@ T: Debug + Default + Clone
   }
   /*-- displays name, type, and coordinates --*/
   pub fn show(&self, nm:&str, left: usize, width:usize) {
-    println!("  {nm:?}: Point<T, N> {{");
+    println!("  {nm:?}: PointN<T> {{");
     show_fold(&self.coor, left + 2, width);
     println!("  }}")
   }
 }
 /*-- implements const indexer -----------------*/
-impl<T:Debug, const N:usize, Idx> std::ops::Index<Idx> for Point<T, N> 
+impl<T:Debug, Idx> std::ops::Index<Idx> for PointN<T> 
     where
         T:Debug + Default + Clone, 
         Idx: std::slice::SliceIndex<[T]>
@@ -73,7 +65,7 @@ impl<T:Debug, const N:usize, Idx> std::ops::Index<Idx> for Point<T, N>
     }
 }
 /*-- implements mutable indexer ---------------*/
-impl<T, const N: usize, Idx> std::ops::IndexMut<Idx> for Point<T, N> 
+impl<T, Idx> std::ops::IndexMut<Idx> for PointN<T> 
     where
         T:Debug + Default + Clone, 
         Idx: std::slice::SliceIndex<[T]>
@@ -83,7 +75,7 @@ impl<T, const N: usize, Idx> std::ops::IndexMut<Idx> for Point<T, N>
     }
 }
 /* explicit conversion to slice &[T] */
-impl<T, const N: usize> AsRef<[T]> for Point<T, N>
+impl<T> AsRef<[T]> for PointN<T>
   where 
     T: ?Sized,
     T: Debug + Display + Default + Clone,
@@ -93,7 +85,7 @@ impl<T, const N: usize> AsRef<[T]> for Point<T, N>
   }
 }
 /* implicit conversion to slice &[T] */
-impl<T, const N: usize> std::ops::Deref for Point<T, N> 
+impl<T> std::ops::Deref for PointN<T> 
   where T: Debug + Default + Clone,
 {
   type Target = [T];
@@ -107,13 +99,13 @@ impl<T, const N: usize> std::ops::Deref for Point<T, N>
 */
 pub fn demo_pointn() {
 
-  show_label("demo indexing with PointN<132, 5>", 40);
+  show_label("demo indexing with PointN<T>", 40);
   println!();
 
-  show_op("PointN<i32, 5>");
+  show_op("PointN<i32>");
   println!();
-  let mut p = Point::<i32, 5>::new()
-         .init(&vec![1, 2, 3, 2, 1]);
+  let mut p = PointN::<i32>::new(0)
+         .init(vec![1, 2, 3, 2, 1]);
   p.show("p", 2, 12);
   println!();
   show_op("*p.coors() = vec![1, 0, -1, 0, 1]");

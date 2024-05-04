@@ -1,0 +1,106 @@
+-----------------------------------
+  generic functions and types
+-----------------------------------
+
+--------------------------------
+  demo standard generic types
+--------------------------------
+
+--- arrays: [T; N] ---
+
+  [1, 2, 3, 2, 1]
+  [1.0, 1.5, 2.0, 1.5, 1.0]
+
+--- slices: &T[m..n] ---
+
+  [2, 3, 2, 1]
+  [2.0, 1.5]
+
+--- vectors: Vec<T> ---
+
+  Vec<i32> [1, 2, 3, 2, 1]
+  Vec<(i32, &str)> [(1, "one"), (2, "two")]
+
+--- maps: HashMap<K,V> ---
+
+  maps: HashMap<&str, i32>
+    {"zero": 0, "two": 2, "three": 3, "one": 1}
+
+----------------------------------------
+   demo user defined HelloGeneric type
+----------------------------------------
+
+--- HelloGeneric<T> ---
+
+--- let mut h = HelloGeneric::<i32>::new(42) ---
+  HelloGeneric { 42 }
+
+--- *h.value() = 84 ---
+  HelloGeneric { 84 }
+
+--- let c = h.clone() ---
+  HelloGeneric { 84 }
+
+--- let n = h : transfer ownership of datum ---
+  HelloGeneric { 84 }
+
+----------------------------------------
+  demo Arithmetic Trait with Stats<T>
+----------------------------------------
+
+--- Stats<T> ---
+
+  Stats { items: [1.5, 2.5, 3.0, -1.25, 0.5] }
+  max: 3.0
+  min: -1.25
+  sum: 6.25
+  avg: 1.25
+
+----------------------------------------
+  demo indexing with PointN<T>
+----------------------------------------
+
+--- PointN<i32> ---
+
+  "p": PointN<T> {
+    1, 2, 3, 2, 1
+  }
+
+--- *p.coors() = vec![1, 0, -1, 0, 1] ---
+  "p": PointN<T> {
+    1, 0, -1, 0, 1
+  }
+
+  using immutable indexer:
+  value of p[0] is 1
+
+  using mutable indexer:
+--- p[0] = 3 ---
+  "p": PointN<T> {
+    3, 0, -1, 0, 1
+  }
+--- p[1] = 4 ---
+  "p": PointN<T> {
+    3, 4, -1, 0, 1
+  }
+
+-------------------------
+ demo_generic_functions
+-------------------------
+
+--- show_type<T:Debug>(_t, "name") ---
+
+call name: "v", type: "alloc::vec::Vec<i32>"
+call name: "m", type: "std::collections::hash::map::HashMap<&str, i32>"
+
+--- demo_indexer ---
+
+  [i32; 3]  [ 1, 2, 3 ]
+  Vec<i32>  [ 1, 2, 3 ]
+  PointN<f64>  [ 1.0, 2.0, -0.5 ]
+
+
+  That's all Folks!
+
+C:\github\JimFawcett\Bits\Rust\rust_generics
+>

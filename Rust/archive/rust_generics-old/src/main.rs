@@ -106,8 +106,8 @@ fn demo_generic_functions() {
   println!();
   demo_indexer("[i32; 3]", &[1, 2, 3]);
   demo_indexer("Vec<i32>", &v);
-  let p = Point::<f64, 3>::new().init(&vec![1.0, 2.0, -0.5]);
-  demo_indexer("Point<f64, 3>", &p);
+  let p = PointN::<f64>::new(3).init(vec![1.0, 2.0, -0.5]);
+  demo_indexer("PointN<f64>", &p);
 }
 /*---------------------------------------------------------
   Demo object instances in action
