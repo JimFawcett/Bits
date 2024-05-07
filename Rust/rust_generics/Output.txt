@@ -24,7 +24,7 @@
 --- maps: HashMap<K,V> ---
 
   maps: HashMap<&str, i32>
-    {"zero": 0, "two": 2, "three": 3, "one": 1}
+    {"zero": 0, "one": 1, "two": 2, "three": 3}
 
 ----------------------------------------
    demo user defined HelloGeneric type
@@ -57,17 +57,17 @@
   avg: 1.25
 
 ----------------------------------------
-  demo indexing with PointN<T>
+  demo indexing with PointN<132, 5>
 ----------------------------------------
 
---- PointN<i32> ---
+--- PointN<i32, 5> ---
 
-  "p": PointN<T> {
-    1, 2, 3, 2, 1
+  "p": Point<T, N> {
+    0, 2, 3, 2, 1
   }
 
 --- *p.coors() = vec![1, 0, -1, 0, 1] ---
-  "p": PointN<T> {
+  "p": Point<T, N> {
     1, 0, -1, 0, 1
   }
 
@@ -76,11 +76,11 @@
 
   using mutable indexer:
 --- p[0] = 3 ---
-  "p": PointN<T> {
+  "p": Point<T, N> {
     3, 0, -1, 0, 1
   }
 --- p[1] = 4 ---
-  "p": PointN<T> {
+  "p": Point<T, N> {
     3, 4, -1, 0, 1
   }
 
@@ -97,10 +97,8 @@ call name: "m", type: "std::collections::hash::map::HashMap<&str, i32>"
 
   [i32; 3]  [ 1, 2, 3 ]
   Vec<i32>  [ 1, 2, 3 ]
-  PointN<f64>  [ 1.0, 2.0, -0.5 ]
+  Point<f64, 3>  [ 0.0, 2.0, -0.5 ]
 
 
   That's all Folks!
 
-C:\github\JimFawcett\Bits\Rust\rust_generics
->

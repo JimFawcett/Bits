@@ -36,7 +36,7 @@ T: Debug + Default + Clone
     T::default(). 
   -------------------------------------------------------*/
   pub fn init(mut self, coord: &Vec<T>) -> Point<T, N> {
-    for i in 1..N {
+    for i in 0..N {
       if i < coord.len() {
         self.coor[i] = coord[i].clone();
       }

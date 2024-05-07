@@ -59,13 +59,19 @@ fn demo_std_generic_types() {
 
   show_op("vectors: Vec<T>");
   println!();
+
+  /*-- vector of copy type --*/
   let mut v = Vec::<i32>::new();
-  v.push(1);
-  v.push(2);
-  v.push(3);
-  v.push(2);
-  v.push(1);
+  let s = &vec![1, 2, 3, 2, 1];
+  v.extend_from_slice(s);
+  /*
+    This works because the elements are i32, i.e., copy.
+    To load a vector with non-copy types use:
+    v.extend(s.iter().cloned());
+  */
   println!("  Vec<i32> {:?}", v);
+
+  /*--- vector of tuple (i32, &str) --*/
   let mut v2 = Vec::<(i32,&str)>::new();
   v2.push((1, "one"));
   v2.push((2, "two"));

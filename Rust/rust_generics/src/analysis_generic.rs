@@ -46,7 +46,8 @@ pub fn show_type<T:Debug>(_t: &T, nm: &str) {
   - that includes array [T;N], slice T[N], Vec<T>, PointN<T>
 */
 #[allow(clippy::needless_range_loop)]
-pub fn demo_indexer<T: Debug + Display>(nm:&str, s:&[T]) 
+pub fn demo_indexer<T>(nm:&str, s:&[T])
+  where T: Debug + Display 
 {
   print!("  {}", nm);
   let max = s.len();
@@ -108,15 +109,16 @@ pub fn offset(left: usize) -> String {
   https://stackoverflow.com/questions/50101842/how-to-find-the-last-occurrence-of-a-char-in-a-string
 */
 fn find_last_utf8(s: &str, chr: char) -> Option<usize> {
-/*-- alternate implementation --*/
+  s.chars().rev().position(|c| c== chr)
+    .map(|rev_pos| s.chars().count() - rev_pos - 1)
+
+    /*-- alternate implementation --*/
   // if let Some(rev_pos) = 
   //   s.chars().rev().position(|c| c == chr) {
   //     Some(s.chars().count() - rev_pos - 1)
   // } else {
   //     None
   // }
-  s.chars().rev().position(|c| c== chr)
-    .map(|rev_pos| s.chars().count() - rev_pos - 1)
 }
 /*---------------------------------------------------------
   fold an enumerable's elements into rows of w elements
@@ -132,7 +134,14 @@ pub fn fold<T, I:Debug>(
 {
   let mut accum = String::new();
   accum += &offset(left);
-
+  
+  for (i, item) in t.into_iter().enumerate() {
+    accum += &format!("{item:?}, ");
+    if ((i + 1) % width) == 0 && i != 0 {
+        accum += "\n";
+        accum += &offset(left);
+    }
+  }
   /*-- Alternate direct implementation --*/
   //let mut i = 0usize;
   // for item in t {
@@ -144,13 +153,6 @@ pub fn fold<T, I:Debug>(
   //   i += 1;
   // }
   
-  for (i, item) in t.into_iter().enumerate() {
-    accum += &format!("{item:?}, ");
-    if ((i + 1) % width) == 0 && i != 0 {
-        accum += "\n";
-        accum += &offset(left);
-    }
-  }
   let opt = find_last_utf8(&accum, ',');
   if let Some(index) = opt {
     accum.truncate(index);
