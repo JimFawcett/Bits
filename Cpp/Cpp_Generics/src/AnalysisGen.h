@@ -7,7 +7,8 @@
   - You can skip the hard parts until then, without loss
     of understanding.
 */
-
+#ifndef AnalysisGen
+#define AnalysisGen
 #include <typeinfo>     // typeid
 #include <utility>      // move()
 #include <sstream>      // stringstream
@@ -21,50 +22,71 @@ namespace Analysis {
     definitions below may be placed in any order. That's
     needed because C++ requires declaration before use.
   */
-  template<typename T, int N>
-  void showArray(std::array<T,N> &a);
-  template<typename C>
-  void showColl(const C& c);
-  template<typename K, typename V>
-  void showMap(const std::map<K,V> &m);
-  template<typename T>
-  void showType(T t, const std::string &nm, const std::string& suffix = "");
-  void showNote(const std::string& txt, const std::string& suffix = "");
-  void showOp(const std::string& opstr, const std::string& suffix = "");
-  void print(const std::string& txt = "");
-  void println(const std::string& txt = "");
+  // template<typename T, int N>
+  // void showArray(std::array<T,N> &a);
+  // template<typename C>
+  // void showColl(const C& c);
+  // template<typename K, typename V>
+  // void showMap(const std::map<K,V> &m);
+  // template<typename T>
+  // inline void showType(T t, const std::string &nm, const std::string& suffix = "");
+  // void showNote(const std::string& txt, const std::string& suffix = "");
+  // void showOp(const std::string& opstr, const std::string& suffix = "");
+  // void print(const std::string& txt = "");
+  // void println(const std::string& txt = "");
   std::string truncate(size_t N, const char* pStr);
-  std::string indent(size_t n);
-  template<typename T>
-  std::string fold(std::vector<T>& v, size_t left, size_t width);
-  template<typename T>
-  std::string formatColl(
-    const T& t, const std::string& nm,
-    const std::string& suffix = "", size_t left = 2, size_t width = 7
-  );
-  template<typename T>
-  std::string formatScalar(
-    const T& t, const std::string& nm, 
-    const std::string& suffix = "", size_t left = 2
-  );
-  template<typename T>
-  std::string formatString(
-    const T& t, const std::string& nm, const std::string& suffix,
-    size_t left = 2
-  );
-  template<typename T>
-  std::string format(
-    const T& t, const std::string& nm, const std::string& suffix = "",
-    size_t left = 2, size_t width = 7
-  );
+  // std::string indent(size_t n);
+  // template<typename T>
+  // std::string fold(std::vector<T>& v, size_t left, size_t width);
+  // template<typename T>
+  // std::string formatColl(
+  //   const T& t, const std::string& nm,
+  //   const std::string& suffix = "", size_t left = 2, size_t width = 7
+  // );
+  // template<typename T>
+  // std::string formatScalar(
+  //   const T& t, const std::string& nm, 
+  //   const std::string& suffix = "", size_t left = 2
+  // );
+  // template<typename T>
+  // std::string formatString(
+  //   const T& t, const std::string& nm, const std::string& suffix,
+  //   size_t left = 2
+  // );
+  // template<typename T>
+  // std::string format(
+  //   const T& t, const std::string& nm, const std::string& suffix = "",
+  //   size_t left = 2, size_t width = 7
+  // );
   /*-- end of function declarations --*/
 
   /*------------------------------------------------------------
     Display and Analysis functions and global definitions
   --------------------------------------------------------------
   */
-  const std::string nl = "\n";
-  /*------------------------------------------------------------
+  //inline const std::string nl = "\n";
+  static std::string const nl = "\n";
+
+  /*-----------------------------------------------
+    Display emphasized line
+  */
+  inline void showOp(const std::string& opstr, const std::string& suffix = "") {
+    std::cout << "\n  --- " << opstr << " ---\n" << suffix;
+  }
+  /*-----------------------------------------------
+    Display text after newline and indentation
+  */
+  inline void print(const std::string& txt = "") {
+    std::cout << txt;
+  }
+  /*-----------------------------------------------
+    Display text after newline and indentation
+    - provides trailing newline
+  */
+  inline void println(const std::string& txt = "") {
+    std::cout << txt << "\n";
+  }
+ /*------------------------------------------------------------
     Mutable globals are a common source of bugs.  We try not
     to use them, but will use DisplayParams here to control how
     the insertion operator sends instances to standard output.
@@ -83,7 +105,7 @@ namespace Analysis {
     - requires DisplayParams
   */
   template<typename T>
-  void showType(T t, const std::string &callname, const std::string& suffix) {
+  void showType(T t, const std::string &callname, const std::string& suffix = "") {
     std::cout << "\n  " << callname;          // show name at call site
     std::cout << " type: " 
               << truncate(DisplayParams.trunc,typeid(t).name());  // show type
@@ -204,8 +226,8 @@ namespace Analysis {
   */
   template<typename Coll>
   std::string formatColl(
-    const Coll& c, const std::string& nm, const std::string& suffix,
-    size_t left, size_t width
+    const Coll& c, const std::string& nm, const std::string& suffix = "",
+    size_t left = 2, size_t width = 7
   ) {
     std::stringstream out;
     out << indent(left) << nm << ": {\n" << indent(left + 2);
@@ -230,8 +252,8 @@ namespace Analysis {
   */
   template<typename T>
   std::string formatScalar(
-    const T& t, const std::string& nm, const std::string& suffix,
-    size_t left
+    const T& t, const std::string& nm, const std::string& suffix = "",
+    size_t left = 2
   ) {
     std::stringstream out;
     out << "\n" << indent(left) << nm << ": " << t << suffix;
@@ -243,8 +265,8 @@ namespace Analysis {
   */
   template<typename T>
   std::string formatString(
-    const T& t, const std::string& nm, const std::string& suffix,
-    size_t left
+    const T& t, const std::string& nm, const std::string& suffix = "",
+    size_t left = 2
   ) {
     std::stringstream out;
     out << "\n" << indent(left) << nm << ": \"" << t << "\"" << suffix;
@@ -282,8 +304,8 @@ namespace Analysis {
   */
   template<typename T>
   std::string format(
-    const T& t, const std::string& nm, const std::string& suffix,
-    size_t left, size_t width
+    const T& t, const std::string& nm, const std::string& suffix = "",
+    size_t left = 2, size_t width = 7
   ) {
     if constexpr(is_iterable_v<T>) {  // decision at compile-time
       return formatColl(t, nm, suffix, left, width);
@@ -295,29 +317,33 @@ namespace Analysis {
   /*-----------------------------------------------
     Display emphasized text
   */
-  inline void showNote(const std::string& txt, const std::string& suffix) {
-    print("--------------------------------------------------");
-    print("  " + txt);
-    print("--------------------------------------------------");
+  inline void showNote(
+    const std::string& txt, size_t width = 40, const std::string& suffix = ""
+  ) {
+    auto line = std::string(width, '-');
+    println(line);
+    println("  " + txt);
+    println(line);
     std::cout << suffix;
   }
-  /*-----------------------------------------------
-    Display emphasized line
-  */
-  inline void showOp(const std::string& opstr, const std::string& suffix) {
-    std::cout << "\n  --- " << opstr << " ---" << suffix;
-  }
-  /*-----------------------------------------------
-    Display text after newline and indentation
-  */
-  inline void print(const std::string& txt) {
-    std::cout << "\n  " << txt;
-  }
-  /*-----------------------------------------------
-    Display text after newline and indentation
-    - provides trailing newline
-  */
-  inline void println(const std::string& txt) {
-    std::cout << "\n  " << txt << "\n";
-  }
+  // /*-----------------------------------------------
+  //   Display emphasized line
+  // */
+  // inline void showOp(const std::string& opstr, const std::string& suffix) {
+  //   std::cout << "\n  --- " << opstr << " ---" << suffix;
+  // }
+  // /*-----------------------------------------------
+  //   Display text after newline and indentation
+  // */
+  // inline void print(const std::string& txt) {
+  //   std::cout << "\n  " << txt;
+  // }
+  // /*-----------------------------------------------
+  //   Display text after newline and indentation
+  //   - provides trailing newline
+  // */
+  // inline void println(const std::string& txt) {
+  //   std::cout << "\n  " << txt << "\n";
+  // }
 }
+#endif

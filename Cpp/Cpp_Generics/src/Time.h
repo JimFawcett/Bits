@@ -8,6 +8,8 @@
 #include <string>
 #include <chrono>
 #include <ctime>
+#include "AnalysisGen.h"
+using namespace Analysis;
 
 namespace Points {
 
@@ -168,4 +170,76 @@ namespace Points {
     auto duration = duration_cast<std::chrono::milliseconds>(stoptime - starttime);
     return duration.count();
   }
+}
+/*-- test calendar time Time class --*/
+void testtime() {
+  using namespace Points;
+  using namespace Analysis;
+
+  println();
+  showNote("test Time", 20);
+  Time t;
+  t.getLocalTime();
+  std::cout << "\n  datetime = " << t.toString() << std::endl;
+  std::cout << "\n  epoch in secs = " << t.getTime();
+  std::cout << "\n  year:     " << t.year();
+  std::cout << "\n  month:    " << t.month();
+  std::cout << "\n  day:      " << t.day();
+  std::cout << "\n  hour:     " << t.hour();
+  std::cout << "\n  minutes:  " << t.minutes();
+  std::cout << "\n  seconds:  " << t.seconds();
+  std::cout << "\n  timezone: " << t.getTimeZone();
+  std::cout << std::endl;
+
+  t.getGMTTime();
+  std::cout << "\n  datetime = " << t.toString() << std::endl;
+  std::cout << "\n  epoch in secs = " << t.getTime();
+  std::cout << "\n  year:     " << t.year();
+  std::cout << "\n  month:    " << t.month();
+  std::cout << "\n  day:      " << t.day();
+  std::cout << "\n  hour:     " << t.hour();
+  std::cout << "\n  minutes:  " << t.minutes();
+  std::cout << "\n  seconds:  " << t.seconds();
+  std::cout << "\n  timezone: " << t.getTimeZone();
+  std::cout << std::endl;
+}
+
+/*-- test timer Timer class --*/
+void testtimer() {
+  using namespace Analysis;
+  using namespace Points;
+
+  println();
+  showNote("test Timer", 20);
+
+  std::vector<double> v {
+    1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0, 5.5
+  };
+  auto f = [&v]() {
+    for(auto &item : v) { item *= item; }
+  };
+
+  auto g = [f](size_t n) {
+    for(size_t i = 0; i < n; ++i) { f(); }
+  };
+
+  Timer tmr;
+  tmr.start();
+  tmr.stop();
+  std::cout << "  noOp elapsed interval in nanosec = " 
+            << tmr.elapsedNanoSec() << "\n";
+
+  tmr.start();
+  g(200);
+  tmr.stop();
+  std::cout << "  g(200) elapsed interval in nanosec = " 
+            << tmr.elapsedNanoSec() << "\n";
+  std::cout << "  g(200) elapsed interval in microsec = " 
+            << tmr.elapsedMicroSec() << "\n";
+
+  tmr.start();
+  std::this_thread::sleep_for(std::chrono::milliseconds(5));
+  tmr.stop();
+  std::cout << "  5 millisec sleep elapsed interval in millisec = " 
+            << tmr.elapsedMilliSec() << "\n";
 }

@@ -1,82 +1,4 @@
 /*-------------------------------------------------------------------
-  Demos.h defines Demo<T> and Stats<T> classes
-  - Demo<T> is a simple demonstration of a generic type that
-    does'nt do anything very useful except to explain syntax.
-  - Stats<T> holds a std::vector<T> and provides methods for
-    computing max, min, average of this collection of elements
-    of unspecified type T
-*/
-/*-------------------------------------------------------------------
-  simple user-defined type to demonstrate template syntax
-*/
-using namespace Analysis;
-
-template<typename T>
-class Demo {
-public:
-  Demo() = default;
-  Demo(T& tin) : t(tin) {};
-  Demo(const Demo<T>& t) = default;
-  Demo<T>& operator=(const Demo<T>&t) = default;
-  ~Demo() = default;
-  T& value() { return t; }
-  void show();
-private:
-  T t;
-};
-
-template<typename T>
-void Demo<T>::show() {
-  std::cout << "  Demo<T> {\n  ";
-  std::cout << "  type T: " 
-            << truncate(DisplayParams.trunc,typeid(t).name());  // show type
-  std::cout << ", size: " << sizeof(t);  // show size on stack
-  std::cout << ", value: " << t;
-  std::cout << "\n  }\n";
-}
-/* template method specialization */
-template<>
-void inline Demo<std::vector<int>>::show() {
-  std::cout << "  Demo<T> {\n  ";
-  std::cout << "  type T: " 
-            << truncate(DisplayParams.trunc,typeid(t).name());  // show type
-  std::cout << ", size: " << sizeof(t) << "\n    value: [ ";
-  for (auto item : t) {
-    std::cout << item << " ";
-  };
-  std::cout << "]\n  }\n";
-}
-/* partial template specialization of Demo class */
-template<template<typename> typename V, typename T>
-class Demo<V<T>> {
-  Demo<V<T>>& operator=(const Demo<V<T>>& v) = default;
-  ~Demo() = default;
-  V<T>& value() { return val; }
-  void show() {
-    std::cout << "  Demo<V<T>> {\n  ";
-    std::cout << "  type V<T>: " 
-              << truncate(DisplayParams.trunc,typeid(val).name());  // show type
-    std::cout << ", size: " << sizeof(val) << "\n    value: [ ";
-    for (auto item : val) {
-      std::cout << item << " ";
-    };
-    std::cout << "]\n  }\n";
-  }
-private:
-  V<T> val;
-};
-// template<template<typename> typename V, typename T>
-// void Demo<V<T>>::show() {
-//   std::cout << "  Demo<V<T>> {\n  ";
-//   std::cout << "  type V<T>: " 
-//             << truncate(DisplayParams.trunc,typeid(val).name());  // show type
-//   std::cout << ", size: " << sizeof(val) << "\n    value: [ ";
-//   for (auto item : val) {
-//     std::cout << item << " ";
-//   };
-//   std::cout << "]\n  }\n";
-// }
-/*-------------------------------------------------------------------
   Stats<T>
   - Stats<T> holds a std::vector<T> and provides methods for
     computing max, min, average of this collection
@@ -87,6 +9,9 @@ private:
 #include <iostream>
 #include <vector>
 #include <exception>
+#include "AnalysisGen.h"
+using namespace Analysis;
+
 /*-------------------------------------------------------------------
   Stats<T> class provides several simple computational services on
   a vector of items who's type provides required arithmetic operations.
@@ -210,4 +135,42 @@ void Stats<T>::show(const std::string& name) {
         std::cout.flush();
     }
     std::cout << "\n  }\n";
+}
+/*-- demonstrate custom type Stats<T> --*/
+void demo_custom_type_Stats() {
+
+  println();
+  showNote("Demo user-defined Stats<T>", 35);
+
+  showOp("Stats<double> s(v)", nl);
+  std::vector<double> v { 1.0, 2.5, -3.0, 4.5 };
+  showSeqColl(v);
+  Stats<double> s(v);
+  std::cout << "  min: " << s.min();
+  std::cout << ", max: " << s.max();
+  std::cout << ", sum: " << s.sum();
+  std::cout << ", avg: " << s.avg() << std::endl;
+
+  showOp("Stats<double> s2 = s", nl);
+  Stats<double> s2 = s;  // copy construction
+  std::cout << "  min: " << s2.min();
+  std::cout << ", max: " << s2.max();
+  std::cout << ", sum: " << s2.sum();
+  std::cout << ", avg: " << s2.avg() << std::endl;
+
+  showOp("Stats<std::string> ss", nl);
+  std::vector<std::string> vstr { "ab", "cd", "ef" };
+  Stats<std::string> ss(vstr);
+  std::cout << "  min: " << ss.min();
+  std::cout << ", max: " << ss.max();
+  std::cout << ", sum: " << ss.sum();
+  //--------------------------------------------------
+  // first compile phase:
+  //   Stats<T>::avg() passess
+  // second compile phase:
+  //   Stats<std::string>::avg() fails to compile.
+  //   No way to divide sum string by size integer in
+  //   std::cout << ", avg: " << ss.avg() << std::endl; 
+  //   All the other methods compile successfully. 
+  println();
 }

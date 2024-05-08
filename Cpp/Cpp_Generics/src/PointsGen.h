@@ -7,11 +7,12 @@
 #include <vector>
 #include <string>
 #include <initializer_list>
+#include "AnalysisGen.h"
 #include "Time.h"
 
 namespace Points {
 
-  using namespace Analysis;
+  //using namespace Analysis;
   
   /*-------------------------------------------------------------------
     Point<T, N> class represents a point in an N-Dimensional hyperspace.
@@ -182,4 +183,33 @@ namespace Points {
     out << indent(t2.left()) << "}";
     return out;
   }
+}
+/*-- demonstrate use of user-defined types --*/
+void demo_custom_type_Point() {
+  using namespace Analysis;
+  using namespace Points;
+
+  println();
+  showNote("Demo user-defined Point<T, N>", 40);
+
+  /*-- demonstrate Point<double 3> initialization lists --*/
+  showOp("Point<double, 3> p1 {1.0, 1.5, 2.0}");  // equal to N
+  Point<double, 3> p1 {1.0, 1.5, 2.0};
+  p1.show("p1");
+  std::cout << "\n  p1[1] = " << p1[1];           // indexing
+  std::cout << "\n  p1.time().day() = " 
+            << p1.time().day();
+  std::cout << "\n  p1.time().seconds() = " 
+            << p1.time().seconds() << "\n";
+  showOp("Point<double, 3> p2 {1.0, 1.5}");
+  Point<double, 3> p2 {1.0, 1.5};                 // less than N
+  p2.show("p2");
+  showOp("Point<double, 3> p3 {1.0, 1.5, 2.0, 2.5}");
+  Point<double, 3> p3 {1.0, 1.5, 2.0, 2.5};       // greater than N
+  p3.show("p3");
+  std::cout << "\n  p3.timeToString():\n    \"" 
+            << p3.timeToString() << "\"\n";
+  showOp("Point<int, 10> p3 { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 }");
+  Point<int, 10> p4 { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
+  p4.show("p4");
 }
