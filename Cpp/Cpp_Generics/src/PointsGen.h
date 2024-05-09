@@ -7,6 +7,7 @@
 #include <vector>
 #include <string>
 #include <initializer_list>
+#include <concepts>
 #include "AnalysisGen.h"
 #include "Time.h"
 
@@ -31,7 +32,7 @@ namespace Points {
     It does not provide an iterator nor begin() and end() members.
     Those will added in the iteration bit.
   */
-  template<typename T, size_t N>
+  template<typename T, const size_t N>
   class Point {
   public:
     Point();                                      // default ctor
@@ -184,7 +185,8 @@ namespace Points {
     return out;
   }
 }
-/*-- demonstrate use of user-defined types --*/
+/*-- demonstrate use of Point type --*/
+
 void demo_custom_type_Point() {
   using namespace Analysis;
   using namespace Points;

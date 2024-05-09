@@ -9,12 +9,15 @@
 */
 #ifndef AnalysisGen
 #define AnalysisGen
+
 #include <typeinfo>     // typeid
 #include <utility>      // move()
 #include <sstream>      // stringstream
 #include <type_traits>  // is_scalar, if constexpr
 #include <iostream>     // cout
 #include <vector>       // vector
+#include <string>
+#include <concepts>
 
 namespace Analysis {
   /*------------------------------------------------------------
@@ -22,49 +25,20 @@ namespace Analysis {
     definitions below may be placed in any order. That's
     needed because C++ requires declaration before use.
   */
-  // template<typename T, int N>
-  // void showArray(std::array<T,N> &a);
-  // template<typename C>
-  // void showColl(const C& c);
-  // template<typename K, typename V>
-  // void showMap(const std::map<K,V> &m);
-  // template<typename T>
-  // inline void showType(T t, const std::string &nm, const std::string& suffix = "");
-  // void showNote(const std::string& txt, const std::string& suffix = "");
-  // void showOp(const std::string& opstr, const std::string& suffix = "");
-  // void print(const std::string& txt = "");
-  // void println(const std::string& txt = "");
   std::string truncate(size_t N, const char* pStr);
-  // std::string indent(size_t n);
-  // template<typename T>
-  // std::string fold(std::vector<T>& v, size_t left, size_t width);
-  // template<typename T>
-  // std::string formatColl(
-  //   const T& t, const std::string& nm,
-  //   const std::string& suffix = "", size_t left = 2, size_t width = 7
-  // );
-  // template<typename T>
-  // std::string formatScalar(
-  //   const T& t, const std::string& nm, 
-  //   const std::string& suffix = "", size_t left = 2
-  // );
-  // template<typename T>
-  // std::string formatString(
-  //   const T& t, const std::string& nm, const std::string& suffix,
-  //   size_t left = 2
-  // );
-  // template<typename T>
-  // std::string format(
-  //   const T& t, const std::string& nm, const std::string& suffix = "",
-  //   size_t left = 2, size_t width = 7
-  // );
-  /*-- end of function declarations --*/
+
+  /*------------------------------------------------------------
+    C++ concept definitions
+  */
+  template<typename T>
+  concept Show = requires(T t, const std::string& s) {
+    t.show(s);
+  };
 
   /*------------------------------------------------------------
     Display and Analysis functions and global definitions
   --------------------------------------------------------------
   */
-  //inline const std::string nl = "\n";
   static std::string const nl = "\n";
 
   /*-----------------------------------------------
@@ -89,7 +63,7 @@ namespace Analysis {
  /*------------------------------------------------------------
     Mutable globals are a common source of bugs.  We try not
     to use them, but will use DisplayParams here to control how
-    the insertion operator sends instances to standard output.
+    functions and the insertion operator sends instances to output.
   */
   struct displayParams {
     size_t left = 2;    // number of spaces to indent
@@ -251,14 +225,24 @@ namespace Analysis {
     Format output for scalar types like primitives
   */
   template<typename T>
-  std::string formatScalar(
+  auto formatScalar(
     const T& t, const std::string& nm, const std::string& suffix = "",
     size_t left = 2
-  ) {
+  ) -> std::string 
+  {
     std::stringstream out;
     out << "\n" << indent(left) << nm << ": " << t << suffix;
     return out.str();
   }
+  // template<typename T>
+  // std::string formatScalar(
+  //   const T& t, const std::string& nm, const std::string& suffix = "",
+  //   size_t left = 2
+  // ) {
+  //   std::stringstream out;
+  //   out << "\n" << indent(left) << nm << ": " << t << suffix;
+  //   return out.str();
+  // }
   /*-----------------------------------------------
     Format output for strings
     - indent and embed in quotation marks
@@ -326,24 +310,5 @@ namespace Analysis {
     println(line);
     std::cout << suffix;
   }
-  // /*-----------------------------------------------
-  //   Display emphasized line
-  // */
-  // inline void showOp(const std::string& opstr, const std::string& suffix) {
-  //   std::cout << "\n  --- " << opstr << " ---" << suffix;
-  // }
-  // /*-----------------------------------------------
-  //   Display text after newline and indentation
-  // */
-  // inline void print(const std::string& txt) {
-  //   std::cout << "\n  " << txt;
-  // }
-  // /*-----------------------------------------------
-  //   Display text after newline and indentation
-  //   - provides trailing newline
-  // */
-  // inline void println(const std::string& txt) {
-  //   std::cout << "\n  " << txt << "\n";
-  // }
 }
 #endif
