@@ -22,9 +22,9 @@
 #include <set>            // set<T> class
 #include <thread>         // this_thread
 #include "AnalysisGen.h"  // Analysis functions
-#include "PointsGen.h"    // Point<T, N> class declaration
 #include "HelloTemplates.h"        // Stats class declaration
 #include "Stats.h"
+#include "PointsGen.h"    // Point<T, N> class declaration
 
 using namespace Analysis;
 using namespace Points;
@@ -41,7 +41,9 @@ std::ostream& operator<<(std::ostream& out, std::vector<T>& v) {
   return out;
 }
 
-/*-- demonstrate use of std generic types --*/
+/*-----------------------------------------------
+  demonstrate use of std generic types
+*/
 void demo_std_generic_types() {
   
   showNote("Demo std generic types", 30);
@@ -72,105 +74,9 @@ void demo_std_generic_types() {
   println();
 }
 
-// /*-- demonstrate creation and use of Demo<T> --*/
-// void demo_custom_type_Demo() {
-  
-//   showNote("Demo user-defined Demo<T>", nl);
-
-//   showOp("Demo<T>", nl);
-//   int arg = 42;
-//   Demo<int> demi(arg);
-//   demi.show();
-//   std::cout << std::endl;;
-  
-//   double pi = 3.1415927;
-//   Demo<double> demd(pi);
-//   demd.show();
-
-//   /*-------------------------------------------------------
-//     specialization defined in Demo<T> class header
-//     Demo.h and used here
-//   */
-//   auto vs = std::vector<int> { 1, 2, 3 };
-//   Demo<std::vector<int>> demv(vs);
-//   demv.show();
-
-//   // /*-------------------------------------------------------
-//   //   partial specialization defined in Demo<T> class header
-//   //   Demo.h and used here
-//   // */
-//   // auto svs = std::vector<double> { 1.0, 2.0, 3.0 };
-//   // Demo<std::vector<double>> sdemv(svs);
-//   // sdemv.show();
-//   //
-//   // compiler thinks that show is unspecialized
-// }
-
-// /*-- demonstrate custom type Stats<T> --*/
-// void demo_custom_type_Stats() {
-
-//   showNote("Demo user-defined Stats<T>");
-
-//   showOp("Stats<double> s(v)", nl);
-//   std::vector<double> v { 1.0, 2.5, -3.0, 4.5 };
-//   showSeqColl(v);
-//   Stats<double> s(v);
-//   std::cout << "  min: " << s.min();
-//   std::cout << ", max: " << s.max();
-//   std::cout << ", sum: " << s.sum();
-//   std::cout << ", avg: " << s.avg() << std::endl;
-
-//   showOp("Stats<double> s2 = s", nl);
-//   Stats<double> s2 = s;  // copy construction
-//   std::cout << "  min: " << s2.min();
-//   std::cout << ", max: " << s2.max();
-//   std::cout << ", sum: " << s2.sum();
-//   std::cout << ", avg: " << s2.avg() << std::endl;
-
-//   showOp("Stats<std::string> ss", nl);
-//   std::vector<std::string> vstr { "ab", "cd", "ef" };
-//   Stats<std::string> ss(vstr);
-//   std::cout << "  min: " << ss.min();
-//   std::cout << ", max: " << ss.max();
-//   std::cout << ", sum: " << ss.sum();
-//   //--------------------------------------------------
-//   // first compile phase:
-//   //   Stats<T>::avg() passess
-//   // second compile phase:
-//   //   Stats<std::string>::avg() fails to compile.
-//   //   No way to divide sum string by size integer in
-//   //   std::cout << ", avg: " << ss.avg() << std::endl; 
-//   //   All the other methods compile successfully. 
-//   print();
-// }
-
-// /*-- demonstrate use of user-defined types --*/
-// void demo_custom_type_Point() {
-  
-//   showNote("Demo user-defined Point<T, N>", nl);
-
-//   /*-- demonstrate Point<double 3> initialization lists --*/
-//   showOp("Point<double, 3> p1 {1.0, 1.5, 2.0}");  // equal to N
-//   Point<double, 3> p1 {1.0, 1.5, 2.0};
-//   p1.show("p1");
-//   std::cout << "\n  p1[1] = " << p1[1];           // indexing
-//   std::cout << "\n  p1.time().day() = " 
-//             << p1.time().day();
-//   std::cout << "\n  p1.time().seconds() = " 
-//             << p1.time().seconds() << "\n";
-//   showOp("Point<double, 3> p2 {1.0, 1.5}");
-//   Point<double, 3> p2 {1.0, 1.5};                 // less than N
-//   p2.show("p2");
-//   showOp("Point<double, 3> p3 {1.0, 1.5, 2.0, 2.5}");
-//   Point<double, 3> p3 {1.0, 1.5, 2.0, 2.5};       // greater than N
-//   p3.show("p3");
-//   std::cout << "\n  p3.timeToString():\n    \"" 
-//             << p3.timeToString() << "\"\n";
-//   showOp("Point<int, 10> p3 { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 }");
-//   Point<int, 10> p4 { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
-//   p4.show("p4");
-// }
-/*-- demonstrate use of generic functions --*/
+/*-----------------------------------------------
+  demonstrate use of generic functions
+*/
 void demo_generic_functions() {
 
   println();
@@ -238,72 +144,6 @@ void demo_generic_functions() {
   std::cout << Analysis::format(um2, "um", "\n", 2, 4);
 }
 
-// /*-- test calendar time Time class --*/
-// void testtime() {
-//   showNote("test Time","\n");
-//   Time t;
-//   t.getLocalTime();
-//   std::cout << "\n  datetime = " << t.toString() << std::endl;
-//   std::cout << "\n  epoch in secs = " << t.getTime();
-//   std::cout << "\n  year:     " << t.year();
-//   std::cout << "\n  month:    " << t.month();
-//   std::cout << "\n  day:      " << t.day();
-//   std::cout << "\n  hour:     " << t.hour();
-//   std::cout << "\n  minutes:  " << t.minutes();
-//   std::cout << "\n  seconds:  " << t.seconds();
-//   std::cout << "\n  timezone: " << t.getTimeZone();
-//   std::cout << std::endl;
-
-//   t.getGMTTime();
-//   std::cout << "\n  datetime = " << t.toString() << std::endl;
-//   std::cout << "\n  epoch in secs = " << t.getTime();
-//   std::cout << "\n  year:     " << t.year();
-//   std::cout << "\n  month:    " << t.month();
-//   std::cout << "\n  day:      " << t.day();
-//   std::cout << "\n  hour:     " << t.hour();
-//   std::cout << "\n  minutes:  " << t.minutes();
-//   std::cout << "\n  seconds:  " << t.seconds();
-//   std::cout << "\n  timezone: " << t.getTimeZone();
-//   std::cout << std::endl;
-// }
-
-// /*-- test timer Timer class --*/
-// void testtimer() {
-
-//   showNote("test Timer");
-
-//   std::vector<double> v {
-//     1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0, 5.5
-//   };
-//   auto f = [&v]() {
-//     for(auto &item : v) { item *= item; }
-//   };
-
-//   auto g = [f](size_t n) {
-//     for(size_t i = 0; i < n; ++i) { f(); }
-//   };
-
-//   Timer tmr;
-//   tmr.start();
-//   tmr.stop();
-//   std::cout << "\n  noOp elapsed interval in nanosec = " 
-//             << tmr.elapsedNanoSec();
-
-//   tmr.start();
-//   g(200);
-//   tmr.stop();
-//   std::cout << "\n  g(200) elapsed interval in nanosec = " 
-//             << tmr.elapsedNanoSec();
-//   std::cout << "\n  g(200) elapsed interval in microsec = " 
-//             << tmr.elapsedMicroSec();
-
-//   tmr.start();
-//   std::this_thread::sleep_for(std::chrono::milliseconds(5));
-//   tmr.stop();
-//   std::cout << "\n  5 millisec sleep elapsed interval in millisec = " 
-//             << tmr.elapsedMilliSec();
-//   std::cout << std::endl;
-// }
 /*-----------------------------------------------
   Demo execution starts here
 */

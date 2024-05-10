@@ -1,52 +1,20 @@
-  --------------------------------------------------
-    demo generic functions
-  --------------------------------------------------
+-----------------------------------
+  Demo user-defined Stats<T>
+-----------------------------------
 
-  --- showType for std::string ---
-  s type: class std::basic_string<char,struct std:...
-  size:  28
+  --- Stats<double> s(v) ---
 
-  --- showType for std::vector ---
-  v type: class std::vector<int,class std::allocat...
-  size:  16
+  Collection<T> [1, 2.5, -3, 4.5]
+  min: -3, max: 4.5, sum: 5, avg: 1.25
 
-  --- showSeqColl for std::string ---
-  Collection<T> [a,  , s, t, r, i, n, g]
+  --- Stats<double> s2 = s ---
 
-  --- showSeqColl for std::vector ---
-  Collection<T> [1, 2, 3, 2, 1, 0, -1, -2]
+  min: -3, max: 4.5, sum: 5, avg: 1.25
 
-  --- showAssocColl for std::map ---
-  Collection<K,V> {
-    {five, 5}, {four, 4}, {one, 1}, {three, 3}, {two, 2}, {zero, 0}
-  }
+  --- Stats<int> s3(u) ---
 
-  --- showAssocColl for std::unordered_map ---
-  Collection<K,V> {
-    {three, 3}, {zero, 0}, {one, 1}, {two, 2}, {five, 5}, {four, 4}
-  }
+  Collection<T> [1, 2, 3, 1]
+  min: 1, max: 3, sum: 7, avg: 1.75
 
-  --- Analysis::format for int ---
-  mol: 42
-
-  --- Analysis::format for std::string ---  s: {
-    a,  , s, t, r, i, n,
-    g
-  }
-
-  --- Analysis::format for std::vector ---  v: {
-    1, 2, 3, 2, 1,
-    0, -1, -2
-  }
-
-  --- Analysis::format for std::map ---  m: {
-    {five, 5}, {four, 4}, {one, 1}, {three, 3},
-    {two, 2}, {zero, 0}
-  }
-
-  --- Analysis::format for std::unordered_map ---  um: {
-    {three, 4}, {zero, 0}, {one, 1}, {two, 2},
-    {five, 5}, {four, 4}
-  }
 
 

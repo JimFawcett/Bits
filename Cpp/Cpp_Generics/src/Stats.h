@@ -27,7 +27,7 @@ template <typename T>
 requires Number<T>
 class Stats {
 public:
-    Stats() = default;
+    Stats() = delete;
     Stats(const std::vector<T>& v);
     Stats(const Stats<T>& s) = default;
     Stats<T>& operator=(Stats<T>& s) = default;
@@ -171,6 +171,21 @@ void demo_custom_type_Stats() {
   std::cout << ", sum: " << s2.sum();
   std::cout << ", avg: " << s2.avg() << std::endl;
 
+  showOp("Stats<int> s3(u)", nl);
+  std::vector<int> u { 1, 2, 3, 1 };
+  showSeqColl(u);
+  Stats<int> s3(u);
+  std::cout << "  min: " << s3.min();
+  std::cout << ", max: " << s3.max();
+  std::cout << ", sum: " << s3.sum();
+  std::cout << ", avg: " << s3.avg() << std::endl;
+
+  /*--------------------------------------------------
+    This works without the Number concept, with the
+    exception of average. With concept the stats
+    library fails to compile because strings are
+    not ints or floats.
+  */
   // showOp("Stats<std::string> ss", nl);
   // std::vector<std::string> vstr { "ab", "cd", "ef" };
   // Stats<std::string> ss(vstr);
@@ -185,5 +200,6 @@ void demo_custom_type_Stats() {
   //   No way to divide sum string by size integer in
   //   std::cout << ", avg: " << ss.avg() << std::endl; 
   //   All the other methods compile successfully. 
+
   println();
 }
