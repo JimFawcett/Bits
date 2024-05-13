@@ -24,7 +24,7 @@ template <typename T>
   concept Number = std::integral<T> || std::floating_point<T>;
 
 template <typename T>
-requires Number<T>
+  requires Number<T>
 class Stats {
 public:
     Stats() = delete;
@@ -45,14 +45,14 @@ private:
   Constructor initialized with vector of values
 */
 template<typename T>
-requires Number<T>
+  requires Number<T>
 Stats<T>::Stats(const std::vector<T>& v) : items(v) {}
 
 /*-------------------------------------------------------------------
   check that Stats instance contains at least one value
 */
 template<typename T>
-requires Number<T>
+  requires Number<T>
 bool Stats<T>::check() {
     return items.size() > 0;
 }
@@ -60,7 +60,7 @@ bool Stats<T>::check() {
   returns number of data items
 */
 template<typename T>
-requires Number<T>
+  requires Number<T>
 size_t Stats<T>::size() {
     if(!check()) {
         throw "Stats is empty";
@@ -71,7 +71,7 @@ size_t Stats<T>::size() {
   returns largest value (not necessarily largerst magnitude)
 */
 template<typename T>
-requires Number<T>
+  requires Number<T>
 T Stats<T>::max() {
     if(!check()) {
         throw "Stats is empty";
@@ -88,7 +88,7 @@ T Stats<T>::max() {
   returns smallest value (not necessarily smallest magnitude)
 */
 template<typename T>
-requires Number<T>
+  requires Number<T>
 T Stats<T>::min() {
     if(!check()) {
         throw "Stats is empty";
@@ -105,7 +105,7 @@ T Stats<T>::min() {
   returns sum of data values
 */
 template<typename T>
-requires Number<T>
+  requires Number<T>
 T Stats<T>::sum() {
     if(!check()) {
         throw "Stats is empty";
@@ -120,7 +120,7 @@ T Stats<T>::sum() {
   returns average of data values
 */
 template<typename T>
-requires Number<T>
+  requires Number<T>
 double Stats<T>::avg() {
     if(!check()) {
         throw "Stats is empty";
@@ -135,7 +135,7 @@ double Stats<T>::avg() {
   displays current contents
 */
 template<typename T>
-requires Number<T>
+  requires Number<T>
 void Stats<T>::show(const std::string& name) {
     if(!check()) {
         throw "Stats is empty";

@@ -35,7 +35,7 @@ void HelloTemplates<T>::show() {
 }
 /* template method specialization */
 template<>
-void inline HelloTemplates<std::vector<int>>::show() {
+void HelloTemplates<std::vector<int>>::show() {
   std::cout << "  HelloTemplates<T> {\n  ";
   std::cout << "  type T: " 
             << truncate(DisplayParams.trunc,typeid(t).name());  // show type
