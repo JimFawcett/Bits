@@ -73,7 +73,7 @@ You can clone the repo from this link.
 */
 use std::collections::*;
 mod analysis_iter;
-// use analysis_iter::*;
+use analysis_iter::*;
 mod points_iter;
 use points_iter::*;
 
@@ -87,6 +87,122 @@ use std::cmp::*;
   to illustrate how iterators are used.
 ---------------------------------------------------------*/
 
+/*---------------------------------------------------------
+  Demonstrate iter() by displaying a comma seperated
+  list of items in several common collections.
+  - uses three different strategies used for making
+    display comma-seperated
+  - syntax used in this demo
+    - iter().next() -> Option<Self::Item>
+    - enum Option<T> { Some(T), None, }
+*/
+fn demo_iter() {
+  show_label("demo_iter()", 30);
+  println!();
+
+  show_op("array iter using loop");
+  let ar = [1, 2, 3, 4];
+  let mut iter = ar.iter();
+  print!("{}",iter.next().unwrap());  // display first item
+  loop {
+    let item = iter.next();
+    match item {  //display remaining items
+      Some(item) => print!(", {}", item),
+      None => break
+    }
+  }
+  println!();
+  // ar not consumed by ar.iter(), above
+  // so statement below is valid:
+  // println!("{:?}", ar);
+  // println!();
+
+  /*--- equivalent to loop, above ---*/
+  show_op("Vec iter using for-in");
+  let v = vec![1, 2, 3, 4];
+  let mut first = true; 
+  for item in &v {
+    if first {
+      print!("{item}");
+      first = false;
+    }
+    else {
+      print!(", {item}");
+    }
+  }
+  println!();
+  // statement below is valid, v not consumed since
+  //   for-in used reference &v
+  // println!("{:?}", v);
+  // println!();
+
+  show_op("HashMap iter");
+  let mut hm = HashMap::<&str, i32>::new();
+  hm.insert("zero", 0);
+  hm.insert("one", 1);
+  hm.insert("two", 2);
+  hm.insert("three", 3);
+  /*------------------------------------------------------- 
+    enumerate is an iterator adapter that returns another 
+    iterator yielding (count, value) where value is 
+    yielded by iter 
+  */
+  for item in hm.iter().enumerate() {
+    if item.0 == 0 {  // count == zero
+      print!("{:?}", item.1);
+    }
+    else {  // count > 0
+      print!(", {:?}", item.1);
+    }
+  }
+  println!();
+  show_op("HashMap iter using println!");
+  println!("{:?}", hm);
+
+  show_op("Point iter using println!");
+  let mut p = Point::<f64, 5>::new();
+  p.init(&vec![1.0, 1.5, 2.0, 1.5, 1.0]);
+  print!("{:?}", p);
+  show_label(
+  "print!(\"{:?}\", p) uses &p.into_iter(),
+  which does not consume p, to display items", 45
+  );
+  println!();
+
+  show_op("using show_csl(&ar) for array");
+  show_csl(&ar); 
+  show_op("using show_csl(&v) for Vector");
+  show_csl(&v);
+  show_op("using show_csl(&hm) for HashMap");
+  show_csl(&hm);
+  show_op("using show_csl(&p) for Point");
+  show_csl(&p);   // p is consumed
+  println!();
+
+  show_op("using show_csl(ar) for array - copies ar");
+  show_csl(ar);  // ar is not consumed as it is a copy type
+  show_op("using show_csl(v) for Vector - moves v");
+  show_csl(v);   // v is consumed
+  show_op("using show_csl(hm) for HashMap - moves hm");
+  show_csl(hm);  // hm is consumed
+  show_op("using show_csl(p) for Point - moves p");
+  show_csl(p);   // p is consumed
+}
+
+fn show_csl<C>(c:C)  // consumes c
+  where C: IntoIterator, C::Item: Debug 
+{
+  let iter = c.into_iter();
+  for (count, val) in iter.enumerate() {
+    if count == 0 {
+      print!("{:?}", val);
+    }
+    else {
+      print!(", {:?}", val);
+    }
+  }
+  println!();
+}
 /*---------------------------------------------------------*/
 fn demo_array_into_iterator_loop<T:Debug>(arr:[T; 5]) {
   let mut iter = arr.into_iter();
@@ -177,7 +293,7 @@ fn execute_demo_collection_into_iterator() {
   println!();
   /*-- PointN ----------*/
   print!("execute demo_collection_into_iterator for PointN");
-  let mut p = PointN::<f64>::new(5);
+  let mut p = Point::<f64, 5>::new();
   p[0] = 1.0;
   p[1] = 1.5;
   p[2] = 2.0;
@@ -256,7 +372,7 @@ fn execute_demo_collection_iter_for() {
   println!();
 
   print!("execute demo_collection_iter_mut_for with PointN");
-  let mut p = PointN::<f64>::new(7);
+  let mut p = Point::<f64, 7>::new();
   p[0] = 1.0;
   p[1] = 1.5;
   p[2] = 2.0;
@@ -332,7 +448,7 @@ fn execute_demo_collection_iter_mut_for() {
   println!();
 
   print!("execute demo_collection_iter_mut_for with PointN");
-  let mut p = PointN::<f64>::new(7);
+  let mut p = Point::<f64, 7>::new();
   p[0] = 1.0;
   p[1] = 1.5;
   p[2] = 2.0;
@@ -381,7 +497,7 @@ fn execute_demo_adapters() {
   println!("{:?} ", &vo);
 
   println!("execute demo_adapters<T, f64>(coll, 1.5) with PointN<f64>:");
-  let mut pad = PointN::<f64>::new(5);
+  let mut pad = Point::<f64, 5>::new();
   pad[0] = 1.5;
   pad[1] = -2.0;
   pad[2] = 0.0;
@@ -549,14 +665,8 @@ fn execute_demo_for_looper() {
   let v = vec![1, 2, 3, 4, 3, 2, 1];
   demo_for_looper(&v);
   print!("execute demo_for_looper with PointN");
-  let mut p = PointN::<i32>::new(0usize);
-  p.push(1);
-  p.push(2);
-  p.push(3);
-  p.push(4);
-  p.push(3);
-  p.push(2);
-  p.push(1);
+  let mut p = Point::<i32, 7>::new();
+  p.init(&vec![1, 2, 3, 4, 3, 2, 1]);
   demo_for_looper(&p);
 }
 /*-----------------------------------------------
@@ -596,14 +706,8 @@ fn execute_demo_ranger() {
   vd.push_back(1);
   demo_ranger(&mut vd.iter());
   print!("execute demo_ranger with PointN iter");
-  let mut p = PointN::<i32>::new(0usize);
-  p.push(1);
-  p.push(2);
-  p.push(3);
-  p.push(4);
-  p.push(3);
-  p.push(2);
-  p.push(1);
+  let mut p = Point::<i32, 7>::new();
+  p.init(&vec![1, 2, 3, 4, 3, 2, 1]);
   demo_ranger(&mut p.iter());
 }
 /*-----------------------------------------------
@@ -631,13 +735,8 @@ fn execute_collection_with_operation() {
   demo_slice_looper(&v);
   /*-- plus_one on PointN -----------*/
   print!("execute collection_with_operation plus_one on PointN");
-  let mut p = PointN::<f64>::new(0);
-  //let p.items = vec![1.0, 1.5, 2.0, 1.5, 1.0];
-  p.push(1.0);
-  p.push(1.5);
-  p.push(2.0);
-  p.push(1.5);
-  p.push(1.0);
+  let mut p = Point::<f64, 5>::new();
+  p.init(&vec![1.0, 1.5, 2.0, 1.5, 1.0]);
   let plus_one = |item:&f64| {
     let val = item + 1.0;
     print!("{val:?} ");
@@ -648,13 +747,8 @@ fn execute_collection_with_operation() {
   demo_slice_looper(&p.items);
   /*-- square on PointN -------------*/
   print!("execute collection_with_operation square on PointN");
-  let mut p = PointN::<f64>::new(0);
-  //let p.items = vec![1.0, 1.5, 2.0, 1.5, 1.0];
-  p.push(1.0);
-  p.push(1.5);
-  p.push(2.0);
-  p.push(1.5);
-  p.push(1.0);
+  let mut p = Point::<f64, 5>::new();
+  p.init(&vec![1.0, 1.5, 2.0, 1.5, 1.0]);
   let square = |item:&f64| {
     let val = item * item;
     print!("{val:?} ");
@@ -680,36 +774,37 @@ fn test() {
 fn main() {
   analysis_iter::show_label("Demonstrate Rust Iteration",30);
   println!();
+  demo_iter();
 
-  analysis_iter::show_op("into_iterator()");
-  println!();
-  execute_demo_array_into_iterator_loop();
-  execute_demo_array_into_iterator_for();
-  execute_demo_vec_into_iterator_for();
-  execute_demo_collection_into_iterator();
-  println!();
+  // analysis_iter::show_op("into_iterator()");
+  // println!();
+  // execute_demo_array_into_iterator_loop();
+  // execute_demo_array_into_iterator_for();
+  // execute_demo_vec_into_iterator_for();
+  // execute_demo_collection_into_iterator();
+  // println!();
 
-  analysis_iter::show_op("iter()");
-  println!();
-  execute_demo_array_iter_for();
-  execute_demo_vec_iter_for();
-  execute_demo_collection_iter_for();
-  println!();
+  // analysis_iter::show_op("iter()");
+  // println!();
+  // execute_demo_array_iter_for();
+  // execute_demo_vec_iter_for();
+  // execute_demo_collection_iter_for();
+  // println!();
 
-  analysis_iter::show_op("iter_mut()");
-  println!();
-  execute_demo_vec_iter_mut_for();
-  execute_demo_collection_iter_mut_for();
-  println!();
+  // analysis_iter::show_op("iter_mut()");
+  // println!();
+  // execute_demo_vec_iter_mut_for();
+  // execute_demo_collection_iter_mut_for();
+  // println!();
 
-  analysis_iter::show_op("iteration adapters");
-  println!();
-  execute_demo_adapters();
+  // analysis_iter::show_op("iteration adapters");
+  // println!();
+  // execute_demo_adapters();
 
-  const DOTEST:bool = false;
-  if DOTEST {
-    test();
-  }
+  // const DOTEST:bool = true;
+  // if DOTEST {
+  //   test();
+  // }
 
   println!("\nThat's all folks!\n");
 

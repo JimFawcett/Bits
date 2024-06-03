@@ -26,6 +26,7 @@ pub struct PointN<T>
 impl<T> PointN<T> 
     where T:Debug + Default + Clone
 {
+    /*-- constructor --*/
     pub fn new(n:usize) -> PointN<T> {
         PointN::<T> { 
             items: vec![T::default(); n],
@@ -43,6 +44,7 @@ impl<T> PointN<T>
     pub fn pop(&mut self) -> Option<T> {
       self.items.pop()
     }
+    /*-- non-destructive non-mutating iterator */
     pub fn iter(&self) -> impl Iterator<Item = &T> {
         self.items.iter()
     }
@@ -50,11 +52,6 @@ impl<T> PointN<T>
         self.items.iter_mut()
     }
 }
-// impl<&T> PointN<T> 
-//   where &T:Debug + Default + Clone
-// {
-
-// }
 /*-- implements const indexer -----------------*/
 impl<T:Debug, Idx> std::ops::Index<Idx> for PointN<T> 
     where
@@ -77,17 +74,6 @@ impl<T, Idx> std::ops::IndexMut<Idx> for PointN<T>
         &mut self.items[index]
     }
 }
-// /*-- IntoIterator trait for &PointN<T> ---------*/
-// impl<'a, T> IntoIterator for &'a PointN<T>
-//     where T:Debug + Default + Clone
-// {
-//     type Item = T;
-//     type IntoIter = std::vec::IntoIter<Self::Item>;
-//     fn into_iter(self) -> Self::IntoIter {
-//         let ccln = self.items.clone();
-//         ccln.into_iter()
-//     }
-// }
 /*-- IntoIterator trait for PointN<T> ----------*/
 impl<T> IntoIterator for PointN<T>
     where T:Debug + Default + Clone
@@ -98,3 +84,22 @@ impl<T> IntoIterator for PointN<T>
         self.items.into_iter()
     }
 }
+/*-- IntoIterator trait for &PointN<T> ---------*/
+impl<T> IntoIterator for &PointN<T>
+    where T:Debug + Default + Clone
+{
+    type Item = T;
+    type IntoIter = std::vec::IntoIter<Self::Item>;
+    fn into_iter(self) -> Self::IntoIter {
+        self.items.clone().into_iter()
+    }
+}
+// /*-- Iterator trait for PointN<T> --------------*/
+// impl<T> Iterator for PointN<T>
+//     where T:Debug + Default + Clone
+// {
+//     type Item = T;
+//     fn next(self) -> Option<Self::Item> {
+//         self.items.iter().next();
+//     }
+// }

@@ -78,10 +78,11 @@ pub fn show_label_def(note:&str) {
 /*---------------------------------------------------------
   show string wrapped with dotted lines above and below 
 */
-pub fn show_note(note: &str) {
-  print!("\n-------------------------\n");
-  print!(" {note}");
-  print!("\n-------------------------\n");
+pub fn show_note(note: &str, n:usize) {
+  let border = (0..n).map(|_| "-").collect::<String>();
+  println!("{}", &border);
+  println!("  {note}");
+  println!("{}", &border);
 }
 /*---------------------------------------------------------
   show string wrapped in short lines

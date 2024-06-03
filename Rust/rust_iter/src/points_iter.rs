@@ -18,31 +18,27 @@
 use std::fmt::*;
 
 #[derive(Debug, Clone)]
-pub struct PointN<T> 
+pub struct Point<T, const N: usize> 
     where T:Debug + Default + Clone
 {
     pub items: Vec<T>
 }
-impl<T> PointN<T> 
+impl<T, const N:usize> Point<T, N> 
     where T:Debug + Default + Clone
 {
     /*-- constructor --*/
-    pub fn new(n:usize) -> PointN<T> {
-        PointN::<T> { 
-            items: vec![T::default(); n],
+    pub fn new() -> Point<T, N> {
+        Point::<T, N> { 
+            items: vec![T::default(); N],
         }
     }
-    pub fn is_empty(&self) -> bool {
-      self.items.is_empty()
-    }
-    pub fn len(&self) -> usize {
-      self.items.len()
-    }
-    pub fn push(&mut self, item:T) {
-      self.items.push(item);
-    }
-    pub fn pop(&mut self) -> Option<T> {
-      self.items.pop()
+    pub fn init(&mut self, v:&Vec<T>) {
+      for i in 0..v.len() {
+        self.items[i] = v[i].clone();
+      }
+      for i in v.len()..N {
+        self.items[i] = T::default();
+      }
     }
     /*-- non-destructive non-mutating iterator */
     pub fn iter(&self) -> impl Iterator<Item = &T> {
@@ -53,7 +49,7 @@ impl<T> PointN<T>
     }
 }
 /*-- implements const indexer -----------------*/
-impl<T:Debug, Idx> std::ops::Index<Idx> for PointN<T> 
+impl<T, const N:usize, Idx> std::ops::Index<Idx> for Point<T, N> 
     where
         T:Debug + Default + Clone, 
         Idx: std::slice::SliceIndex<[T]>
@@ -65,7 +61,7 @@ impl<T:Debug, Idx> std::ops::Index<Idx> for PointN<T>
     }
 }
 /*-- implements mutable indexer ---------------*/
-impl<T, Idx> std::ops::IndexMut<Idx> for PointN<T> 
+impl<T, const N:usize, Idx> std::ops::IndexMut<Idx> for Point<T, N> 
     where
         T:Debug + Default + Clone, 
         Idx: std::slice::SliceIndex<[T]>
@@ -75,7 +71,7 @@ impl<T, Idx> std::ops::IndexMut<Idx> for PointN<T>
     }
 }
 /*-- IntoIterator trait for PointN<T> ----------*/
-impl<T> IntoIterator for PointN<T>
+impl<T, const N:usize> IntoIterator for Point<T, N>
     where T:Debug + Default + Clone
 {
     type Item = T;
@@ -84,3 +80,24 @@ impl<T> IntoIterator for PointN<T>
         self.items.into_iter()
     }
 }
+/*-- IntoIterator trait for &PointN<T> ---------*/
+impl<T, const N:usize> IntoIterator for &Point<T, N>
+    where T:Debug + Default + Clone
+{
+    type Item = T;
+    type IntoIter = std::vec::IntoIter<Self::Item>;
+    fn into_iter(self) -> Self::IntoIter {
+        self.items.clone().into_iter()
+    }
+}
+// The definition below is ambiguous
+//
+// /*-- Iterator trait for PointN<T> --------------*/
+// impl<T> Iterator for PointN<T>
+//     where T:Debug + Default + Clone
+// {
+//     type Item = T;
+//     fn next(self) -> Option<Self::Item> {
+//         self.items.iter().next();
+//     }
+// }

@@ -26,7 +26,7 @@ fn demo_string_objects() {
   - move assignment
   - selected operations
 */
-  show_note("demo std String", 40);
+  show_note("demo std::String", 40);
   let mut s:String = "a string".to_string();
   println!("  s: {:?}\n", s);
   
@@ -119,155 +119,12 @@ fn demo_vector_objects() {
   println!("  h_vec: {:?}\n", h_vec);
 
 }
-/*---------------------------------------------------------
-  demo user-defined type Point4D
-  - create and initialize instances
-  - copy construction
-  - copy assignment
-  - selected operations
-*/
-fn demo_user_defined_point4d() {
-
-  show_note("instances of user-defined type Point4D", 35);
-  println!();
-
-  /*-- create instance of Point4D ---*/
-  show_op("let mut p1 = Point4D::new()");
-  let mut p1 = Point4D::new();
-  p1.show("p1", 2);
-  p1.set_x(42.0);
-  p1.set_y(-3.0);
-  p1.set_z(2.0);
-  p1.show("p1", 2);
-  /*-- show p1's type ---------------*/
-  p1.show("p1", 2);
-  println!();
-
-  show_op("using Debug trait with println!");
-  println!("p1: {:?}\n", p1);
-
-  /*-- show one of its operations ---*/
-  show_op("let p1a = p1.clone()");
-  let p1a = p1.clone();
-  p1a.show("p1.clone()", 2);   
-
-  println!("\n  using PointN<f64>::coor_x function:");
-  *(p1.coor_x()) = 84.0;
-  p1.show("p1", 2);
-
-  println!("\n  using PointN<f64>::coor_y function:");
-  *p1.coor_y() = 84.0; 
-  p1.show("p1", 2);
-
-  println!("\n  using PointN<f64>::coor_z function:");
-  let rz = p1.coor_z(); 
-  *rz = 84.0;
-  p1.show("p1", 2);
-
-  println!("\n  updating time value:");
-  /*-- delay 5 secs for update_time demo --*/
-  println!("  delaying 5 seconds before time update");
-  use std::time::Duration;
-  let dur:Duration = Duration::from_secs(5);
-  std::thread::sleep(dur);
-
-  p1.update_time();
-  p1.show("p1", 2);
-  println!();
-
-  show_op("let p2 = p1 : copy construction");
-  let mut p2 = p1;
-  p2.show("p2", 2);
-  p1.show("p1", 2);
-
-  show_op("*p2.coor_x() = 42.0");
-  *p2.coor_x() = 42.0;
-  p2.show("p2", 2);
-
-  show_op("p1 = p2 : copy assignment");
-  p1 = p2;
-  p1.show("p1", 2);
-  p2.show("p2", 2);
-  println!();
-
-  show_note("Point4D objects in heap", 40);
-  let mut h_point = Box::new(Point4D::new());
-  // show_type(&h_point, "h_point");
-  /*
-    Point4D does not implement trait DerefMut, so code has to
-    explicitly deref, as shown here.
-  */
-  *h_point.coor_x() = 2.0;
-  *h_point.coor_y() = 1.0;
-  *h_point.coor_z() = 0.0;
-  (*h_point).show("h_point", 2);
-  println!();
-
-  show_op("let h_point1 = h_point.clone()");
-  let h_point1 = h_point.clone();
-  (*h_point1).show("h_point1", 2);
-  println!();
-
-}
-/*---------------------------------------------------------
-  demo user-defined type PointNPrototype
-  - create and initialize instances
-  - move construction
-  - move assignment
-  - selected operations
-*/
-fn demo_user_defined_pointnprototype() {
-
-  show_note(
-    "instances of user-defined type PointNPrototype", 
-    35
-  );
-  println!();
-
-  /*-- create instance of PointNPrototype ---*/
-  show_op("create PointNPrototype, print using Debug trait");
-  let mut q = PointNPrototype::new();
-  q.init(&[1.0, 2.0, 3.0]);
-  println!("  q: {:?}", q);
-
-  show_op("let q1 = q: move construction");
-  let mut q1 = q;
-  println!("  q1: {:?}", q1);
-  // code below will fail to compile, q was moved
-  // println!("  q: {:?}", q);
-
-  q1.coors()[1] = -2.0;
-  show_op("q = q1: move assignment");
-  q = q1;  // q owns resources given by q1 so valid
-  println!("  q: {:?}", q);
-  // q1 has been move so no longer valid
-
-  show_op("let q2 = q.clone()");
-  let q2 = q.clone();
-  println!("  q2: {:?}\n", q2);
-
-  show_note("PointNPrototype objects in heap", 40);
-  let mut h_point_prototype = 
-    Box::new(PointNPrototype::new());
-  h_point_prototype.init(&[3.0, 2.5, 2.0]);
-  println!("  h_point_prototype: {:?}", h_point_prototype);
-
-  show_op("  h_point_prototype.coors()[0] = -3.0;");
-  h_point_prototype.coors()[0] = -3.0;
-  println!("  h_point_prototype: {:?}", h_point_prototype);
-
-  show_op("let h_point_prototype1 = h_point_prototype.clone()");
-  let h_point_prototype1 = 
-    h_point_prototype.clone();
-  println!("  h_point_prototype1: {:?}", h_point_prototype1);
-
-}
 
 /*---------------------------------------------------------
   Demo object instances in action
 */
 fn main() {
-    show_note("demonstrate object creation and use", 50);
+    show_note("demonstrate object creation and use", 40);
 
     demo_string_objects();
     demo_vector_objects();
