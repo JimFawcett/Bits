@@ -1,11 +1,13 @@
-/*-- PointN<T> -----------------------------------
-  PointN<T> declares a PointN type holding a
+/*-- Point<T, N> --------------------------------
+  Point<T, N> declares a Point type holding a
   Vec<T> of coordinate values.
   It implements:
   - new(n)  constructor
   - iter()  returns iterator over items
-  - trait IntoIterator for PointN<T>
-  - trait IntoIterator for &PointN<T>
+  - iter_mut() mutates while iterating
+  - trait IntoIterator for Point<T, N>
+  - trait IntoIterator for &Point<T, N>
+  - trati IntoIterator for &mut Point<T, N>
   - immutable and mutable indexing
   Note:
   ---------------------------------------------
@@ -70,7 +72,7 @@ impl<T, const N:usize, Idx> std::ops::IndexMut<Idx> for Point<T, N>
         &mut self.items[index]
     }
 }
-/*-- IntoIterator trait for PointN<T> ----------*/
+/*-- IntoIterator trait for PointN<T> ---------*/
 impl<T, const N:usize> IntoIterator for Point<T, N>
     where T:Debug + Default + Clone
 {
@@ -80,7 +82,10 @@ impl<T, const N:usize> IntoIterator for Point<T, N>
         self.items.into_iter()
     }
 }
-/*-- IntoIterator trait for &PointN<T> ---------*/
+/*-- IntoIterator trait for &PointN<T> ----------
+  Supports iterating elements of Point without
+  moving it, by using clone.
+*/
 impl<T, const N:usize> IntoIterator for &Point<T, N>
     where T:Debug + Default + Clone
 {
@@ -90,14 +95,33 @@ impl<T, const N:usize> IntoIterator for &Point<T, N>
         self.items.clone().into_iter()
     }
 }
-// The definition below is ambiguous
+/*-- IntoIterator trait for &mut Point<T, N> ---------
+  - Supports mutating elements of Point while
+    iterating. No clone used here.
+  - Point instance is not moved because we use
+    iter_mut() internally
+  - a is a required lifetime annotation
+*/
+use core::slice::IterMut;
+
+impl<'a, T, const N:usize> IntoIterator for &'a mut Point<T, N>
+    where T:Debug + Default + Clone
+{
+    type Item = &'a mut T;
+    type IntoIter = IterMut<'a, T>;
+    fn into_iter(self) -> Self::IntoIter {
+        self.items.iter_mut()
+    }
+}
+// The definition below is ambiguous since IntoIterator
+// provides an Iterator
 //
-// /*-- Iterator trait for PointN<T> --------------*/
-// impl<T> Iterator for PointN<T>
+/*-- Iterator trait for Point<T, N> ------------*/
+// impl<T, const N:usize> Iterator for &mut Point<T, N>
 //     where T:Debug + Default + Clone
 // {
 //     type Item = T;
-//     fn next(self) -> Option<Self::Item> {
+//     fn next(&self) -> Option<Self::Item> {
 //         self.items.iter().next();
 //     }
 // }

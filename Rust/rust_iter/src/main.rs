@@ -88,22 +88,188 @@ use std::cmp::*;
 ---------------------------------------------------------*/
 
 /*---------------------------------------------------------
+  Demo Vec iteration
+*/
+fn demo_loop_iteration() {
+  show_label("basic loop iteration with Vec", 35);
+
+  /* 1. v.iter(), iterates without consuming v */
+  let v = vec![1, 2, 3, 2, 1];
+  show_op("Vec iteration using loop and iter()");
+  let mut itr = v.iter();
+  loop {
+    match itr.next() {
+      Some(item) => print!("{item} "),
+      None => break,
+    }
+  }
+  // next statement is valid since v not consumed
+  println!();
+  println!("{v:?}");
+
+  /* 2. v.iter_mut() iterates and mutates without consuming v */
+  let mut v = vec![1, 2, 3, 2, 1];
+  let mut mitr = v.iter_mut();
+  show_op("mutable vec iteration with loop and mut_iter()");
+  loop {
+    match mitr.next() {
+      Some(item) => *item += 1,
+      None => break,
+    }
+  }
+  for item in &v {
+    print!("{item} ");
+  }
+  println!();
+  println!("{v:?}");
+
+  /* 3. v.into_iter() consumes v while converting to iterator */
+  let mut itr = v.into_iter();
+  show_op("generate iterator with v.into_iter()");
+  loop {
+    match itr.next() {
+      Some(item) => print!("{item} "),
+      None => break,
+    }
+  }
+  // into_iter() consumes v so the next statement is invalid
+  // println!("{v:?}");  // v was moved
+  println!();
+
+}
+
+fn demo_for_iteration() {
+  show_label("basic for-in loop iteration using Vec", 45);
+
+  /* 1. v.iter(), iterates without consuming v */
+  let v = vec![1, 2, 3, 2, 1];
+  show_op("Vec iteration using v.iter()");
+  for item in v.iter() {
+      print!("{item} ");
+  }
+  // next statement is valid since v not consumed
+  println!();
+  println!("{v:?}");
+
+  /* 2. v.iter_mut() iterates and mutates without consuming v */
+  let mut v = vec![1, 2, 3, 2, 1];
+  show_op("mutable vec iteration using v.iter_mut()");
+  println!("original:   {v:?}");
+  for item in v.iter_mut() {
+    *item += 1;
+      print!("{item:?} ");
+  }
+  println!();
+  println!("after iter: {v:?}");
+
+  /* 3. v.into_iter() consumes v while converting to iterator */
+  // let mut itr = v.into_iter();
+  show_op("for-in uses v.into_iter()");
+  for item in v.into_iter() {
+    print!("{item:?} ");
+  }
+  // into_iter() consumes v so the next statement is invalid
+  // println!("{v:?}");  // v was moved
+  println!();
+  /* 
+     4. iteration with for-in consumes v 
+        - same as 3. except that into_iter() is used implicitly
+        - used in preference to 3
+  */
+  let v = vec![1, 2, 3, 4, 5];
+  show_op("for-in uses v => into_iter()");
+  for item in v {  // implicitly uses into_iter()
+    print!("{item:?} ");
+  }
+  // into_iter() consumes v so the next statement is invalid
+  // println!("{v:?}");  // v was moved
+  println!();
+
+  /*
+     5. iteration over elements of v using &v
+        - uses into_iter() implemented with clone
+          so v not moved
+  */
+  let v = vec![1, 2, -1, -2, 0];
+  show_op("for-in uses &v => use of clone");
+  for item in &v {
+    print!("{item:?} ");
+  }
+  println!();
+  println!("{v:?}");  // v was not moved
+  /*
+     6. mutating iteration over elements of v using &mut v
+        - generates into_iter() implemented with internal
+          call to iter_mut(), so does not move v
+  */
+  let mut v = vec![1, 2, -1, -2, 0];
+  show_op("for-in uses &mut v => iter_mut()");
+  println!("original: {v:?}");
+  for item in &mut v {
+    *item += 1;
+    print!("{item:?} ");
+  }
+  println!();
+  println!("modified: {v:?}");  // v was not moved
+
+  /*------------------------------------------------------- 
+    Iteration forms 4, 5, and 6 are the preferred useage.
+    Forms 1, 2, and 3 show how for-in loops work. 
+  -------------------------------------------------------*/
+}
+
+fn demo_point_iteration() {
+
+  show_label("demo point iteration", 30);
+  let mut p = Point::<i32, 5>::new();
+  p.init(&vec![3, 2, 1, 0, -1]);
+  show_op("for-in uses p, generating iter from p.into_iter()");
+  for item in p {
+    print!("{item:?} ");
+  }
+  // into_iter() consumes v so the next statement is invalid
+  // println!("{p:?}");  // v was moved
+  println!();
+
+  let mut p = Point::<i32, 5>::new();
+  p.init(&vec![3, 2, 1, 0, -1]);
+  show_op("for-in uses &p which uses clone");
+  println!("original:   {p:?}");
+  for item in &p {
+    print!("{item:?} ");
+  }
+  println!();
+  println!("after iter: {p:?}");  // v was not moved
+
+  let mut p = Point::<i32, 5>::new();
+  p.init(&vec![-3, -2, -1, 0, 1]);
+  show_op("for-in uses &mut p => iter_mut()");
+  println!("original:  {:?}", p);
+  for item in &mut p {
+    *item += 1;
+    print!("{item:?} ");
+  }
+  println!();
+  println!("modified:  {p:?}");  // v was not moved
+  
+}
+/*---------------------------------------------------------
   Demonstrate iter() by displaying a comma seperated
   list of items in several common collections.
-  - uses three different strategies used for making
+  - three different strategies used for making
     display comma-seperated
   - syntax used in this demo
     - iter().next() -> Option<Self::Item>
     - enum Option<T> { Some(T), None, }
 */
 fn demo_iter() {
-  show_label("demo_iter()", 30);
-  println!();
+  show_label("demo_iter()", 20);
 
+  /* csl strategy #1 extracts first item before iterating */
   show_op("array iter using loop");
   let ar = [1, 2, 3, 4];
-  let mut iter = ar.iter();
-  print!("{}",iter.next().unwrap());  // display first item
+  let mut iter = ar.iter();  // extract first item
+  print!("{}",iter.next().unwrap());    // display without comma
   loop {
     let item = iter.next();
     match item {  //display remaining items
@@ -114,17 +280,17 @@ fn demo_iter() {
   println!();
   // ar not consumed by ar.iter(), above
   // so statement below is valid:
-  // println!("{:?}", ar);
-  // println!();
+  println!("using println!:\n{:?}", ar);
 
-  /*--- equivalent to loop, above ---*/
+  /* csl strategy #2 uses first flag */
+  /*--- functionaly equivalent to loop, above ---*/
   show_op("Vec iter using for-in");
   let v = vec![1, 2, 3, 4];
-  let mut first = true; 
+  let mut first = true;   // set first flag
   for item in &v {
     if first {
       print!("{item}");
-      first = false;
+      first = false;            // reset first flag
     }
     else {
       print!(", {item}");
@@ -133,10 +299,10 @@ fn demo_iter() {
   println!();
   // statement below is valid, v not consumed since
   //   for-in used reference &v
-  // println!("{:?}", v);
-  // println!();
+  println!("using println!:\n{:?}", v);
 
-  show_op("HashMap iter");
+  /* csl strategy #3 uses enumerate() */
+  show_op("HashMap iter using for-in");
   let mut hm = HashMap::<&str, i32>::new();
   hm.insert("zero", 0);
   hm.insert("one", 1);
@@ -156,27 +322,32 @@ fn demo_iter() {
     }
   }
   println!();
-  show_op("HashMap iter using println!");
-  println!("{:?}", hm);
+  println!("using println!:\n{:?}", hm);
 
-  show_op("Point iter using println!");
+  /* csl strategy same as above */
+  show_op("Point iter using for-in");
   let mut p = Point::<f64, 5>::new();
   p.init(&vec![1.0, 1.5, 2.0, 1.5, 1.0]);
-  print!("{:?}", p);
-  show_label(
-  "print!(\"{:?}\", p) uses &p.into_iter(),
-  which does not consume p, to display items", 45
-  );
+  for item in p.iter().enumerate() {
+    if item.0 == 0 {  // count == zero
+      print!("{:?}", item.1);
+    }
+    else {  // count > 0
+      print!(", {:?}", item.1);
+    }
+  }
   println!();
+  print!("using println!:\n{p:?}");  // p not moved
+  println!("\n");
 
   show_op("using show_csl(&ar) for array");
-  show_csl(&ar); 
+  show_csl(&ar); // ar not consumed
   show_op("using show_csl(&v) for Vector");
-  show_csl(&v);
+  show_csl(&v);  // v not consumed
   show_op("using show_csl(&hm) for HashMap");
-  show_csl(&hm);
+  show_csl(&hm); // hm not consumed
   show_op("using show_csl(&p) for Point");
-  show_csl(&p);   // p is consumed
+  show_csl(&p);  // p not consumed
   println!();
 
   show_op("using show_csl(ar) for array - copies ar");
@@ -189,6 +360,7 @@ fn demo_iter() {
   show_csl(p);   // p is consumed
 }
 
+/* generalize csl strategy #3 */
 fn show_csl<C>(c:C)  // consumes c
   where C: IntoIterator, C::Item: Debug 
 {
@@ -203,7 +375,15 @@ fn show_csl<C>(c:C)  // consumes c
   }
   println!();
 }
-/*---------------------------------------------------------*/
+/*---------------------------------------------------------
+  Related operations:
+  - These all were learning experiments while I was
+    preparing iteration code demos.
+  - They use a few techniques not discussed above along
+    with code very similar to those demos.
+  - Of special note are the generic functions and their
+    often not so obvious signatures.
+---------------------------------------------------------*/
 fn demo_array_into_iterator_loop<T:Debug>(arr:[T; 5]) {
   let mut iter = arr.into_iter();
   loop {
@@ -292,7 +472,7 @@ fn execute_demo_collection_into_iterator() {
   demo_collection_into_iterator(v);
   println!();
   /*-- PointN ----------*/
-  print!("execute demo_collection_into_iterator for PointN");
+  print!("execute demo_collection_into_iterator for Point");
   let mut p = Point::<f64, 5>::new();
   p[0] = 1.0;
   p[1] = 1.5;
@@ -371,7 +551,7 @@ fn execute_demo_collection_iter_for() {
   demo_collection_iter_for(&mut m.iter_mut(), plus_one2);
   println!();
 
-  print!("execute demo_collection_iter_mut_for with PointN");
+  print!("execute demo_collection_iter_mut_for with Point");
   let mut p = Point::<f64, 7>::new();
   p[0] = 1.0;
   p[1] = 1.5;
@@ -447,7 +627,7 @@ fn execute_demo_collection_iter_mut_for() {
   print!("\n  output:\n    {:?}", m);
   println!();
 
-  print!("execute demo_collection_iter_mut_for with PointN");
+  print!("execute demo_collection_iter_mut_for with Point");
   let mut p = Point::<f64, 7>::new();
   p[0] = 1.0;
   p[1] = 1.5;
@@ -496,7 +676,7 @@ fn execute_demo_adapters() {
   let vo = demo_adapters(a, 2);
   println!("{:?} ", &vo);
 
-  println!("execute demo_adapters<T, f64>(coll, 1.5) with PointN<f64>:");
+  println!("execute demo_adapters<T, f64>(coll, 1.5) with Point<f64, 5>:");
   let mut pad = Point::<f64, 5>::new();
   pad[0] = 1.5;
   pad[1] = -2.0;
@@ -664,7 +844,7 @@ fn execute_demo_for_looper() {
   print!("execute demo_for_looper with vector");
   let v = vec![1, 2, 3, 4, 3, 2, 1];
   demo_for_looper(&v);
-  print!("execute demo_for_looper with PointN");
+  print!("execute demo_for_looper with Point");
   let mut p = Point::<i32, 7>::new();
   p.init(&vec![1, 2, 3, 4, 3, 2, 1]);
   demo_for_looper(&p);
@@ -705,7 +885,7 @@ fn execute_demo_ranger() {
   vd.push_back(2);
   vd.push_back(1);
   demo_ranger(&mut vd.iter());
-  print!("execute demo_ranger with PointN iter");
+  print!("execute demo_ranger with Point iter");
   let mut p = Point::<i32, 7>::new();
   p.init(&vec![1, 2, 3, 4, 3, 2, 1]);
   demo_ranger(&mut p.iter());
@@ -734,7 +914,7 @@ fn execute_collection_with_operation() {
   print!("no side effects - original:");
   demo_slice_looper(&v);
   /*-- plus_one on PointN -----------*/
-  print!("execute collection_with_operation plus_one on PointN");
+  print!("execute collection_with_operation plus_one on Point");
   let mut p = Point::<f64, 5>::new();
   p.init(&vec![1.0, 1.5, 2.0, 1.5, 1.0]);
   let plus_one = |item:&f64| {
@@ -746,7 +926,7 @@ fn execute_collection_with_operation() {
   print!("no side effects - same as original:");
   demo_slice_looper(&p.items);
   /*-- square on PointN -------------*/
-  print!("execute collection_with_operation square on PointN");
+  print!("execute collection_with_operation square on Point");
   let mut p = Point::<f64, 5>::new();
   p.init(&vec![1.0, 1.5, 2.0, 1.5, 1.0]);
   let square = |item:&f64| {
@@ -773,8 +953,15 @@ fn test() {
 
 fn main() {
   analysis_iter::show_label("Demonstrate Rust Iteration",30);
-  println!();
+  demo_loop_iteration();
+  demo_for_iteration();
+  demo_point_iteration();
   demo_iter();
+
+  const DOTEST:bool = true;
+  if DOTEST {
+    test();
+  }
 
   // analysis_iter::show_op("into_iterator()");
   // println!();
@@ -800,11 +987,6 @@ fn main() {
   // analysis_iter::show_op("iteration adapters");
   // println!();
   // execute_demo_adapters();
-
-  // const DOTEST:bool = true;
-  // if DOTEST {
-  //   test();
-  // }
 
   println!("\nThat's all folks!\n");
 
