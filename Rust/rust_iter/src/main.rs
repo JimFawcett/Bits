@@ -9,7 +9,7 @@
     which return iterators without consuming originial
     collection.
   - Demonstrates iteration over arrays, slices,
-    Vecs, VecDeques, and custom PointN<T> type. 
+    Vecs, VecDeques, and custom Point<T, N> type. 
 -----------------------------------------------*/
 /*-----------------------------------------------
 Iteration traits:
@@ -66,10 +66,10 @@ You can clone the repo from this link.
 #![allow(unused_variables)]
 
 /*-----------------------------------------------
-  - Don't need use for analysis_iter, below, 
-    as it only contains functions.
-  - Do need for points_iter as it defines a type
-    to be instantiated.
+  - Module analysis_iter provides functions
+    for type analysis and display.
+  - Module points_iter defines type Point<T, N>,
+    a point in N-dimensional hyperspace.
 */
 use std::collections::*;
 mod analysis_iter;
@@ -83,12 +83,14 @@ use std::cmp::*;
 /*---------------------------------------------------------
   Use of Rust iterators is encapsulated in a sequence of
   functions defined below and used in main.  This file 
-  builds collections and applies the various functions
-  to illustrate how iterators are used.
+  builds collections and applies various functions to
+  illustrate how iterators are used.
 ---------------------------------------------------------*/
 
 /*---------------------------------------------------------
-  Demo Vec iteration
+  Demo Vec iteration with loop construct
+  - illustrates how iteration works, using most basic
+    syntax operating on Vec<T> instances.
 */
 fn demo_loop_iteration() {
   show_label("basic loop iteration with Vec", 35);
@@ -113,12 +115,9 @@ fn demo_loop_iteration() {
   show_op("mutable vec iteration with loop and mut_iter()");
   loop {
     match mitr.next() {
-      Some(item) => *item += 1,
+      Some(item) => { *item += 1; print!("{item} "); }
       None => break,
     }
-  }
-  for item in &v {
-    print!("{item} ");
   }
   println!();
   println!("{v:?}");
@@ -137,7 +136,11 @@ fn demo_loop_iteration() {
   println!();
 
 }
-
+/*---------------------------------------------------------
+  Demo iteration with for-in loop construct
+  - illustrates how for-in works, using idiomatic
+    syntax operating on Vec<T> instances.
+*/
 fn demo_for_iteration() {
   show_label("basic for-in loop iteration using Vec", 45);
 
@@ -187,11 +190,11 @@ fn demo_for_iteration() {
 
   /*
      5. iteration over elements of v using &v
-        - uses into_iter() implemented with clone
-          so v not moved
+        - uses internal call to into_iter() implemented with
+          Vec::iter() so v not moved
   */
   let v = vec![1, 2, -1, -2, 0];
-  show_op("for-in uses &v => use of clone");
+  show_op("for-in uses &v => iter()");
   for item in &v {
     print!("{item:?} ");
   }
@@ -217,10 +220,16 @@ fn demo_for_iteration() {
     Forms 1, 2, and 3 show how for-in loops work. 
   -------------------------------------------------------*/
 }
-
+/*---------------------------------------------------------
+  Demo iteration over coordinate values in Point<T,N>
+  - illustrates how to implement iteration for custom
+    types, using definitions in points_iter.rs module.
+*/
 fn demo_point_iteration() {
 
   show_label("demo point iteration", 30);
+
+  /* uses Point<T,N>::IntoIterator => into_iter() => move */
   let mut p = Point::<i32, 5>::new();
   p.init(&vec![3, 2, 1, 0, -1]);
   show_op("for-in uses p, generating iter from p.into_iter()");
@@ -231,9 +240,10 @@ fn demo_point_iteration() {
   // println!("{p:?}");  // v was moved
   println!();
 
+  /* uses &Point<T,N>::IntoIterator => iter() => no move */
   let mut p = Point::<i32, 5>::new();
   p.init(&vec![3, 2, 1, 0, -1]);
-  show_op("for-in uses &p which uses clone");
+  show_op("for-in uses &p, generating iter from &p.iter()");
   println!("original:   {p:?}");
   for item in &p {
     print!("{item:?} ");
@@ -241,9 +251,10 @@ fn demo_point_iteration() {
   println!();
   println!("after iter: {p:?}");  // v was not moved
 
+  /* uses &mut Point<T,N>::IntoIterator => iter_mut() => no move */
   let mut p = Point::<i32, 5>::new();
   p.init(&vec![-3, -2, -1, 0, 1]);
-  show_op("for-in uses &mut p => iter_mut()");
+  show_op("for-in uses &mut p, generating iter from &mut p.iter_mut()");
   println!("original:  {:?}", p);
   for item in &mut p {
     *item += 1;
@@ -255,7 +266,7 @@ fn demo_point_iteration() {
 }
 /*---------------------------------------------------------
   Demonstrate iter() by displaying a comma seperated
-  list of items in several common collections.
+  list (csl) of items in several common collections.
   - three different strategies used for making
     display comma-seperated
   - syntax used in this demo
@@ -340,6 +351,11 @@ fn demo_iter() {
   print!("using println!:\n{p:?}");  // p not moved
   println!("\n");
 
+  /* 
+    Use formatting function that accepts any type 
+    implementing IntoIterator trait.
+    - function defined below 
+  */
   show_op("using show_csl(&ar) for array");
   show_csl(&ar); // ar not consumed
   show_op("using show_csl(&v) for Vector");
@@ -377,10 +393,10 @@ fn show_csl<C>(c:C)  // consumes c
 }
 /*---------------------------------------------------------
   Related operations:
-  - These all were learning experiments while I was
-    preparing iteration code demos.
-  - They use a few techniques not discussed above along
-    with code very similar to those demos.
+  - All functions below were learning experiments imple-
+    mented while I was preparing iteration code demos.
+  - A few use techniques not discussed above. Most use
+    code very similar to the demos above.
   - Of special note are the generic functions and their
     often not so obvious signatures.
 ---------------------------------------------------------*/
@@ -511,7 +527,7 @@ fn execute_demo_vec_iter_for() {
   println!();
 }
 /*---------------------------------------------------------*/
-fn demo_collection_iter_for<T, F>(c:&mut dyn Iterator<Item = T>, f:F) 
+fn demo_collection_iter_for<T, F>(c:impl Iterator<Item = T>, f:F) 
   where 
     F: Fn(&T) -> ()
 {
@@ -519,6 +535,15 @@ fn demo_collection_iter_for<T, F>(c:&mut dyn Iterator<Item = T>, f:F)
     f(&item);
   }
 }
+// /*---------------------------------------------------------*/
+// fn demo_collection_iter_for<T, F>(c:&mut dyn Iterator<Item = T>, f:F) 
+//   where 
+//     F: Fn(&T) -> ()
+// {
+//   for item in c {
+//     f(&item);
+//   }
+// }
 fn execute_demo_collection_iter_for() {
   
   print!("execute demo_collection_iter_for with array");
@@ -947,6 +972,9 @@ fn test() {
   execute_demo_slice_looper();
   execute_demo_for_looper();
   execute_demo_ranger();
+  execute_demo_collection_iter_for();
+  execute_demo_collection_iter_mut_for();
+  execute_demo_collection_into_iterator();
   execute_collection_with_operation();
 }
 /*-- Begin demonstrations ---------------------*/

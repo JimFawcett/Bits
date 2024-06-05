@@ -82,24 +82,28 @@ impl<T, const N:usize> IntoIterator for Point<T, N>
         self.items.into_iter()
     }
 }
-/*-- IntoIterator trait for &PointN<T> ----------
-  Supports iterating elements of Point without
-  moving it, by using clone.
+/*-- IntoIterator trait for &Point<T, N> -------------
+  - Supports interating elements of Point
+  - Point instance is not moved because we use
+    Vec::iter() internally
+  - a is a required lifetime annotation
 */
-impl<T, const N:usize> IntoIterator for &Point<T, N>
+use core::slice::Iter;
+
+impl<'a, T, const N:usize> IntoIterator for &'a Point<T, N>
     where T:Debug + Default + Clone
 {
-    type Item = T;
-    type IntoIter = std::vec::IntoIter<Self::Item>;
+    type Item = &'a T;
+    type IntoIter = Iter<'a, T>;
     fn into_iter(self) -> Self::IntoIter {
-        self.items.clone().into_iter()
+        self.items.iter()
     }
 }
 /*-- IntoIterator trait for &mut Point<T, N> ---------
   - Supports mutating elements of Point while
     iterating. No clone used here.
   - Point instance is not moved because we use
-    iter_mut() internally
+    Vec::iter_mut() internally
   - a is a required lifetime annotation
 */
 use core::slice::IterMut;
