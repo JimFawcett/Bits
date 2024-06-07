@@ -276,11 +276,16 @@ fn demo_point_iteration() {
 fn demo_iter() {
   show_label("demo_iter()", 20);
 
-  /* csl strategy #1 extracts first item before iterating */
+  /*-------------------------------------------------- 
+    iterate over array
+    csl strategy #1 extracts first item before iterating 
+  --------------------------------------------------*/
   show_op("array iter using loop");
   let ar = [1, 2, 3, 4];
   let mut iter = ar.iter();  // extract first item
-  print!("{}",iter.next().unwrap());    // display without comma
+  if let Some(item) = iter.next() {
+    print!("{item}");
+  }
   loop {
     let item = iter.next();
     match item {  //display remaining items
@@ -293,7 +298,10 @@ fn demo_iter() {
   // so statement below is valid:
   println!("using println!:\n{:?}", ar);
 
-  /* csl strategy #2 uses first flag */
+  /*-------------------------------------------------- 
+    iterate over Vec
+    csl strategy #2 uses first flag 
+  --------------------------------------------------*/
   /*--- functionaly equivalent to loop, above ---*/
   show_op("Vec iter using for-in");
   let v = vec![1, 2, 3, 4];
@@ -312,7 +320,10 @@ fn demo_iter() {
   //   for-in used reference &v
   println!("using println!:\n{:?}", v);
 
-  /* csl strategy #3 uses enumerate() */
+  /*-------------------------------------------------- 
+    iterate over HashMap
+    csl strategy #3 uses enumerate() 
+  --------------------------------------------------*/
   show_op("HashMap iter using for-in");
   let mut hm = HashMap::<&str, i32>::new();
   hm.insert("zero", 0);
@@ -324,18 +335,21 @@ fn demo_iter() {
     iterator yielding (count, value) where value is 
     yielded by iter 
   */
-  for item in hm.iter().enumerate() {
-    if item.0 == 0 {  // count == zero
-      print!("{:?}", item.1);
+  for (count, item) in hm.iter().enumerate() {
+    if count == 0 {
+      print!("{item:?}");
     }
-    else {  // count > 0
-      print!(", {:?}", item.1);
+    else {
+      print!(", {item:?}");
     }
   }
   println!();
   println!("using println!:\n{:?}", hm);
 
-  /* csl strategy same as above */
+  /*--------------------------------------------------
+    iterate over Point<T, N>, 
+    csl strategy same as above 
+  --------------------------------------------------*/
   show_op("Point iter using for-in");
   let mut p = Point::<f64, 5>::new();
   p.init(&vec![1.0, 1.5, 2.0, 1.5, 1.0]);
@@ -351,11 +365,11 @@ fn demo_iter() {
   print!("using println!:\n{p:?}");  // p not moved
   println!("\n");
 
-  /* 
+  /*-------------------------------------------------- 
     Use formatting function that accepts any type 
     implementing IntoIterator trait.
     - function defined below 
-  */
+  --------------------------------------------------*/
   show_op("using show_csl(&ar) for array");
   show_csl(&ar); // ar not consumed
   show_op("using show_csl(&v) for Vector");
