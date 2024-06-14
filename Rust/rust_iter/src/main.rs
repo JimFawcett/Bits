@@ -406,6 +406,38 @@ fn show_csl<C>(c:C)  // consumes c
   println!();
 }
 /*---------------------------------------------------------
+  Demonstrate iterator methods
+*/
+fn demo_methods() {
+  show_label("iterator methods", 25);
+
+  show_op("original vector");
+  let mut v = vec![1, 2, 3, 2, 1];
+  println!("{v:?}");
+  show_op("modified using for_each()");
+  /* inplace modification of elements of v */
+  v.iter_mut().for_each(|item| *item *= *item);
+  println!("{v:?}");
+
+  show_op("collect squared items from vec into array");
+  let sq:[i32; 5] = 
+    /* return iterator over squared items from v */
+    v.iter().map(|&item| item * item)
+      /* collect invokes iterator to load modified elements into sq */
+      .collect::<Vec<i32>>().try_into()
+      /* display message if collection panics, e.g., fails and terminates */
+      .expect("incorrect length");
+  println!("{sq:?}");
+
+  show_op("filter out elements larger than 20");
+  let filtered: Vec<i32> = 
+    /* create iterator over filtered elements */
+    sq.iter().filter(|&&item| item <= 20)
+    /* copy filtered element and collect into Vec */
+    .cloned().collect();
+  println!("{filtered:?}");
+}
+/*---------------------------------------------------------
   Related operations:
   - All functions below were learning experiments imple-
     mented while I was preparing iteration code demos.
@@ -999,6 +1031,7 @@ fn main() {
   demo_for_iteration();
   demo_point_iteration();
   demo_iter();
+  demo_methods();
 
   const DOTEST:bool = true;
   if DOTEST {
