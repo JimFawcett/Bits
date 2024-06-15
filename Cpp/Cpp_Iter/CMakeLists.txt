@@ -4,6 +4,7 @@
 #---------------------------------------------------
 
 #---------------------------------------------------
+cmake_minimum_required(VERSION 3.30.0)
 project(IterCMake)
 #---------------------------------------------------
 #   Cpp_Objects dir
@@ -21,6 +22,7 @@ project(IterCMake)
 #---------------------------------------------------
 
 set(CMake_CXX_STANDARD 23)
+set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 #---------------------------------------------------
 # build HelloCMake.obj in folder build/Cpp_Hello.dir/debug

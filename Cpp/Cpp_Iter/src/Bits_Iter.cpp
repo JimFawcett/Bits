@@ -53,6 +53,22 @@ void executeDemoIndexerVec() {
   demoIndexerVec(v);
 }
 /*-----------------------------------------------
+  demoIteratorVec
+*/
+template<typename T>
+void demoIteratorVec(const std::vector<T>& v) {
+  auto itr = v.begin();
+  std::cout << "\n  " << *itr;
+  while(++itr != v.end()) {
+    std::cout << ", " << *itr; 
+  }
+}
+void executeDemoIteratorVec() {
+  std::cout << "\nexecute demoIteratorVec(v)";
+  auto v = std::vector<int> { 1, 2, 3, 2, 1 };
+  demoIteratorVec(v);
+}
+/*-----------------------------------------------
   demoForLoopVec
   - accepts std::vector<T> instances
   - uses range-for to display elements
@@ -251,6 +267,7 @@ int main() {
     std::cout << std::fixed;
     std::cout << std::setprecision(1);
     executeDemoIndexerVec();
+    executeDemoIteratorVec();
     executeDemoForLoopVec();
     executeDemoForLoopPoint();
     executeDemoWhilerPoint();
