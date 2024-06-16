@@ -38,6 +38,9 @@ using namespace Points;
 */
 #pragma warning(disable: 4984)  // warns about C++17 extension
 
+template<typename C>
+void showCSL(const C& c, const std::string& nm = "", size_t max = 7, size_t indent = 0);
+
 /*-----------------------------------------------
   demoIndexer(const std::vector<T>& v)
   - accepts std::vector<T>
@@ -45,7 +48,7 @@ using namespace Points;
   - uses indexing, not using iterator
 */
 template<typename T>
-void demoIndexerVec(const std::vector<T>& v) {
+void indexerVec(const std::vector<T>& v) {
   if(v.size() < 1)
     return;
   std::cout << "\n  " << v[0];
@@ -53,10 +56,10 @@ void demoIndexerVec(const std::vector<T>& v) {
     std::cout << ", "  << v[i];
   }
 }
-void executeDemoIndexerVec() {
+void executeIndexerVec() {
   std::cout << "\nexecute demoIndexerVec(v)";
   auto v = std::vector<int> { 1, 2, 3, 2, 1 };
-  demoIndexerVec(v);
+  indexerVec(v);
 }
 /*-----------------------------------------------
   demoIteratorVec
@@ -64,17 +67,17 @@ void executeDemoIndexerVec() {
   - uses iterator
 */
 template<typename T>
-void demoIteratorVec(const std::vector<T>& v) {
+void iteratorVec(const std::vector<T>& v) {
   auto itr = v.begin();
   std::cout << "\n  " << *itr;
   while(++itr != v.end()) {
     std::cout << ", " << *itr; 
   }
 }
-void executeDemoIteratorVec() {
+void executeIteratorVec() {
   std::cout << "\nexecute demoIteratorVec(v)";
   auto v = std::vector<int> { 1, 2, 3, 2, 1 };
-  demoIteratorVec(v);
+  iteratorVec(v);
 }
 /*-----------------------------------------------
   demoForLoopVec
@@ -83,16 +86,16 @@ void executeDemoIteratorVec() {
   - that uses iterator implicitly
 */
 template<typename T>
-void demoForLoopVec(const std::vector<T>& v) {
+void forLoopVec(const std::vector<T>& v) {
   std::cout << "\n  ";
   for(auto const &item : v) {
     std::cout << item << " ";
   }
 }
-void executeDemoForLoopVec() {
+void executeForLoopVec() {
   std::cout << "\nexecute demoForLoopVec(v)";
   auto v = std::vector<int> { 1, 2, 3, 2, 1 };
-  demoForLoopVec(v);
+  forLoopVec(v);
 }
 /*-----------------------------------------------
   forLoopPoint 
@@ -101,7 +104,7 @@ void executeDemoForLoopVec() {
   - creates comma separated list
 */
 template<typename T, const size_t N>
-void demoForLoopPoint(const Point<T, N>& p) {
+void forLoopPoint(const Point<T, N>& p) {
   auto s = std::stringstream();
   s << "\n  ";
   for(auto const &item : p) {
@@ -113,11 +116,11 @@ void demoForLoopPoint(const Point<T, N>& p) {
   str.pop_back();
   std::cout << str;
 }
-void executeDemoForLoopPoint() {
+void executeForLoopPoint() {
   std::cout << "\nexecute demoForLoopPoint(v)";
   /* using initialization list */
   auto p = Point<int, 5> { 1, 2, 3, 2, 1 };
-  demoForLoopPoint(p);
+  forLoopPoint(p);
 }
 /*-----------------------------------------------
   whilerPoint 
@@ -126,14 +129,14 @@ void executeDemoForLoopPoint() {
   - creates comma separated list
 */
 template<typename T, const size_t N>
-void demoWhilerPoint(const Point<T, N>& p) {
+void whilerPoint(const Point<T, N>& p) {
   auto itr = p.begin();
   std::cout << "\n  " << *itr++;
   while (itr < p.end()) {
     std::cout << ", " << *itr++;
   }
 }
-void executeDemoWhilerPoint() {
+void executeWhilerPoint() {
   std::cout << "\nexecute demoWhilerPoint(v)";
   auto p = Point<int, 5>();
   /* using indexer */
@@ -142,10 +145,10 @@ void executeDemoWhilerPoint() {
   p[2] = 3;
   p[3] = 2;
   p[4] = 1;
-  demoWhilerPoint(p);
+  whilerPoint(p);
 }
 /*-----------------------------------------------
-  whiler
+  demoWhiler
   - is flexible function that accepts any 
     iterable container
   - uses iterator on C.
@@ -182,7 +185,7 @@ void executeDemoWhiler() {
     to show on one line
 */
 template<typename C>
-void demoWhilerGuarded(
+void whilerGuarded(
   const C& c, const std::string& name, 
   size_t indent = 2, size_t max = 8
   ) {
@@ -201,12 +204,18 @@ void demoWhilerGuarded(
     */
   }
 }
-void executeDemoWhilerGuarded() {
+void executeWhilerGuarded() {
   std::cout << "\nexecute demoWhilerGuarded(c) with vector";
   auto v = std::vector<int> { 1, 2, 3, 2, 1, 0, -1, -2, -3, -4 };
-  demoWhilerGuarded(v, "vector");
-  std::cout << "\nexecute demoWhiler(c) with double will fail";
-  demoWhilerGuarded(3.5, "double");
+  whilerGuarded(v, "vector");
+  std::cout << "\nexecute demoWhiler(c) with double";
+  whilerGuarded(3.5, "double");
+  auto v2 = std::vector<int> { 1, 2, 3, 4, 5 };
+  /* used to test showCSL formatting */
+  // std::cout << "\n";
+  // showCSL(v2, "v2", 7, 2);
+  // showCSL(v2, "", 7, 2);
+  // showCSL(v2);
 }
 /*-----------------------------------------------
   collectionWithOperation(C& c, F f)
@@ -217,16 +226,16 @@ void executeDemoWhilerGuarded() {
       square(item), plus_one(item), plus_one_mod(item)
 */
 template<typename C, typename F>
-void collectionWithOperation(C& c, F f) {
+void forEachOp(C& c, F f) {
   for(auto &item : c) {
     f(item);
   }
 }
-void executeCollectionWithOperation() {
+void executeForEachOp() {
   /*------------------------------*/
   auto v = std::vector<int> { 1, 2, 3, 2, 1 };
   std::cout << "\noriginal vector";
-  demoWhiler(v);
+  showCSL(v);
 
   std::cout << "\nexecute collectionWithOperation(v, square)";
   std::cout << "\n  ";
@@ -234,7 +243,7 @@ void executeCollectionWithOperation() {
   auto square = [](int item) { 
     std::cout << item*item << " "; 
   };
-  collectionWithOperation(v, square);
+  forEachOp(v, square);
   /*------------------------------*/
   std::cout << "\nexecute collectionWithOperation(v, plus_one)";
   std::cout << "\n  ";
@@ -242,9 +251,9 @@ void executeCollectionWithOperation() {
   auto plus_one = [](int item) { 
     std::cout << item + 1 << " "; 
   };
-  collectionWithOperation(v, plus_one);
+  forEachOp(v, plus_one);
   std::cout << "\nno side effect of plus_one:";
-  demoForLoopVec(v);
+  showCSL(v);
   /*------------------------------*/
   std::cout << "\nexecute collectionWithOperation(v, plus_one_mod)";
   std::cout << "\n  ";
@@ -253,9 +262,29 @@ void executeCollectionWithOperation() {
     item += 1;
     std::cout << item << " "; 
   };
-  collectionWithOperation(v, plus_one_mod);
+  forEachOp(v, plus_one_mod);
   std::cout << "\nside effect of plus_one_mod:";
-  demoForLoopVec(v);
+  showCSL(v);
+}
+/*-----------------------------------------------
+
+*/
+template<typename C>
+inline void showCSL(const C& c, const std::string& nm, size_t max, size_t indent) {
+  if constexpr(!is_iterable_v<C>) {  // decision at compile-time
+    std::cout << "\n  whiler input type is not iterable";
+    return;
+  }
+  else {
+    std::cout << formatColl(c, nm, "", indent, max);
+    /*
+      Analysis::formatColl uses range-based for loop to iterate 
+      over collection, folding output into rows of max items.
+
+      Could have used the same iteration as in demoWhiler
+      but wanted to show nicer formatting.
+    */
+  }
 }
 /*-----------------------------------------------
   executeForEachAlgorithm()
@@ -265,7 +294,7 @@ void executeCollectionWithOperation() {
 void executeForEachAlgorithm() {
   auto v = std::vector<int> { 1, 2, 3, 2, 1 };
   std::cout << "\noriginal vector:";
-  demoWhiler(v);  // display v
+  showCSL(v);
  
   /* define lambda plus_one_mod */
   auto plus_one_mod = [](int& item) { 
@@ -273,15 +302,15 @@ void executeForEachAlgorithm() {
   };
   std::cout << "\nmodified vector:";
   std::for_each(v.begin(), v.end(), plus_one_mod);
-  demoWhiler(v);  // display v
+  showCSL(v);
   std::cout << "\n";
 
   auto p = Point<int, 5> { 1, 2, 3, 4, 5 };
   std::cout << "\noriginal point";
-  demoWhiler(p);
+  showCSL(p);
   std::cout << "\nmodified point";
   std::for_each(p.begin(), p.end(), plus_one_mod);
-  demoWhiler(p);
+  showCSL(p);
   std::cout << "\n";
  
   /* define lambda sumer */
@@ -306,11 +335,11 @@ int main() {
     showOp("collection specific iterations", nl);
     std::cout << std::fixed;
     std::cout << std::setprecision(1);
-    executeDemoIndexerVec();
-    executeDemoIteratorVec();
-    executeDemoForLoopVec();
-    executeDemoForLoopPoint();
-    executeDemoWhilerPoint();
+    executeIndexerVec();
+    executeIteratorVec();
+    executeForLoopVec();
+    executeForLoopPoint();
+    executeWhilerPoint();
     print();
 
     showOp("accepts any iterable collection", nl);
@@ -318,11 +347,11 @@ int main() {
     print();
 
     showOp("detects non-iterable input at compile-time", nl);
-    executeDemoWhilerGuarded();
+    executeWhilerGuarded();
     print();
 
     showOp("using lambda to operate on items", nl);
-    executeCollectionWithOperation();
+    executeForEachOp();
     std::cout << "\n";
 
     showOp("using std::for_each algorithm to modify items", nl);

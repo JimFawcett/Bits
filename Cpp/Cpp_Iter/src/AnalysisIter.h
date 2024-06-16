@@ -36,7 +36,7 @@ namespace Analysis {
   template<typename T>
   std::string formatColl(
     const T& t, const std::string& nm,
-    const std::string& suffix = "", size_t left = 2, size_t width = 7
+    const std::string& suffix, size_t left, size_t width
   );
   template<typename T>
   std::string formatScalar(
@@ -170,14 +170,35 @@ namespace Analysis {
     Format output for Collection types
     - any type with begin() and end() like
       all the STL containers.
+    - if nm is larger than empty str displays nm : { + ...
+    - if nm is empty str displays { + ...
+    - if c.size() <= width displays on one line
+    - if c.size() > width displays on folded stack of lines
   */
   template<typename Coll>
   std::string formatColl(
-    const Coll& c, const std::string& nm, const std::string& suffix,
-    size_t left, size_t width
+    const Coll& c, const std::string& nm = "", const std::string& suffix = "",
+    size_t left = 2, size_t width = 7
   ) {
+    std::string nameStr;
+    std::string prologue;
+    std::string epilogue;
+    if(nm.size() == 0) {
+      nameStr = "{ ";
+    }
+    else {
+      nameStr = nm + " : { ";
+    }
+    if(c.size() <= width) {
+      prologue = indent(left) + nameStr;
+      epilogue = " }";
+    }
+    else {
+      prologue = indent(left) + nameStr + "\n" + indent(left + 2);
+      epilogue = "\n" + indent(left) + "}\n";
+    }
     std::stringstream out;
-    out << "\n" << indent(left) << nm << ": {\n" << indent(left + 2);
+    out << "\n" + prologue;
     size_t i = 0;
     for(const Coll::value_type& elem : c) {
       if((i % width) == 0 && i != 0 && i != width - 1) {
@@ -187,7 +208,7 @@ namespace Analysis {
         out << elem << ", ";
       }
       else {
-        out << elem << "\n" << indent(left) << "}" << suffix;
+        out << elem << epilogue << suffix;
         break;
       }
       ++i;
