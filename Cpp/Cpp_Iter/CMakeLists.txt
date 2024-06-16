@@ -4,7 +4,7 @@
 #---------------------------------------------------
 
 #---------------------------------------------------
-cmake_minimum_required(VERSION 3.30.0)
+cmake_minimum_required(VERSION 3.30.0-rc3)
 project(IterCMake)
 #---------------------------------------------------
 #   Cpp_Objects dir
@@ -21,14 +21,17 @@ project(IterCMake)
 
 #---------------------------------------------------
 
-set(CMake_CXX_STANDARD 23)
+set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 #---------------------------------------------------
 # build HelloCMake.obj in folder build/Cpp_Hello.dir/debug
 #---------------------------------------------------
 add_executable(Cpp_Iter src/Bits_Iter.cpp)
-
+if (MSVC)
+  # suppress warning about need for C++20 for concepts
+  add_compile_options(/wd4038)
+endif()
 #---------------------------------------------------
 # build HelloCMakeLib.lib in folder build/debug
 #---------------------------------------------------

@@ -4,6 +4,8 @@
   - depends on Points.h to provide user-defined point class
   - depends on Analysis.h for several display and analysis functions
 */
+#pragma warning(disable: 4038)
+
 #include <iostream>         // std::cout
 #include <iomanip>          // std::fixed, std::setprecision
 #include <sstream>          // std::stringstream
@@ -12,8 +14,12 @@
 #include <array>            // array<T> class
 #include <map>              // map<K,V> class
 #include <set>              // set<T> class
+#include <concepts>         // supports C++20 concepts
+#include <algorithm>        // STL algorithms
 #include "AnalysisIter.h"   // Analysis functions
 #include "PointsIter.h"     // PointN<T> class declaration
+
+using namespace Points;
 /*-----------------------------------------------
   Note:
   Find all Bits code, including this in
@@ -22,7 +28,7 @@
 -----------------------------------------------*/
 /*
   This demo uses the std::string and std::vector<T> classes
-  and a user-defined class, PointN<T>, to illustrate how
+  and a user-defined class, Point<T, N>, to illustrate how
   types support indexing and iteration.
   - Each standard container, C, provides C::iterator, 
     C::const_iterator, C::reverse_iterator, and
@@ -36,7 +42,7 @@
   demoIndexer(const std::vector<T>& v)
   - accepts std::vector<T>
   - creates comma separated list
-  - not using iterator
+  - uses indexing, not using iterator
 */
 template<typename T>
 void demoIndexerVec(const std::vector<T>& v) {
@@ -54,6 +60,8 @@ void executeDemoIndexerVec() {
 }
 /*-----------------------------------------------
   demoIteratorVec
+  - accepts std::vector<T> instances
+  - uses iterator
 */
 template<typename T>
 void demoIteratorVec(const std::vector<T>& v) {
@@ -87,13 +95,13 @@ void executeDemoForLoopVec() {
   demoForLoopVec(v);
 }
 /*-----------------------------------------------
-  forLoopPoint accepts PointN<T> instances
-  by constant reference.
-  - uses range-for to display PointN coordinates
+  forLoopPoint 
+  - accepts Point<T, N> instances by constant reference.
+  - uses range-for to display Point coordinates
   - creates comma separated list
 */
-template<typename T>
-void demoForLoopPoint(const PointN<T>& p) {
+template<typename T, const size_t N>
+void demoForLoopPoint(const Point<T, N>& p) {
   auto s = std::stringstream();
   s << "\n  ";
   for(auto const &item : p) {
@@ -107,22 +115,18 @@ void demoForLoopPoint(const PointN<T>& p) {
 }
 void executeDemoForLoopPoint() {
   std::cout << "\nexecute demoForLoopPoint(v)";
-  auto p = PointN<int>(5);
-  p[0] = 1;
-  p[1] = 2;
-  p[2] = 3;
-  p[3] = 2;
-  p[4] = 1;
+  /* using initialization list */
+  auto p = Point<int, 5> { 1, 2, 3, 2, 1 };
   demoForLoopPoint(p);
 }
 /*-----------------------------------------------
-  whilerPoint accepts PointN<T> instances
-  by constant reference.
+  whilerPoint 
+  - accepts Point<T, N> instances by constant reference.
   - explicit use of iterator to display PointN coordinates
   - creates comma separated list
 */
-template<typename T>
-void demoWhilerPoint(const PointN<T>& p) {
+template<typename T, const size_t N>
+void demoWhilerPoint(const Point<T, N>& p) {
   auto itr = p.begin();
   std::cout << "\n  " << *itr++;
   while (itr < p.end()) {
@@ -131,7 +135,8 @@ void demoWhilerPoint(const PointN<T>& p) {
 }
 void executeDemoWhilerPoint() {
   std::cout << "\nexecute demoWhilerPoint(v)";
-  auto p = PointN<int>(5);
+  auto p = Point<int, 5>();
+  /* using indexer */
   p[0] = 1;
   p[1] = 2;
   p[2] = 3;
@@ -140,9 +145,10 @@ void executeDemoWhilerPoint() {
   demoWhilerPoint(p);
 }
 /*-----------------------------------------------
-  whiler is flexible function that accepts any 
-  iterable container
-  - will use iterator on C.
+  whiler
+  - is flexible function that accepts any 
+    iterable container
+  - uses iterator on C.
   - creates comma separated list
 */
 template<typename C>
@@ -161,12 +167,7 @@ void executeDemoWhiler() {
   auto v = std::vector<double> { 1.0, 1.5, -1.5, -1.0, 0 };
   demoWhiler(v);
   std::cout << "\nexecute demoWhiler(c) with Point";
-  auto p = PointN<double>(5);
-  p[0] = 1;
-  p[1] = 2;
-  p[2] = 3;
-  p[3] = 2;
-  p[4] = 1;
+  auto p = Point<double, 5> { 1.0, 2.0, 3.0, 2.0, 1.0 };
   demoWhiler(p);
 }
 /*-----------------------------------------------
@@ -217,16 +218,18 @@ void executeDemoWhilerGuarded() {
 */
 template<typename C, typename F>
 void collectionWithOperation(C& c, F f) {
-  auto iter = c.begin();
   for(auto &item : c) {
     f(item);
   }
 }
 void executeCollectionWithOperation() {
   /*------------------------------*/
+  auto v = std::vector<int> { 1, 2, 3, 2, 1 };
+  std::cout << "\noriginal vector";
+  demoWhiler(v);
+
   std::cout << "\nexecute collectionWithOperation(v, square)";
   std::cout << "\n  ";
-  auto v = std::vector<int> { 1, 2, 3, 2, 1 };
   /*-- lambda --*/
   auto square = [](int item) { 
     std::cout << item*item << " "; 
@@ -247,12 +250,49 @@ void executeCollectionWithOperation() {
   std::cout << "\n  ";
   /*-- lambda --*/
   auto plus_one_mod = [](int& item) { 
-    item += 3;
+    item += 1;
     std::cout << item << " "; 
   };
   collectionWithOperation(v, plus_one_mod);
   std::cout << "\nside effect of plus_one_mod:";
   demoForLoopVec(v);
+}
+/*-----------------------------------------------
+  executeForEachAlgorithm()
+  - uses std::for_each with lambda plus_one_mod
+  - same functionality as collectionWithOperation
+*/
+void executeForEachAlgorithm() {
+  auto v = std::vector<int> { 1, 2, 3, 2, 1 };
+  std::cout << "\noriginal vector:";
+  demoWhiler(v);  // display v
+ 
+  /* define lambda plus_one_mod */
+  auto plus_one_mod = [](int& item) { 
+    item += 1;
+  };
+  std::cout << "\nmodified vector:";
+  std::for_each(v.begin(), v.end(), plus_one_mod);
+  demoWhiler(v);  // display v
+  std::cout << "\n";
+
+  auto p = Point<int, 5> { 1, 2, 3, 4, 5 };
+  std::cout << "\noriginal point";
+  demoWhiler(p);
+  std::cout << "\nmodified point";
+  std::for_each(p.begin(), p.end(), plus_one_mod);
+  demoWhiler(p);
+  std::cout << "\n";
+ 
+  /* define lambda sumer */
+  auto sumer = [](int item) -> int {
+    static int sum = 0;
+    sum += item;
+    return sum; 
+  };
+  auto result = std::for_each(p.begin(), p.end(), sumer);
+  std::cout << "\nsum = " << sumer(0) << " - using supplied lambda";
+  std::cout << "\nsum = " << result(0) << " - using returned lambda";
 }
 /*-------------------------------------------------------------------
   Demonstration starts here 
@@ -261,7 +301,7 @@ void testFormat();
 
 int main() {
 
-    print("Demonstrate C++ Iteration\n");
+    showNote("Demonstrate C++ Iteration", 30, "\n"); 
 
     showOp("collection specific iterations", nl);
     std::cout << std::fixed;
@@ -285,6 +325,9 @@ int main() {
     executeCollectionWithOperation();
     std::cout << "\n";
 
+    showOp("using std::for_each algorithm to modify items", nl);
+    executeForEachAlgorithm();
+
     // #define TEST
     #ifdef TEST
     testFormat();
@@ -300,9 +343,9 @@ void testFormat() {
 
   showNote("Test and demonstrate formatting functions");
   
-  showOp("demonstrate PointN show()");
+  showOp("demonstrate Point show()");
   print("default indent = 4 and width = 7:");
-  PointN<int> p2(15);
+  Point<int, 15> p2;
   p2.show("p2");
   size_t saveLeft = p2.left();
   size_t saveWidth = p2.width();
@@ -358,11 +401,12 @@ void testFormat() {
   double adouble { 3.1415927 };
   std::cout << formatScalar(adouble, "adouble", nl);
 
-  showNote("Using consolidated format function", nl);
+  showNote("Using consolidated format function", 40, nl);
   
-  std::cout << format(adouble, "adouble", nl);
-  std::cout << format(astring, "astring", nl);
+  /* qualification needed to avoid ambiguity with std::format */
+  std::cout << Analysis::format(adouble, "adouble", nl);
+  std::cout << Analysis::format(astring, "astring", nl);
   std::vector<double> avec{ 1, 2, 3, 4.5, -3.14159 };
-  std::cout << format(avec, "avec", nl);
-  std::cout << format(amap, "amap", nl);
+  std::cout << Analysis::format(avec, "avec", nl);
+  std::cout << Analysis::format(amap, "amap", nl);
 }
