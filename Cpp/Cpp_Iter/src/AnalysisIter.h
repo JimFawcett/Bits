@@ -111,7 +111,7 @@ namespace Analysis {
     Display emphasized line
   */
   inline void showOp(const std::string& opstr, const std::string& suffix) {
-    std::cout << "\n  --- " << opstr << " ---" << suffix;
+    std::cout << "\n--- " << opstr << " ---" << suffix;
   }
   /*-----------------------------------------------
     Helper function for formatting output

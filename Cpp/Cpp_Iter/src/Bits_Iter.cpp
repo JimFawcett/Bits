@@ -42,6 +42,44 @@ template<typename C>
 void showCSL(const C& c, const std::string& nm = "", size_t max = 7, size_t indent = 0);
 
 /*-----------------------------------------------
+  Basic iterator operations
+  - uses std::vector<int>
+  - could be any other iterable container
+*/
+void iteratorBasics() {
+  showOp("iterator basics");
+  std::cout << std::endl;
+
+  auto v = std::vector<int> { 1, 2, 3, 4, 5 };
+
+  /* basic loop showing iterator usage */
+  for(auto itr = v.begin(); itr != v.end(); ++itr) {
+    std::cout << *itr << " ";
+  }
+  std::cout << " - using basic for loop with vector" << std::endl;
+
+  /* range-for uses iterator internally */
+  for(auto item : v) {
+    std::cout << item << " ";
+  }
+  std::cout << " - using range-for with vector" << std::endl;
+
+  int arr[5] { 1, 2, 3, 2, 1 };
+
+  /* basic loop showing iterator usage */
+  for(auto itr = std::begin(arr); itr != std::end(arr); ++itr) {
+    std::cout << *itr << " ";
+  }
+  std::cout << " - using basic for loop with native array" << std::endl;
+
+  /* range-for uses iterator internally */
+  for(auto item : arr) {
+    std::cout << item << " ";
+  }
+  std::cout << " - using range-for with native array" << std::endl;
+  std::cout << std::endl;
+}
+/*-----------------------------------------------
   demoIndexer(const std::vector<T>& v)
   - accepts std::vector<T>
   - creates comma separated list
@@ -332,6 +370,8 @@ int main() {
 
     showNote("Demonstrate C++ Iteration", 30, "\n"); 
 
+    iteratorBasics();
+
     showOp("collection specific iterations", nl);
     std::cout << std::fixed;
     std::cout << std::setprecision(1);
@@ -357,6 +397,8 @@ int main() {
     showOp("using std::for_each algorithm to modify items", nl);
     executeForEachAlgorithm();
 
+    demo_custom_type_Point_iteration();
+    
     // #define TEST
     #ifdef TEST
     testFormat();

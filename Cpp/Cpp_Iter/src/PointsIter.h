@@ -216,34 +216,44 @@ namespace Points {
     return out;
   }
 }
-/*-- demonstrate use of Point type --*/
+/*-- demonstrate iteration over Point type --*/
 
-void demo_custom_type_Point() {
+void demo_custom_type_Point_iteration() {
   using namespace Analysis;
   using namespace Points;
 
-  println();
-  showNote("Demo user-defined Point<T, N>", 40);
+  showNote("iteration over user-defined Point<T, N>", 45, "\n");
 
   /*-- demonstrate Point<double 3> initialization lists --*/
-  showOp("Point<double, 3> p1 {1.0, 1.5, 2.0}");  // equal to N
-  Point<double, 3> p1 {1.0, 1.5, 2.0};
+  showOp("Point<double, 3> p1 {1.0, 1.5, 2.0, 1.5, 1.0 }");  // equal to N
+  Point<double, 5> p1 {1.0, 1.5, 2.0, 1.5, 1.0};
+  p1.left() = 0;
   p1.show("p1");
-  std::cout << "\n  p1[1] = " << p1[1];           // indexing
-  std::cout << "\n  p1.time().day() = " 
+  std::cout << "\np1[1] = " << p1[1];           // indexing
+  std::cout << "\np1.time().day() = " 
             << p1.time().day();
-  std::cout << "\n  p1.time().seconds() = " 
+  std::cout << "\np1.time().seconds() = " 
             << p1.time().seconds() << "\n";
-  showOp("Point<double, 3> p2 {1.0, 1.5}");
-  Point<double, 3> p2 {1.0, 1.5};                 // less than N
+
+  showOp("iteration using basic loop", "\n");
+  auto itr = p1.begin();
+  while(true) {
+    std::cout << *itr++ << " ";
+    if(itr == p1.end()) {
+      break;
+    }
+  }
+  std::cout << std::endl;
+
+  showOp("iteration using range-for", "\n");
+  for(auto item : p1) {
+    std::cout << item << " ";
+  }
+  std::cout << std::endl;
+
+  showOp("Point<int, 10> p2 { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 }");
+  Point<int, 10> p2 { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
+  p2.left() = 0;
   p2.show("p2");
-  showOp("Point<double, 3> p3 {1.0, 1.5, 2.0, 2.5}");
-  Point<double, 3> p3 {1.0, 1.5, 2.0, 2.5};       // greater than N
-  p3.show("p3");
-  std::cout << "\n  p3.timeToString():\n    \"" 
-            << p3.timeToString() << "\"\n";
-  showOp("Point<int, 10> p3 { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 }");
-  Point<int, 10> p4 { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
-  p4.show("p4");
 }
 #endif
