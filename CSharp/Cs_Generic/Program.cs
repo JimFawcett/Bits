@@ -3,8 +3,8 @@
   - demonstrates creating and using std library generic types:
       array, List<T>, Dictionary<K,V>
   - demonstrates creating and using user-defined generic types:
-      Demo<T>, Stats<T>, and PointsN<T>
-  - depends on PointsGeneric.cs to provide user-defined PointN class
+      Demo<T>, Stats<T>, and Point<T, N>
+  - depends on PointsGeneric.cs to provide user-defined Point class
   - depends on Stats.cs to provide user-defined Stats class
   - depends on AnalysisGeneric.cs for several display and analysis 
     functions
@@ -102,8 +102,9 @@ namespace CSharpGenerics
       Console.WriteLine("  avg: {0:0.0}", s.avg());
       Console.WriteLine();
 
-      Display.ShowOp("PointN<double>");
-      PointN<double> p = new PointN<double>(0);
+      Display.ShowOp("Point<double>");
+
+      Point<double> p = new Point<double>(5);
       List<double> tmp = new List<double>{1.0, 2.5, 3.0, -2.5, 1.0 };
       p.coor = tmp;
       Display.ShowTypeEnum(p, "p");

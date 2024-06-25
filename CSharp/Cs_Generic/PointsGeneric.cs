@@ -9,18 +9,22 @@ using Analysis;
 
 namespace Points {
   /*----------------------------------------------------------------------
-    PointN<T> represents a point in N-dimensional space 
-     - holds any finite number of generic coordinates
+    Point<T> represents a point in N-dimensional space 
+     - C# generics do not accept integers as generic parameters
+       so we cannot declare P<T,N> where N is an integer like
+       we did for C++ and Rust
+     - Point holds any finite number of generic coordinates
      - coordinates are held in a List<T>
      - implements IEnumerable<T> so it can be indexed and iterated
      - it is a reference type because it is implemented with a class.
        its List<T> is also a reference type
   */
-  public class PointN<T> : IEnumerable<T> , Analysis.IShow {
+  public class Point<T> : IEnumerable<T>, Analysis.IShow
+  {
     /*--------------------------------------------------------------------
       Constructs a point with N coordinates each with default value
     */
-    public PointN(int N) {
+    public Point(int N) {
       coor = new List<T>();
       for(int i = 0; i<N; ++i) {
         T? test = default(T);
@@ -29,7 +33,7 @@ namespace Points {
         }
       }
     }
-    /* translates IShow::show() for needs of PointN class */
+    /* translates IShow::show() for needs of Point class */
     public void Show(string name) {
       PrintSelf(name);
     }
@@ -72,18 +76,17 @@ namespace Points {
     public int Left { get; set; } = 2;    // default offset
     public int Indent { get; set; } = 2;
     /* initializers */
-    public PointN<T> width(int w) {
+    public Point<T> width(int w) {
       this.Width = w;
       return this;
     } 
-    public PointN<T> left(int l) {
+    public Point<T> left(int l) {
       this.Left = l;
       return this;
     } 
-    public PointN<T> indent(int i) {
+    public Point<T> indent(int i) {
       this.Indent = i;
       return this;
     } 
   }
-
 }

@@ -21,7 +21,7 @@ using Analysis;                     // defined in Analysis.cs
   through std collections:
   - String, List<T>, Dictionary<K,V>
   and through user-defined type:
-  - PointN<T> 
+  - Point<T> 
 */
 namespace CSharpIter
 {
@@ -222,7 +222,7 @@ namespace CSharpIter
 
       // Display.ShowLabel("  Alternate function for generating CSVs");
       // Display.print("--- coor to folded CSV ---");
-      // PointN<int> p1 = new PointN<int>(0);
+      // Point<int> p1 = new Point<int>(0);
       // List<int> tmpl = new List<int>{ 1, 2, 3, 4, 5, 6, 7 };
       // p1.coor = tmpl;
       // int[] arr3 = p1.coor.ToArray();
