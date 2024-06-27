@@ -5,6 +5,7 @@
 
 using System.Collections;
 using System.Collections.Generic;   // IEnumerable<T>, List<T>, ...
+using System.Numerics;              // INumber<T>
 using Analysis;
 
 namespace Stats {
@@ -14,7 +15,7 @@ namespace Stats {
      - computes several statistics on its values
   */
   public class Stats<T> 
-    where T: IComparable, IComparable<T>, IEquatable<T>, IConvertible
+    where T: INumber<T>
   {
     /*--------------------------------------------------------------------
       Constructs a point with N coordinates each with default value
@@ -63,10 +64,10 @@ namespace Stats {
       }
       return default(T);
     }
-    public T avg() {
+    public double avg() {
       check();
       dynamic? sum = this.sum();
-      return sum/items.Count;
+      return Convert.ToDouble(sum)/Convert.ToDouble(items.Count);
     }
   }
 }

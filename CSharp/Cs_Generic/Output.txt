@@ -1,181 +1,25 @@
-C:\github\JimFawcett\Bits\CSharp\Cs_Generic
-> dotnet run
 
 --------------------------------------------------
- Demonstrate C# generics
+Demonstrate generic functions
 --------------------------------------------------
 
---------------------------------------------------
-Examples of creation and display of Library Types
-- size is the size of reference, not instance
-- String is not generic, but ShowTypeScalar(...),
-  used below to display String, is generic
-- Generic function ShowTypeEnum(...) is used, below,
-  for both List<T> and Dictionary<K,V>
---------------------------------------------------
-aString: String, size: 8, reference type
-value: "a string"
+--- ShowList(List<int> l) ---
+  [ 1, 2, 3, 2, 1 ]
 
-another: String, size: 8, reference type
-value: "another string"
+--- ShowList(List<double> l) ---
+  [ 1, 2.25, 3.5, 4.75, 5 ]
 
-aList: List<T>, size: 8, reference type
+--- ShowTypeEnum(List<double> l, "l") ---
+ldt: List<T>, size: 8, reference type
 value:
-  aList {
-    1, 1.5, 2, 2.5, 3, 
-    3.5, 4
+  ldt {
+    1, 2.25, 3.5, 4.75, 5
   }
 
-d1: Dictionary<T>, size: 8, reference type
+--- ShowTypeEnum(Dictionary<String, int> d, "d") ---
+map: Dictionary<K,V>, size: 8, reference type
 value:
-  d1 {
-    [0, zero], [1, one], [2, two]
+  map {
+    [zero, 0], [one, 1], [two, 2]
   }
 
---------------------------------------------------
-Example of user-defined type:
-- PointN<T>, a point with N generic coordinates
---------------------------------------------------
-  p1 {
-    1.5, 2, 3.5, 4, 5.5,
-    6, 7.5
-  }
---------------------------------------------------
-PointN<T> is both Enumerable and Showable. That is,
-it implements both IEnumerable<T> and IShow.
-- so both ShowTypeEnum and ShowTypeShowable work
---------------------------------------------------
---- ShowTypeShowable(p1, "p1") ---
-p1: PointN<T>, size: 8, reference type
-value:
-  p1 {
-    1.5, 2, 3.5, 4, 5.5, 6,
-    7.5
-  }
-
---- ShowTypeEnum(p1, "p1") ---
-p1: PointN<T>, size: 8, reference type
-value:
-  p1 {
-    1.5, 2, 3.5, 4, 5.5, 6,
-    7.5
-  }
-
---- set left(2) and width(7) ---
---- p2.Show("p2") ---
-  p2 {
-    1, 2, 3, 4, 5, 6, 7
-  }
-
-p2: PointN<T>, size: 8, reference type
-value:
-  p2 {
-    1, 2, 3, 4, 5, 6, 7
-  }
-
---------------------------------------------------
-Test formatting for Enumerable types
---------------------------------------------------
-
-testarr: Int32[], size: 8, reference type
-value:
-  testarr {
-    0, 1, 2, 3, 4,
-    5, 6, 7, 8, 9
-  }
-
-
-That's all Folks!
-
-C:\github\JimFawcett\Bits\CSharp\Cs_Generic
-> dotnet run
-
---------------------------------------------------
- Demonstrate C# generics
---------------------------------------------------
-
---------------------------------------------------
-Examples of creation and display of Library Types
-- size is the size of reference, not instance
-- String is not generic, but ShowTypeScalar(...),
-  used below to display String, is generic
-- Generic function ShowTypeEnum(...) is used, below,
-  for both List<T> and Dictionary<K,V>
---------------------------------------------------
-
-aString: String, size: 8, reference type
-value: "a string"
-
-another: String, size: 8, reference type
-value: "another string"
-
-aList: List<T>, size: 8, reference type
-value:
-  aList {
-    1, 1.5, 2, 2.5, 3, 
-    3.5, 4
-  }
-
-d1: Dictionary<T>, size: 8, reference type
-value:
-  d1 {
-    [0, zero], [1, one], [2, two]
-  }
-
---------------------------------------------------
-Example of user-defined type:
-- PointN<T>, a point with N generic coordinates
---------------------------------------------------
-  p1 {
-    1.5, 2, 3.5, 4, 5.5,
-    6, 7.5
-  }
---------------------------------------------------
-PointN<T> is both Enumerable and Showable. That is,
-it implements both IEnumerable<T> and IShow.
-- so both ShowTypeEnum and ShowTypeShowable work
---------------------------------------------------
---- ShowTypeShowable(p1, "p1") ---
-p1: PointN<T>, size: 8, reference type
-value:
-  p1 {
-    1.5, 2, 3.5, 4, 5.5, 6,
-    7.5
-  }
-
---- ShowTypeEnum(p1, "p1") ---
-p1: PointN<T>, size: 8, reference type
-value:
-  p1 {
-    1.5, 2, 3.5, 4, 5.5, 6,
-    7.5
-  }
-
---- set left(2) and width(7) ---
---- p2.Show("p2") ---
-  p2 {
-    1, 2, 3, 4, 5, 6, 7
-  }
-
-p2: PointN<T>, size: 8, reference type
-value:
-  p2 {
-    1, 2, 3, 4, 5, 6, 7
-  }
-
---------------------------------------------------
-Test formatting for Enumerable types
---------------------------------------------------
-
-testarr: Int32[], size: 8, reference type
-value:
-  testarr {
-    0, 1, 2, 3, 4,
-    5, 6, 7, 8, 9
-  }
-
-
-That's all Folks!
-
-C:\github\JimFawcett\Bits\CSharp\Cs_Generic
->>

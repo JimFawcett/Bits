@@ -25,11 +25,11 @@ You can clone the repo from this link.
 -----------------------------------------------*/
 namespace CSharpGenerics
 {
-  public class Demo<T> where T:new() {
-    public Demo() {
+  public class Hello<T> where T:new() {
+    public Hello() {
       datum = new T();
     }
-    public Demo(T t) {
+    public Hello(T t) {
       datum = t;
     }
     public void show(String nm) {
@@ -85,21 +85,35 @@ namespace CSharpGenerics
 
       Display.ShowNote("Demonstrate user-defined generic types", nl);
 
-      Display.ShowOp("Demo<int>");
-      Demo<int> d = new Demo<int>(42);
-      Display.ShowType(d, "d");
+      Display.ShowOp("Hello<int>");
+      Hello<int> hi = new Hello<int>(42);
+      Display.ShowType(hi, "hi");
       Console.WriteLine("value:");
-      d.show("d");
+      hi.show("h");
+      Display.ShowOp("Hello<double>");
+      Hello<double> hd = new Hello<double>(3.1415927);
+      Console.WriteLine("access hd.datum: {0}", hd.datum);
+      hd.show("hd");
       Console.WriteLine();
       
+      Display.ShowOp("Stats<int>");
+      List<int> tmp1 = new List<int> { 1, 2, 3, 2, 1 };
+      Stats<int> si = new Stats<int>(tmp1);
+      ShowList(tmp1);
+      Console.WriteLine("  max: {0}", si.max());
+      Console.WriteLine("  min: {0}", si.min());
+      Console.WriteLine("  sum: {0}", si.sum());
+      Console.WriteLine("  avg: {0:0.00}", si.avg());
+      Console.WriteLine();
+
       Display.ShowOp("Stats<double>");
-      List<double> tmpl = new List<double> { 1.0, 1.5, 2.0, 1.5, 1.0 };
-      Stats<double> s = new Stats<double>(tmpl);
-      ShowList(tmpl);
-      Console.WriteLine("  max: {0:0.0}", s.max());
-      Console.WriteLine("  min: {0:0.0}", s.min());
-      Console.WriteLine("  sum: {0:0.0}", s.sum());
-      Console.WriteLine("  avg: {0:0.0}", s.avg());
+      List<double> tmp2 = new List<double> { 1.0, 1.5, 2.0, 1.5, 1.0 };
+      Stats<double> sd = new Stats<double>(tmp2);
+      ShowList(tmp2);
+      Console.WriteLine("  max: {0:0.0}", sd.max());
+      Console.WriteLine("  min: {0:0.0}", sd.min());
+      Console.WriteLine("  sum: {0:0.0}", sd.sum());
+      Console.WriteLine("  avg: {0:0.00}", sd.avg());
       Console.WriteLine();
 
       Display.ShowOp("Point<double>");
@@ -108,6 +122,11 @@ namespace CSharpGenerics
       List<double> tmp = new List<double>{1.0, 2.5, 3.0, -2.5, 1.0 };
       p.coor = tmp;
       Display.ShowTypeEnum(p, "p");
+      Display.ShowOp("use indexing to retrieve and modify coordinates");
+      Console.WriteLine("  value of p[1] is {0}", p[1]);
+      p[1] = -2.5;
+      Display.ShowOp("using p.show(callName)");
+      p.Show("p");
       Console.WriteLine();
     }
     static void Demostrate_generic_functions() {
@@ -124,7 +143,7 @@ namespace CSharpGenerics
       ShowList(ld);
       Console.WriteLine();
 
-      Display.ShowOp("ShowTypeEnum(List<double> l, \"l\")");
+      Display.ShowOp("ShowTypeEnum(List<double> ldt, \"ldt\")");
       List<double> ldt = new List<double> {1.0, 2.25, 3.50, 4.75, 5.0};
       Display.ShowTypeEnum(ldt, "ldt");
       Console.WriteLine();

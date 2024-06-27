@@ -58,6 +58,8 @@ namespace Points {
       }
       Console.Write("\n{0}", Display.Indent(Left));
       Console.WriteLine("}");
+      String callname = "  " + dt;
+      Console.WriteLine(callname);
     }
     /* The three functions below support indexing and iterating */
     public T this[int index] {
@@ -71,6 +73,7 @@ namespace Points {
       return this.GetEnumerator();
     }
     public List<T> coor { get; set; }
+    public DateTime dt { get; set; } = DateTime.Now; 
     public int Length { get { return coor.Count; } }
     public int Width { get; set; } = 5;   // default row size
     public int Left { get; set; } = 2;    // default offset
