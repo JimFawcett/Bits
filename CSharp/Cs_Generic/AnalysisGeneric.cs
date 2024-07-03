@@ -3,41 +3,43 @@
   - provides several type analysis and display methods in the
     class Display
 */
-
+using System;
+using System.Collections;
+using System.Collections.Generic;     // IEnumerable<T>, List<T>
+using System.Linq;                    // IEnumerable<T>.ToArray
+using System.Text;                    // StringBuilder
 using System.Reflection;
 using System.Reflection.Emit;
-using System.Collections;
-using System.Collections.Generic;   // IEnumerable<T>, List<T>
-using System.Linq;                  // IEnumerable<T>.ToArray
-using System.Text;
+using System.Runtime.InteropServices; //GCHandle
 
 namespace Analysis {
-    /*----------------------------------------------------------------------
-        IShow allows analysis functions to operate on instances of any class 
-        that implements it. See ShowTypeShowable<T>(T t, ...), below.
+    /*----------------------------------------------------------
+        IShow interface allows analysis functions to operate on 
+        instances of any class that implements it. 
+        - See ShowTypeShowable<T>(T t, ...), below.
     */
     public interface IShow {
-        void Show(string name);   // show instance state as rows of elements
+        void Show(string name, int Width = 5, int Left = 2);   // show instance state as rows of elements
         int Length { get; }       // total number of elements
         int Width { get; set; }   // number of elements per row
         int Left { get; set; }    // offset from terminal Left
-        int Indent {get; set; }   // element indent
+        int Indent {get; set; }   // element indent from braces
     }
-        
+    /*-----------------------------------------------------------------------
+      Collection of static functions that present information about types
+      and data values on the terminal line.
+    */          
     public class Display {
-        /*-------------------------------------------------
-          Show static type with some formatting adjustments
-          and name at callsite.
-        */
         public static String Spaces(int i) {
             return new String(' ', i);
-        }
-        public void Println(String s) {
-            Console.WriteLine(s);
         }
         public static bool IsAssociativeColl(IEnumerable coll) {
           return coll is IDictionary;
         }
+        /*-------------------------------------------------
+          Show static type with some formatting adjustments
+          and name at callsite.
+        */
         public static void ShowType<T>(T t, string nm) {
             Type tt = t!.GetType();
             string tnm = tt.Name;
@@ -152,7 +154,7 @@ namespace Analysis {
         Truncate string to length of N, but only if
         its length is greater than N
         */
-        string truncate(int N, string bigStr) {
+        public static string truncate(int N, string bigStr) {
             if(bigStr.Length <= N) {
                 return bigStr;
             }
@@ -197,8 +199,8 @@ namespace Analysis {
         }
         }
         /*-------------------------------------------------
-        Beware, two distinct objects may have same hashcode.
-        - Not used in this demo for that reason.
+          Beware, two distinct objects may have same hashcode.
+          - Not used in this demo for that reason.
         */
         public static void showIdent<T>(
             T t, String n, string suffix = ""
@@ -207,8 +209,8 @@ namespace Analysis {
             Console.WriteLine("{0}, {1}{2}", n, id, suffix);
         }
         /*-------------------------------------------------
-        Display function call or operation to help turn 
-        output data into information 
+          Display function call or operation to help turn 
+          output data into information 
         */
         public static void ShowOp(string op, string suffix = "") {
             Console.WriteLine("--- {0} ---{1}", op, suffix);
@@ -219,10 +221,14 @@ namespace Analysis {
         public static void println(String s = "") {
             Console.WriteLine(s);
         }
+        public static void Println(String s) {
+            Console.WriteLine(s);
+        }
         /*-------------------------------------------------
-        Emphasize text with borders
+          Emphasize text with borders
         */
-        public static void ShowNote(string s, string suffix = "") {
+        public static void ShowNote(string s, int n=60, string suffix = "") {
+            string line = new string('-', n);
             Console.WriteLine(
                 "--------------------------------------------------"
             );
@@ -240,6 +246,13 @@ namespace Analysis {
             ShowNote(s);
             Console.WriteLine();
         }
+        /*-----------------------------------------------------------
+          All methods below this are not part of this presentation
+          - may use advanced code techniques
+          - may be experimental
+          - may simply be alternate designs that could be
+            useful in other applications
+        -----------------------------------------------------------*/
         /*
           Show fields and methods for either reference or value types
           using reflection
@@ -269,131 +282,164 @@ namespace Analysis {
                 );
             }
         }
-    // /*-----------------------------------------------------
-    //   Build string representation of array of type T
-    // -----------------------------------------------------*/
-    // public static string ToStringRepArray<T>(T[] arr) {
-    //   StringBuilder sb = new StringBuilder();
-    //   sb.Append("{ ");
-    //   bool first = true;
-    //   foreach(T item in arr) {
-    //     if(item == null) {
-    //       break;
-    //     }
-    //     if(first) {
-    //       sb.Append(item.ToString());
-    //       first = false;
-    //     }
-    //     else {
-    //       sb.AppendFormat(", {0}", item);
-    //     }
-    //   }
-    //   sb.Append(" }\n");
-    //   return sb.ToString();
-    // }
+    /*-----------------------------------------------------
+      Build string representation of array of type T
+    -----------------------------------------------------*/
+    public static string ToStringRepArray<T>(T[] arr) {
+      StringBuilder sb = new StringBuilder();
+      sb.Append("{ ");
+      bool first = true;
+      foreach(T item in arr) {
+        if(item == null) {
+          break;
+        }
+        if(first) {
+          sb.Append(item.ToString());
+          first = false;
+        }
+        else {
+          sb.AppendFormat(", {0}", item);
+        }
+      }
+      sb.Append(" }\n");
+      return sb.ToString();
+    }
     /*-----------------------------------------------------
       Build string representation of IEnumerable 
       collection T<U>. Works for array too.
     -----------------------------------------------------*/
-    // public static string ToStringRepIEnumerable<T,U>(T enu) 
-    //   where T:IEnumerable<U>
-    // {
-    //   StringBuilder sb = new StringBuilder();
-    //   sb.Append("[ ");
-    //   bool first = true;
-    //   foreach(U item in enu) {
-    //     if(item == null) {
-    //       break;
-    //     }
-    //     if(first) {
-    //       sb.Append(item.ToString());
-    //       first = false;
-    //     }
-    //     else {
-    //       sb.AppendFormat(", {0}", item);
-    //     }
-    //   }
-    //   sb.Append(" ]\n");
-    //   return sb.ToString();
-    // }
+    public static string ToStringRepIEnumerable<T,U>(T enu) 
+      where T:IEnumerable<U>
+    {
+      StringBuilder sb = new StringBuilder();
+      sb.Append("[ ");
+      bool first = true;
+      foreach(U item in enu) {
+        if(item == null) {
+          break;
+        }
+        if(first) {
+          sb.Append(item.ToString());
+          first = false;
+        }
+        else {
+          sb.AppendFormat(", {0}", item);
+        }
+      }
+      sb.Append(" ]\n");
+      return sb.ToString();
+    }
     /*-----------------------------------------------------
       Direct implementation of enumerating associative
       collection.  This can also be done with
       ToStringRepIEnumerable<Dict,KVPair>(dict).
     -----------------------------------------------------*/
-    // public static string ToStringRepAssocCont<Dict,Key,Value>(Dict assoc) 
-    //   where Dict:IDictionary<Key,Value>
-    // {
-    //   StringBuilder sb = new StringBuilder();
-    //   sb.Append("{ ");
-    //   bool first = true;
-    //   foreach(var item in assoc) {
-    //     if(first) {
-    //       var sf = String.Format("{{{0}, {1}}}", item.Key, item.Value);
-    //       sb.Append(sf);
-    //       first = false;
-    //     }
-    //     else {
-    //       sb.AppendFormat(", {{{0}, {1}}}", item.Key, item.Value);
-    //     }
-    //   }
-    //   sb.Append(" }\n");
-    //   return sb.ToString();
-    // }
+    public static string ToStringRepAssocCont<Dict,Key,Value>(Dict assoc) 
+      where Dict:IDictionary<Key,Value>
+    {
+      StringBuilder sb = new StringBuilder();
+      sb.Append("{ ");
+      bool first = true;
+      foreach(var item in assoc) {
+        if(first) {
+          var sf = String.Format("{{{0}, {1}}}", item.Key, item.Value);
+          sb.Append(sf);
+          first = false;
+        }
+        else {
+          sb.AppendFormat(", {{{0}, {1}}}", item.Key, item.Value);
+        }
+      }
+      sb.Append(" }\n");
+      return sb.ToString();
+    }
     /*-- move this to functions --*/
-    // static void DemoPassValAndRef() {
-    //   Display.ShowNote("Pass by value", "\n");
-    //   double d = 3.1415927;
-    //   Pass_by_value<double>(d, "d");
-    //   TestForNullValue(d, "d");
+    static void DemoPassValAndRef() {
+      Display.ShowNote("Pass by value", 60, "\n");
+      double d = 3.1415927;
+      Pass_by_value<double>(d, "d");
+      TestForNullValue(d, "d");
 
-    //   List<int> li = new List<int>{ 1, 2, 3, 2, 1 };
-    //   Pass_by_value<List<int>>(li, "li");
-    //   TestForNullValue(li, "li");
-    // }
-    // static unsafe void Pass_by_value<T>(T? t, string nm) {
-    //   string ts = Anal.GetTypeString(t, nm);
-    //   Console.WriteLine(ts);
-    //   /*
-    //     Suppresses warning about taking address of managed type.
-    //     The pointer is used only to show the address of ptr
-    //     as part of analysis of copy operations.
-    //   */
-    //   #pragma warning disable 8500
-    //   string addrd = Anal.ToStringAddress<T>(&t);
-    //   #pragma warning restore 8500
-    //   Console.WriteLine("{0}: {1}", nm, addrd);
-    //   t = default(T);
-    //   /*
-    //     caller sees this change if and only if T is a reference type
-    //     in which case t is null.
-    //   */
-    // }
-    // static void TestForNullValue<T>(T? t, string nm) {
-    //   if(t == null) {
-    //     Console.WriteLine(nm + " is null");
-    //   }
-    //   else {
-    //     Console.WriteLine(nm + " is {0}", t);
-    //   }
-    // }
-    // static void DemoPrimitives() {
-    //   Display.ShowNote(
-    //     "Examples of creation and display of Primitive Types",
-    //     "", 60
-    //   );
-    //   short s = 123;
-    //   Display.ShowTypeScalar(s, "s", nl);
-    //   long l = 12345;
-    //   Display.ShowTypeScalar(l, "l", nl);
-    //   float f = 3.1415927f;
-    //   Display.ShowTypeScalar(f, "f", nl);
-    //   double d = 3.1415927;
-    //   Display.ShowTypeScalar(d, "d", nl);
-    //   int[] arr = new int[]{ 4, 3, 2, 1, 0, -1};
-    //   Display.ShowTypeScalar(arr, "arr");
-    //   Display.ShowIntArray(arr, nl);
-    // }
+      List<int> li = new List<int>{ 1, 2, 3, 2, 1 };
+      Pass_by_value<List<int>>(li, "li");
+      TestForNullValue(li, "li");
+    }
+    public static string GetTypeString<T>(T t, String nm, String suffix = "")
+    {
+      /*-- t! asserts that t is not null --*/
+      Type tt = t!.GetType();
+      string typeInfo = String.Format("{0}: Type: {1}\n", nm, tt.Name);
+      int size = GetManagedSize(tt);
+      string instanceInfo = String.Format("value: {0}\nsize: {1}{2}", t, size, suffix);
+      return typeInfo + instanceInfo;
+    }
+    static unsafe void Pass_by_value<T>(T? t, string nm) {
+      string ts = GetTypeString(t, nm);
+      Console.WriteLine(ts);
+      /*
+        Suppresses warning about taking address of managed type.
+        The pointer is used only to show the address of ptr
+        as part of analysis of copy operations.
+      */
+      #pragma warning disable 8500
+      string addrd = ToStringAddress<T>(&t);
+      #pragma warning restore 8500
+      Console.WriteLine("{0}: {1}", nm, addrd);
+      t = default(T);
+      /*
+        caller sees this change if and only if T is a reference type
+        in which case t is null.
+      */
+    }
+    #pragma warning disable 8500
+    public static unsafe string ToStringAddress<T>(T* ptr) {
+      if(ptr == null) {
+        return "";
+      }
+      IntPtr addr = (IntPtr)ptr;
+      string addrstr = string.Format("address: 0x" + addr.ToString("x"));
+      return addrstr;
+    }
+    #pragma warning restore 8500
+    /*-- extract address of reference instance in managed heap --*/
+    public static string ToStringAddressFromHandle<T>(T t) {
+      string addrstr = "for handle\n";
+      try {
+        GCHandle handle = GCHandle.Alloc(t, GCHandleType.Pinned);
+        IntPtr address = handle.AddrOfPinnedObject();
+        addrstr = "address: " + String.Format("0x" + address.ToString("x"));
+        handle.Free();
+        return addrstr + "\n";
+      }
+      catch {
+        Console.WriteLine("GCHandle exception thrown");
+      }
+      return addrstr;
+    }
+    static void TestForNullValue<T>(T? t, string nm) {
+      if(t == null) {
+        Console.WriteLine(nm + " is null");
+      }
+      else {
+        Console.WriteLine(nm + " is {0}", t);
+      }
+    }
+    static void DemoPrimitives() {
+      Display.ShowNote(
+        "Examples of creation and display of Primitive Types",
+        60
+      );
+      short s = 123;
+      Display.ShowTypeScalar(s, "s", "\n");
+      long l = 12345;
+      Display.ShowTypeScalar(l, "l", "\n");
+      float f = 3.1415927f;
+      Display.ShowTypeScalar(f, "f", "\n");
+      double d = 3.1415927;
+      Display.ShowTypeScalar(d, "d", "\n");
+      int[] arr = new int[]{ 4, 3, 2, 1, 0, -1};
+      Display.ShowTypeScalar(arr, "arr");
+    }
   /*-------------------------------------------------
         Build string of comma separated values from 
         Enumerable collection
@@ -425,7 +471,8 @@ namespace Analysis {
             return null;
         }
         /*----------------------------------------------------------------
-            Utils uses advanced relection 
+            This method uses advanced relection 
+
             - GetMangedSize(Type type) is function that returns the size of 
             value types and handles, used to help discover how things work.
             It is placed here because it uses advanced techniques that

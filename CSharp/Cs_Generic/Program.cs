@@ -62,7 +62,7 @@ namespace CSharpGenerics
     /*-- demonstration starts here --*/
     static void Demonstrate_Std_Library_Types() {
 
-      Display.ShowNote("Demonstrate std library generic types", nl);
+      Display.ShowNote("Demonstrate std library generic types", 60, nl);
 
       Display.ShowOp("String[] array processed by generic function");
       String[] array = {"one", "two", "three"};
@@ -83,7 +83,7 @@ namespace CSharpGenerics
     }
     static void Demonstrate_User_defined_Types() {
 
-      Display.ShowNote("Demonstrate user-defined generic types", nl);
+      Display.ShowNote("Demonstrate user-defined generic types", 60, nl);
 
       Display.ShowOp("Hello<int>");
       Hello<int> hi = new Hello<int>(42);
@@ -119,7 +119,7 @@ namespace CSharpGenerics
       Display.ShowOp("Point<double>");
 
       Point<double> p = new Point<double>(5);
-      List<double> tmp = new List<double>{1.0, 2.5, 3.0, -2.5, 1.0 };
+      List<double> tmp = new List<double>{ 1.0, 2.5, 3.0, -2.5, 1.0 };
       p.coor = tmp;
       Display.ShowTypeEnum(p, "p");
       Display.ShowOp("use indexing to retrieve and modify coordinates");
@@ -128,10 +128,30 @@ namespace CSharpGenerics
       Display.ShowOp("using p.show(callName)");
       p.Show("p");
       Console.WriteLine();
+      /* uses default constructor with initializer list */
+      Display.ShowOp("new Point<int> { 1, 2, 3, 4, 5}");
+      Point<int> pi = new Point<int> { 1, 2, 3, 4, 5 };
+      pi.Show("pi");
+
+      Display.ShowOp("pi.AddRange(rng)");
+      List<int> rng = new List<int> {4,3,2,1};
+      pi.AddRange(rng);
+      int[] arr = { 0, -1, -2 };
+      pi.AddRange(arr);
+      pi.width(6);
+      pi.Show("pi");
+      Console.WriteLine("  pi.Count = {0}", pi.Count);
+      Console.WriteLine();
+
+      Dim.N = 6;
+      PointN<int, Dim> pn = new PointN<int, Dim>(6);
+      int[] rng2 = { 1, 2, 3, 4, 5, 6};
+      pn.SetRange(rng2);
+      Display.ShowTypeEnum(pn, "pn");
     }
     static void Demostrate_generic_functions() {
 
-      Display.ShowNote("Demonstrate generic functions", nl);
+      Display.ShowNote("Demonstrate generic functions", 60, nl);
       
       Display.ShowOp("ShowList(List<int> l)");
       List<int> li = new List<int> {1, 2, 3, 2, 1};

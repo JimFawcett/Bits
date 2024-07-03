@@ -22,6 +22,13 @@ namespace Points {
   public class Point<T> : IEnumerable<T>, Analysis.IShow
   {
     /*--------------------------------------------------------------------
+      Constructs an empty point
+    */
+    public Point() {
+      coor = new List<T>();
+      // _N initializes to 0
+    }
+    /*--------------------------------------------------------------------
       Constructs a point with N coordinates each with default value
     */
     public Point(int N) {
@@ -32,10 +39,17 @@ namespace Points {
           coor.Add(test);
         }
       }
+      _N = coor.Count;
     }
     /* translates IShow::show() for needs of Point class */
-    public void Show(string name) {
+    public void Show(string name, int _width = 5, int _left = 2) {
+      int SaveWidth = Width;
+      int SaveLeft = Left;
+      Width = _width;
+      Left = _left;
       PrintSelf(name);
+      Width = SaveWidth;
+      Left = SaveLeft;
     }
     /*
       Displays structure and state of N-dimensional point.
@@ -72,6 +86,19 @@ namespace Points {
     IEnumerator IEnumerable.GetEnumerator() {
       return this.GetEnumerator();
     }
+    /* supports inializer list */
+    public void Add(T t) {
+      coor.Add(t);
+      _N = coor.Count;
+    }
+    public void AddRange(IEnumerable<T> list) {
+      coor.AddRange(list);
+      _N = coor.Count;
+    }
+    private int _N = 0;
+    public int Count {
+      get { return _N; }
+    }
     public List<T> coor { get; set; }
     public DateTime dt { get; set; } = DateTime.Now; 
     public int Length { get { return coor.Count; } }
@@ -91,5 +118,45 @@ namespace Points {
       this.Indent = i;
       return this;
     } 
+  }
+  /* experiment */
+  public struct Dim { public static int N { get; set; } = 0; }
+  public class PointN<T, N> : IEnumerable<T>
+    where T : new() 
+  {
+    private int _N = 0;
+    public int Count { 
+      get { return _N; } 
+      private set {
+        _N = value;
+      }
+    }
+    public List<T> coor { get; private set; }
+    public PointN(int N) {
+      coor = new List<T>();
+      foreach (var i in Enumerable.Range(0, N)) {
+        coor.Add(new T());
+      }
+      Count = coor.Count;
+    }
+    public void SetRange(IEnumerable<T> rng) {
+      List<T> coll = rng.ToList();
+      foreach (var i in Enumerable.Range(0, Count)) {
+        if (i < coll.Count()) {
+          coor[i] = coll[i];
+        }
+      }
+    }
+    /* The three functions below support indexing and iterating */
+    public T this[int index] {
+      get { return coor[index]; }
+      set { coor.Insert(index, value); }
+    }
+    public IEnumerator<T> GetEnumerator() {
+      return coor.GetEnumerator();
+    }
+    IEnumerator IEnumerable.GetEnumerator() {
+      return this.GetEnumerator();
+    }
   }
 }
