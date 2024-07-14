@@ -122,6 +122,11 @@ namespace CSharpIter
       };
       GenericEnumerator<KeyValuePair<String,int>>(d);
       Console.WriteLine();
+
+      Display.ShowOp("enumerate over Point<int>");
+      Point<int> p = new Point<int>{ 1, 2, 3, 2, 1 };
+      GenericEnumerator<int>(p);
+      Console.WriteLine();
     }
     /*-----------------------------------------------------
       void GenericForEach<T>(IEnumerable<T> enm)
@@ -137,7 +142,7 @@ namespace CSharpIter
         @"  GenericForEach<T>(
     IEnumerable<T> enm, Action<T> lambda
   )"
-      );
+);
       Console.WriteLine();
 
       Display.ShowOp("Add 1.0 to items of List<double>");
@@ -188,6 +193,19 @@ namespace CSharpIter
       Console.WriteLine("Modified:");
       GenericEnumerator<double>(coll2);                 // display
       Console.WriteLine();
+
+      Display.ShowOp("GenericModifier for Point<double> with square");
+      /*-- original --*/
+      var pm = new Point<double> { 1.0, 2.5, -5.0, 7.5 };
+      Console.WriteLine("Original:");
+      GenericEnumerator<double>(pm);
+      /*-- modified --*/
+      Console.WriteLine("Modified:");
+      var pm2 = GenericModifier<double>(pm, square);  // modify
+      GenericEnumerator<double>(pm2);                 // display
+      Console.WriteLine();
+
+      
     }
     /*-----------------------------------------------------
       Begin demonstration
@@ -220,14 +238,14 @@ namespace CSharpIter
       // string tmp = Display.FoldArray(arr2, 3, 2);
       // Console.WriteLine("\n{0}",tmp);
 
-      // Display.ShowLabel("  Alternate function for generating CSVs");
-      // Display.print("--- coor to folded CSV ---");
-      // Point<int> p1 = new Point<int>(0);
-      // List<int> tmpl = new List<int>{ 1, 2, 3, 4, 5, 6, 7 };
-      // p1.coor = tmpl;
-      // int[] arr3 = p1.coor.ToArray();
-      // tmp = Display.FoldArray(arr3, 4, 2);
-      // Console.WriteLine("\n{0}",tmp);
+      Display.ShowLabel("  Alternate function for generating CSVs");
+      Display.print("--- coor to folded CSV ---");
+      Point<int> p1 = new Point<int>(0);
+      List<int> tmpl = new List<int>{ 1, 2, 3, 4, 5, 6, 7 };
+      p1.coor = tmpl;
+      int[] arr3 = p1.coor.ToArray();
+      var tmp = Display.FoldArray(arr3, 4, 2);
+      Console.WriteLine("\n{0}",tmp);
 
       // string tmp1 = Display.ToCSV<int>(p1.coor);
       // tmp1 = Display.ToCSV(p1.coor);  // demo that type inference works here

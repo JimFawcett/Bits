@@ -29,6 +29,20 @@ namespace Points {
         }
       }
     }
+    /*--------------------------------------------------------------------
+      Supports building point by Adding elements after construction
+    */
+    public Point() {
+      coor = new List<T>();
+    }
+    /*-----------------------------------------------------
+      Add element to back of coordinate list
+      - supports using list initializer, e.g.
+        var p = new Point<int> { 1, 2. 3 }
+    */
+    public void Add(T t) {
+      coor.Add(t);
+    }
     /* translates IShow::show() for needs of Point class */
     public void Show(string name) {
       PrintSelf(name);
