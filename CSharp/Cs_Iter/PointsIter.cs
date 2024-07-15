@@ -1,6 +1,6 @@
 /*-------------------------------------------------------------------
   Points.cs
-  - provides definitions for user-defined class Point4D
+  - provides definitions for user-defined class BasicPoint<T>
 */
 
 using System.Collections;
@@ -8,19 +8,22 @@ using System.Collections.Generic;   // IEnumerable<T>, List<T>
 using Analysis;
 
 namespace Points {
+
   /*----------------------------------------------------------------------
-    Point<T>
+    BasicPoint<T>
      - holds any finite number of generic coordinates
      - coordinates are held in a List<T>
      - implements IEnumerable<T> so it can be indexed and iterated
+     - does not implement ICollection<T> or IList<T> to avoid making
+       demonstration too complicated for learning example
      - it is a reference type because it is implemented with a class.
        its List<T> is also a reference type
   */
-  public class Point<T> : IEnumerable<T> , Analysis.IShow {
+  public class BasicPoint<T> : IEnumerable<T>, Analysis.IShow {
     /*--------------------------------------------------------------------
-      Constructs a point with N coordinates each with default value
+      Constructs a BasicPoint with N coordinates each with default value
     */
-    public Point(int N) {
+    public BasicPoint(int N) {
       coor = new List<T>();
       for(int i = 0; i<N; ++i) {
         T? test = default(T);
@@ -30,25 +33,25 @@ namespace Points {
       }
     }
     /*--------------------------------------------------------------------
-      Supports building point by Adding elements after construction
+      Supports building BasicPoint by Adding elements after construction
     */
-    public Point() {
+    public BasicPoint() {
       coor = new List<T>();
     }
     /*-----------------------------------------------------
       Add element to back of coordinate list
       - supports using list initializer, e.g.
-        var p = new Point<int> { 1, 2. 3 }
+        var p = new BasicPoint<int> { 1, 2. 3 }
     */
     public void Add(T t) {
       coor.Add(t);
     }
-    /* translates IShow::show() for needs of Point class */
+    /* translates IShow::show() for needs of BasicPoint class */
     public void Show(string name) {
       PrintSelf(name);
     }
     /*
-      Displays structure and state of N-dimensional point.
+      Displays structure and state of N-dimensional BasicPoint.
       - state is a set of rows of coordinate data
       - property Width specifies number of elements in each row
       - property Left specifies offset of row from terminal Left edge
@@ -78,11 +81,11 @@ namespace Points {
     public IEnumerator<T> GetEnumerator() {
       return coor.GetEnumerator();
     }
-    /*-- returns Point<T> enumerator --*/
+    /*-- returns BasicPoint<T> enumerator --*/
     IEnumerator IEnumerable.GetEnumerator() {
       return this.GetEnumerator();
     }
-    /*-- returns Point<T> iterator --*/
+    /*-- returns BasicPoint<T> iterator --*/
     public IEnumerable<T> iter() {
       foreach (var item in coor) {
         yield return item;
@@ -94,18 +97,57 @@ namespace Points {
     public int Left { get; set; } = 2;    // default offset
     public int Indent { get; set; } = 2;
     /* initializers */
-    public Point<T> width(int w) {
+    public BasicPoint<T> width(int w) {
       this.Width = w;
       return this;
     } 
-    public Point<T> left(int l) {
+    public BasicPoint<T> left(int l) {
       this.Left = l;
       return this;
     } 
-    public Point<T> indent(int i) {
+    public BasicPoint<T> indent(int i) {
       this.Indent = i;
       return this;
     } 
   }
-
+  /*-------------------------------------------------------
+    Point<T>
+    - same as BasicPoint<T> with additions:
+      - implements ICollection<T> and IList<T> interfaces
+      - single inheritance of BasicPoint<T>'s implementation
+  
+  */
+  public class Point<T> : 
+    BasicPoint<T>, IEnumerable<T>, ICollection<T>, IList<T> 
+  {
+    public Point(int N) : base(N) { }
+    public Point() : base() {}
+    public void Clear() { 
+      base.coor.Clear(); 
+    }
+    public bool Contains(T item) { 
+      return base.coor.Contains(item); 
+    }
+    public void CopyTo(T[] array, int i) {
+      base.coor.CopyTo(array, i);
+    }
+    public bool Remove(T item) {
+      return base.coor.Remove(item);
+    }
+    public int Count { 
+      get { return base.coor.Count; } 
+    }
+    public bool IsReadOnly {
+      get { return false; }
+    }
+    public int IndexOf(T item) {
+      return base.coor.IndexOf(item);
+    }
+    public void Insert(int i, T item) {
+      base.coor.Insert(i, item);
+    }
+    public void RemoveAt(int index) {
+      base.coor.RemoveAt(index);
+    }
+  }
 }
