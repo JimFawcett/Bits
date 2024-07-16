@@ -69,6 +69,7 @@ namespace Points {
           Console.Write(Display.Indent(Left + Indent));
         }
       }
+      Console.Write("\n" + Display.Indent(Left + Indent) + "{0}", dt);
       Console.Write("\n{0}", Display.Indent(Left));
       Console.WriteLine("}");
     }
@@ -92,6 +93,8 @@ namespace Points {
       }
     }
     public List<T> coor { get; set; }
+    public DateTime dt { get; set; } = DateTime.Now;
+
     public int Length { get { return coor.Count; } }
     public int Width { get; set; } = 5;   // default row size
     public int Left { get; set; } = 2;    // default offset

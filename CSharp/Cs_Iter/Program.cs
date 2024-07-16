@@ -303,6 +303,8 @@ namespace CSharpIter
       Display.ShowOp("modified BasicPoint using lambda capture");
       GenericEnumerator<double>(mpb);
       Console.WriteLine();
+      Display.ShowOp("modified BasicPoint Show(name)");
+      mpb.Show("mpb");
     }
     /*-----------------------------------------------------
       IEnumerable<T> GenericModifier<T>(IEnumerable<T> enm, Func<T,T> lambda)
