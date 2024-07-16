@@ -129,3 +129,14 @@ impl<'a, T, const N:usize> IntoIterator for &'a mut Point<T, N>
 //         self.items.iter().next();
 //     }
 // }
+
+// macro_rules! Point {
+//     ( $( $x:expr ), * ) => {
+//       {
+//         let mut tmp_pnt = Point<T,N>::new();
+//         $(
+//           temp_pnt. ???
+//         )
+//       }
+//     };
+// }
