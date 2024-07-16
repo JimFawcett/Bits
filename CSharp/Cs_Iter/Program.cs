@@ -32,6 +32,95 @@ namespace CSharpIter
     const string nl = "\n";
 
     /*-----------------------------------------------------
+      Enumerate standard library types
+    */
+    static void EnumStdTypes() {
+
+      Display.ShowNote("  Enumerate standard types", "\n");
+
+      Display.ShowOp("array - basic enumeration");
+      int[] arri = { 0, 1, 2, 1, 0 };
+      var enm = arri.GetEnumerator();
+      enm.MoveNext();
+      Console.Write("  {0}", enm.Current);
+      while (enm.MoveNext()) {
+        Console.Write(", {0}", enm.Current);
+      }
+      Console.WriteLine("\n");
+
+      Display.ShowOp("enumerate list with foreach");
+      List<double> ld = new List<double>{1.0, 1.5, 2.0, 2.5, 3.0 };
+      bool first = true;
+      foreach (var item in ld) {
+        if (first) {
+          Console.Write("  {0:0.0}", item);
+          first = false;
+        }
+        else {
+          Console.Write(", {0:0.0}", item);
+        }
+      }
+      Console.WriteLine("\n");
+
+      Display.ShowOp("enumerate dictionary with foreach");
+      Dictionary<string, int> dsi = 
+        new Dictionary<string, int>{ 
+          {"zero", 0}, {"one", 1}, {"two", 2}, {"three", 3}, {"four", 4},  
+        };
+      first = true;
+      foreach (var item in dsi) {
+        if (first) {
+          Console.Write("  {0}", item);
+          first = false;
+        }
+        else {
+          Console.Write(", {0}", item);
+        }
+      }
+      Console.WriteLine("\n");
+    }
+    /*-----------------------------------------------------
+      Enumerate Point<T>
+      - all of the examples here work with either
+        BasicPoint<T> or Point<T>
+    */
+    static void EnumPoint() {
+
+      Display.ShowNote("  Enumerate Point types", "\n");
+
+      Display.ShowOp("BasicPoint - indexing");
+      BasicPoint<int> bpi = new BasicPoint<int>() { 0, 1, 2, 3, 4 };
+      Console.Write("  {0}", bpi[0]);
+      for (int i = 1; i < bpi.Length; i++) {
+        Console.Write(", {0}", bpi[i]);
+      };
+      Console.WriteLine("\n");
+
+      Display.ShowOp("BasicPoint - basic enumeration");
+      // BasicPoint<int> bpi = new BasicPoint<int>() { 0, 1, 2, 3, 4 };
+      var enm = bpi.GetEnumerator();
+      enm.MoveNext();
+      Console.Write("  {0}", enm.Current);
+      while (enm.MoveNext()) {
+        Console.Write(", {0}", enm.Current);
+      }
+      Console.WriteLine("\n");
+
+      Display.ShowOp("Point enumeration with foreach");
+      Point<double> pd = new Point<double>() { 0.0, -1.5, 3.0, -4.5, 6.0 };
+      bool first = true;
+      foreach (var item in pd) {
+        if (first) {
+          Console.Write("  {0:0.0}", item);
+          first = false;
+        }
+        else {
+          Console.Write(", {0:0.0}", item);
+        }
+      }
+      Console.WriteLine("\n");
+    }
+    /*-----------------------------------------------------
       void ListIndexer<T>(List<T>)
       - Display list items with indexing
     */
@@ -197,7 +286,7 @@ namespace CSharpIter
       Console.WriteLine();
       Display.ShowOp("modified list using lambda capture");
       GenericEnumerator<double>(modLd);
-      Console.WriteLine("\n");
+      Console.WriteLine();
 
       /* repeat same demonstration with BasicPoint */
       Display.ShowOp("original BasicPoint");
@@ -213,7 +302,7 @@ namespace CSharpIter
       GenericForEach<double>(pb, add_one_point);
       Display.ShowOp("modified BasicPoint using lambda capture");
       GenericEnumerator<double>(mpb);
-      Console.WriteLine("\n");
+      Console.WriteLine();
     }
     /*-----------------------------------------------------
       IEnumerable<T> GenericModifier<T>(IEnumerable<T> enm, Func<T,T> lambda)
@@ -269,8 +358,6 @@ namespace CSharpIter
       var pm2 = GenericModifier<double>(pm, square);  // modify
       GenericEnumerator<double>(pm2);                 // display
       Console.WriteLine();
-
-      
     }
     /*-----------------------------------------------------
       Begin demonstration
@@ -279,6 +366,8 @@ namespace CSharpIter
     {
       Display.ShowLabel(" Demonstrate C# iteration");
 
+      EnumStdTypes();
+      EnumPoint();
       executeListIndexer();
       executeGenericIndexer();
       executeGenericEnumerator();
@@ -290,7 +379,7 @@ namespace CSharpIter
       );
 
       int[] testarr = { 0,1, 2, 3, 4, 5, 6, 7, 8, 9 };
-      Display.ShowTypeEnum(testarr, "testarr", 5, nl);
+      Display.ShowTypeEnum(testarr, "testarr", 5);
 
       /*
         Commented function calls below left to let viewers

@@ -115,10 +115,11 @@ namespace Points {
     - same as BasicPoint<T> with additions:
       - implements ICollection<T> and IList<T> interfaces
       - single inheritance of BasicPoint<T>'s implementation
-  
+      - Deriving from ICollecton<T> and IList<T> supports using
+        generic functions for analysis and display.
   */
   public class Point<T> : 
-    BasicPoint<T>, IEnumerable<T>, ICollection<T>, IList<T> 
+    BasicPoint<T>, ICollection<T>, IList<T> 
   {
     public Point(int N) : base(N) { }
     public Point() : base() {}
