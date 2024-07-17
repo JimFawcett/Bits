@@ -150,7 +150,7 @@ namespace CSharpIter
       - works for all sequential indexable containers
     */
     static void GenericIndexer<C, T>(C coll) 
-       where C:IEnumerable, ICollection<T>, IList<T>
+       where C: ICollection<T>, IList<T>
     {
       Console.Write("  {0}", coll[0]);
       for(int i=1; i < coll.Count(); ++i) {
@@ -313,8 +313,10 @@ namespace CSharpIter
     */
     static IEnumerable<T> GenericModifier<T>(IEnumerable<T> enm, Func<T,T> lambda) {
       /* 
-        IEnumerable<T> is immutable so make new modified collection 
-        using Linq Select method
+        lambda makes copies of input enumerable's elements,
+        so lambda's modifications don't affect input.
+        Instead we make new modified collection using
+        Linq Select method
       */
       return enm.Select(lambda);
     }
