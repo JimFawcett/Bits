@@ -140,8 +140,8 @@ def iteration_over_user_defined_types():
   print("  avg: {}".format(s.avg()))
   print()
 
-  Anal.showOp("PointN[float]")
-  p:Points.PointN[float] = Points.PointN[float](0)
+  Anal.showOp("Point[float]")
+  p:Points.Point[float] = Points.Point[float](0)
   p.coors = l  # all Python members are public
   # alternate initialization
   # p.append(1.0)
@@ -228,7 +228,7 @@ def iteration_formatted_user_defined_types():
   Anal.showNote("  formatted iteration over user-defined type", "\n")
 
   Anal.showOp("p.show('p', 0, 7)")
-  p = Points.PointN[float](10)
+  p = Points.Point[float](10)
   p[1] = 1
   p[3] = 3.5
   p[9] = 42
@@ -238,7 +238,7 @@ def iteration_formatted_user_defined_types():
   Anal.showOp(
     "forloopFormattedFolded(p, 'p : Points...', 4, 7)"
   )
-  forloopFormattedFolded(p, "  p : Points.PointN[float](10)", 4, 7)
+  forloopFormattedFolded(p, "  p : Points.Point[float](10)", 4, 7)
     
 #------------------------------------------------
 # function implementing all demonstrations

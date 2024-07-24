@@ -54,29 +54,39 @@ def demo_std_generics():
   print(d)
   print()
 
-#-- user defined Demo type --#
+#-- user defined Hello type --#
 
 from typing import TypeVar, Generic
 T = TypeVar('T', bound=int | float)
 
-class Demo(Generic[T]):
+class Hello(Generic[T]):
     
   # supports constructor notation
-  def __init__(self, n: int) -> None:
-      self.datum:T = n
+  def __init__(self, t: T = 0) -> None:
+      self._datum:T = t
   
-  def getvalue(self) -> T:
-      return self.datum
+  # property supports public member syntax while
+  # keeping _datum encapsulated, e.g., not in
+  # public interface
 
-  def setvalue(self, val:T):
-      self.datum = val
+  @property
+  def value(self):
+     return self._datum
+  
+  @value.setter
+  def value(self, t:T):
+      self._datum = t
 
-  # show named value of PointN[T] instance
+  @value.getter
+  def value(self):
+      return self._datum
+
+  # show named value of Point[T] instance. 
+  # Uses default value for left.
+  
   def show(self, name, left = 0) :
-      print(AnalysisGen.indent(left), sep='')
-      print(name, ": ", "Demo { ", self.datum, " }", sep='')
-      # print(AnalysisGen.indent(left), name, ": ", self.datum, sep='')
-      print()
+      print(AnalysisGen.indent(left), sep='', end='')
+      print(name, ": ", "Hello { ", self._datum, " }", sep='')
 
 #-- demonstrate user-defined generic types --#
 
@@ -84,32 +94,42 @@ def demo_user_defined_generics():
     Anal.showNote("  demo user-defined generics")
     print()
 
-    Anal.showOp("Demo[int]")
-    d: Demo[int] = Demo(42)
-    print(type(d))
-    d.show("d", 2)
+    Anal.showOp("Hello(42)")
+    h1: Hello[int] = Hello(42)
+    print(" ", type(h1))
+    h1.show("h1", 2)
+    print()
 
-    Anal.showOp("p1 = Points.PointN[float](5)")
-    p1: Points.PointN = Points.PointN[float](5)
+    Anal.showOp("Hello() uses default argument")
+    h2: Hello[float] = Hello()
+    h2.show("h2", 2)
+    print()
+    Anal.showOp("h2.value = 3.1415927")
+    h2.value = 3.1415927
+    h2.show("h2", 2)
+    print()
+
+    Anal.showOp("p1 = Points.Point[float](5)")
+    p1: Points.Point = Points.Point[float](5)
     p1[1] = 1.5
     p1[3] = -2.0
     index = p1.len() - 1
     p1[index] = 42
-    print(type(p1))
-    p1.show("p1")
+    print(" ", type(p1))
+    p1.show("p1", 2)
     print()
 
 def demo_generic_functions():
 
-  Anal.showNote("demo generic functions", "\n")
+  Anal.showNote("  demo generic functions", "\n")
 
   Anal.showOp("Anal.showType(list[int], name)")
-  l:list[int] = [1, 2, 3, 2, 1]
-  Anal.showType(l, "l")
+  l1:list[int] = [1, 2, 3, 2, 1, 0, -1, -2, -1, 0]
+  Anal.showType(l1, "l1")
   print()
 
   Anal.showOp("showTypeEnum(list[int], name)")
-  Anal.showTypeEnum(l, "l", left = 2, width = 7, suffix = "")
+  Anal.showTypeEnum(l1, "l1", left = 2, width = 7, suffix = "")
   print() 
 
 #-- demonstration starts here --#

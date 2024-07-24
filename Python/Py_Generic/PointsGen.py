@@ -1,6 +1,6 @@
 #----------------------------------------------------------
 #   Py_Generic::PointsGen.py
-#   PointN[T]
+#   Point[T]
 #     Point in N dimensional hyperspace with type T
 #     coordinates.
 #----------------------------------------------------------
@@ -16,10 +16,10 @@ from typing import TypeVar, Generic
 
 T = TypeVar('T', bound=int | float)
 
-class PointN(Generic[T]):
+class Point(Generic[T]):
     
     # supports constructor notation
-    def __init__(self, n: int) -> None:         # p = PointN<double>(8)
+    def __init__(self, n: int) -> None:         # p = Point<double>(8)
         self.coors:list[T] = []
         for i in range(n):
             self.coors.append(0)
@@ -39,9 +39,9 @@ class PointN(Generic[T]):
     def __setitem__(self, key: int, val: T):    # p[1] = value
         self.coors[key] = val
 
-    # show named value of PointN[T] instance
-    def show(self, name, left = 0, width = 7) :
+    # show named value of Point[T] instance
+    def show(self, name, left = 2, width = 7) :
         print(AnalysisGen.indent(left), name, ' ', sep='')
         print(AnalysisGen.indent(left), "{", sep='')
-        print(AnalysisGen.fold(self.coors, left+2, width))
+        print(AnalysisGen.fold(self.coors, left+3, width), sep='')
         print(AnalysisGen.indent(left), "}", sep = '')

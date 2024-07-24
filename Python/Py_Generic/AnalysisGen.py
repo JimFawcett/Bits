@@ -17,9 +17,9 @@ import copy
 nl = "\n"
 
 # show name, type, value, and size of a Python instance
-def showType(t:T, nm:str, suffix = "") :
-    print(nm, type(t), "dynamic")
-    print("value: ", t, ', size: ', sys.getsizeof(t), suffix)
+def showType(t:T, nm:str, indnt = 2, suffix = "") :
+    print(indent(indnt), nm, ' ', type(t), " dynamic", sep="")
+    print(indent(indnt), "value: ", t, ', size: ', sys.getsizeof(t), suffix, sep="")
 
 # generate indent string with n spaces
 def indent(n:int):
