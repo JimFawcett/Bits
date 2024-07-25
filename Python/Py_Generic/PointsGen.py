@@ -5,6 +5,8 @@
 #     coordinates.
 #----------------------------------------------------------
 
+import datetime
+import time
 import AnalysisGen
 from typing import TypeVar, Generic
 
@@ -23,6 +25,7 @@ class Point(Generic[T]):
         self.coors:list[T] = []
         for i in range(n):
             self.coors.append(0)
+        self._dt: datetime = datetime.datetime.now()
     
     def append(self, t: T):
         self.coors.append(t)
@@ -39,9 +42,21 @@ class Point(Generic[T]):
     def __setitem__(self, key: int, val: T):    # p[1] = value
         self.coors[key] = val
 
+    @property
+    def dt(self):
+        return self._dt
+    
+    @dt.getter
+    def dt(self):
+        return self._dt
+    
+    def now(self):
+        _dt = datetime.datetime.now()
+
     # show named value of Point[T] instance
     def show(self, name, left = 2, width = 7) :
         print(AnalysisGen.indent(left), name, ' ', sep='')
         print(AnalysisGen.indent(left), "{", sep='')
         print(AnalysisGen.fold(self.coors, left+3, width), sep='')
+        print(AnalysisGen.indent(left + 2), self.dt)
         print(AnalysisGen.indent(left), "}", sep = '')
