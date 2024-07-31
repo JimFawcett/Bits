@@ -174,14 +174,22 @@ def iteration_over_user_defined_types():
   # p.append(-1.0)
   p.show("p")         # show uses fold which uses for-in iteration
   print()
+
+  Anal.showOp("iterate using p's iterator")
+  itr = p.iter()
+  print("  {}".format(next(itr)), end='')
+  for item in itr : {
+    print(", {}".format(item), end='')
+  }
+  print("\n")
   
 #--------------------------------------------------
-# demo formatting iterations over std collections
+# demo formatting functions over std collections
 #--------------------------------------------------
 
 # forloop extracts iterator from enumerable
 #------------------------------------------------
-def forloopFormatted(enum: Sequence, nm:str, left:int, width:int):
+def forloopFormatted(enum: Sequence, nm:str):
   print("  ", nm, type(enum))
   print("  ", end='')
   first:bool = True
@@ -220,12 +228,12 @@ def iteration_using_formatting_functions():
 
   Anal.showOp("forloopFormatted(list[int])")
   l:list[int] = [1, 2, 3, 2, 1]
-  forloopFormatted(l, "l", 2, 4)
+  forloopFormatted(l, "l")
   print()
 
   Anal.showOp("forloopFormatted(str)")
   s:str = "a string"
-  forloopFormatted(s, "str", 2, 4)
+  forloopFormatted(s, "str")
   print()
 
   Anal.showOp("Anal.showTypeEnum(range(1,6), ...)")
