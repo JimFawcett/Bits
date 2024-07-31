@@ -41,6 +41,9 @@ class Point(Generic[T]):
     def iter(self) -> Iterator:                 # p.iter()
         return self.coors.__iter__()
     
+    # Point does not have to define an iterator. 
+    # It simply uses coors iterator.
+    
     # show named value of Point[T] instance
     def show(self, name, left = 0, width = 7) :
         print(Anal.indent(left), name, ' {', sep='')

@@ -1,5 +1,5 @@
 #----------------------------------------------------------
-# Py_Generic.py
+# Py_Iter.py
 #
 # Python type hints and generics
 #   - Demonstrates generic and type hint syntax
@@ -39,19 +39,30 @@ def generator(coll: Iterable[T]) -> Generator:
 def execute_basic_iterations():
     Anal.showNote("  basic iteration over ranges", "\n")
 
-    # iteration using iterator directly
+   # iteration using iterator directly
     Anal.showOp("extracting iterator from range(0,10)")
-    iter = range(0,10).__iter__()
+    itr = range(0,10).__iter__()
     print("  ", end='')
-    try:
-      while True:
-        print("{} ".format(next(iter)), end='')
-    except StopIteration:
-      pass
+    while True:
+      try:
+        print("{} ".format(itr.__next__()), end='')
+      except StopIteration:
+        break
+    print()
+
+    # iteration using python functions iter() and next()
+    Anal.showOp("extracting iterator from range(0,10) with iter() and next()")
+    my_itr = iter(range(0,10))
+    print("  ", end='')
+    while True:
+      try:
+        print("{} ".format(next(my_itr)), end='')
+      except StopIteration:
+        break
     print()
 
     # idiomatic iteration over range using for loop
-    Anal.showOp("idiomatic iteration over range(1,6)")
+    Anal.showOp("idiomatic for-in iteration over range(1,6)")
     print("  ", end='')
     for i in range(1,6):
       print("{} ".format(i), end='')
@@ -59,11 +70,11 @@ def execute_basic_iterations():
 
     # direct use of generator
     Anal.showOp("using iterator returned by generator")
-    iter = generator(range(1,5))
+    itr = generator(range(1,5))
     print("  ", end='')
     try:
       while True:
-        print("{} ".format(next(iter)), end='')
+        print("{} ".format(next(itr)), end='')
     except StopIteration:
       pass
     print()
@@ -81,19 +92,19 @@ def execute_basic_iterations():
 # for seq iter returns seq item
 def forloop_seq_iteration(coll):
     print(type(coll))
-    iter = coll.__iter__()
-    print("  {}".format(next(iter)), end='')
-    for item in iter:
+    itr = coll.__iter__()
+    print("  {}".format(next(itr)), end='')
+    for item in itr:
       print(", {}".format(item), end='')
     print()
 
 # for map iter returns map key
 def forloop_map_iteration(coll):
     print(type(coll))
-    iter = coll.__iter__()
-    key = next(iter)
+    itr = coll.__iter__()
+    key = next(itr)
     print('  {', key, ': ', coll[key], '}', end='')
-    for key in iter:
+    for key in itr:
       print(', {', key, ': ', coll[key], '}', end='')
     print()
 
@@ -136,8 +147,20 @@ def iteration_over_user_defined_types():
   print(l)
   print("  max: {}".format(s.max()))
   print("  min: {}".format(s.min()))
-  print("  sum: {}".format(s.sum()))
+  print("  sum: {}".format(s.sum()))  # sum() uses for-in iteration
   print("  avg: {}".format(s.avg()))
+  print()
+  Anal.showOp("iterating over s:Stats[float]")
+  print("  ", end='')
+  for item in s: {
+    print("{} ".format(item), end='')
+  }
+  print("\n")
+
+  Anal.showOp("error handling for empty serr: Stats[float]")
+  serr = Stats.Stats[float](0)
+  avg = serr.avg()
+  print("  serr.avg(): ", serr.avg())
   print()
 
   Anal.showOp("Point[float]")
@@ -149,11 +172,12 @@ def iteration_over_user_defined_types():
   # p.append(0.0)
   # p.append(-0.5)
   # p.append(-1.0)
-  p.show("p")
+  p.show("p")         # show uses fold which uses for-in iteration
   print()
   
+#--------------------------------------------------
 # demo formatting iterations over std collections
-#------------------------------------------------
+#--------------------------------------------------
 
 # forloop extracts iterator from enumerable
 #------------------------------------------------

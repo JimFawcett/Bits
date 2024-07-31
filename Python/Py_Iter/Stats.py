@@ -18,21 +18,21 @@ class Stats(Generic[T]):
   def __init__(self, l:list[T]) -> None:
     self.items = l
 
-  def check(self) -> None:
-    if self.items is None:
-      raise ValueError("items is None")
-    
   def len(self) -> int:
     return self.items.len()
 
-  def max(self) -> T:
+  def max(self) -> T | None:
+    if not self.items:
+      return None
     max:T = self.items[0]
     for item in self.items:
       if max < item:
         max = item
     return max
   
-  def min(self) -> T:
+  def min(self) -> T | None:
+    if not self.items:
+      return None
     min:T = self.items[0]
     for item in self.items:
       if min > item:
@@ -45,9 +45,12 @@ class Stats(Generic[T]):
       sum += item
     return sum
   
-  def avg(self) -> T:
+  def avg(self) -> T | None:
+     if not self.items:
+       return None
      num = self.sum()
      den = len(self.items)
      return num/den
      
-
+  def __iter__(self) -> Iterator:                 # p.iter()
+      return self.items.__iter__()

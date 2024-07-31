@@ -5,8 +5,8 @@
 
 import sys
 import collections
-from typing import TypeVar
 from collections.abc import Sequence
+from typing import TypeVar
 
 T = TypeVar('T')
 # Coll = Union[Iterable, Sized] = 'Coll'
@@ -17,12 +17,12 @@ import copy
 nl = "\n"
 
 # show name, type, value, and size of a Python instance
-def showType(t:T, nm:str, indnt = 2, suffix = "") :
+def showType(t:T, nm:str, indnt:int = 2, suffix:str = "") :
     print(indent(indnt), nm, ' ', type(t), " dynamic", sep="")
     print(indent(indnt), "value: ", t, ', size: ', sys.getsizeof(t), suffix, sep="")
 
 # generate indent string with n spaces
-def indent(n:int):
+def indent(n:int) -> str:
     tmpStr = ""
     for i in range(n):
         tmpStr += ' '
@@ -41,7 +41,7 @@ def fold(enum: Sequence, left:int, width:int) -> str:
     return tmpStr
 
 # show name, type, value, and size of a Python instance
-def showTypeEnum(enum, nm, left = 2, width = 7, suffix = "") :
+def showTypeEnum(enum:Sequence, nm:str, left:int = 2, width:int = 7, suffix:str = "") :
     # topStr = indent(left) + nm + type(enum) + "dynamic"
     print(indent(left),nm, ' ', type(enum), ' ', "dynamic", sep='')
     print(indent(left), "{", sep='')
@@ -50,16 +50,16 @@ def showTypeEnum(enum, nm, left = 2, width = 7, suffix = "") :
     print(indent(left), "size: ", sys.getsizeof(enum), suffix, sep='')
 
 # same as showType except uses class method to show value
-def showTypeShowable(t, nm, suffix = ""):
+def showTypeShowable(t:T, nm:str, suffix:str = ""):
     print(type(t), "dynamic")
     t.show(nm)
 
 # show Python id, unique for each instance
-def showIdent(t, name, suffix = "") :
+def showIdent(t:T, name:str, suffix:str = "") :
     print(name, '"{}"'.format(t), id(t), suffix)
 
 # show emphasized note
-def showNote(text, suffix = "", n: int = 50) :
+def showNote(text:str, suffix:str = "", n: int = 50) :
     tmpStr = ""
     for i in range(n):
       tmpStr += '-'
@@ -68,6 +68,6 @@ def showNote(text, suffix = "", n: int = 50) :
     print(tmpStr, suffix)
 
 # show delineated string to announce a program operation
-def showOp(text):
+def showOp(text:str):
     print("--- {} ---".format(text))
 
